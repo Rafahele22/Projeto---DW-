@@ -1,5 +1,4 @@
-<html>
-  <head>
+<head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Fontscope</title>
@@ -38,6 +37,7 @@
         <a href="#" class="button" id="filters_btn">
           <img src="assets/imgs/filters.svg" alt="icon filters"/>
           <h4>Filters</h4>
+          <h6></h6>
         </a>
 
         <a href="#" class="button" id="search_bar">
@@ -46,7 +46,7 @@
         </a>
 
         <section>
-          <a href="#">
+          <a href="#" id="view_mode_selected">
             <img src="assets/imgs/grid_selected.svg" alt="icon display content grid"/>
           </a>
 
@@ -118,8 +118,29 @@
     <main>
       
       <div class="grid grid_view">
-       
-
+        <div class="list">
+            <div class="list_information_bar">
+              <section class="list_information">
+                        <h3>ABC Arizona Serif</h3>
+                        <h3>ABC Dinamo</h3>
+                        <h3>10 styles</h3>
+                        <h3>Variable</h3>
+                        </section>
+            <section class="list_information">
+              <a href="#" class="fav-btn"><img src="assets/imgs/fav.svg" alt="favourite"/></a>
+                        <a href="#" class="button save-btn">
+                            <h4>Save</h4>
+                            <img src="assets/imgs/arrow.svg" alt="arrow"/>
+                        </a>
+                    </section>
+                    <section class="save_list">
+                        <h4>Save font on...</h4>
+                        <a href="#"><div><h4>Aa</h4><h4>Web</h4></div><h5>add</h5></a>
+                        <a href="#"><div><h4>Aa</h4><h4>Print</h4></div><h5>add</h5></a>
+                    </section>
+                    </div>
+                    <h1 style="font-family:'${font._id}-font'">The quick brown fox jumps over the lazy dog...</h1>
+                    </div>
       </div>
     </main>
     <footer></footer>

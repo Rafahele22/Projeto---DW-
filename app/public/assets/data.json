@@ -33,7 +33,7 @@
     "foundry": "Suva Type Foundry",
     "design": ["Adam Asztalos"],
     "variable": false,
-    "tags": ["Display"]
+    "tags": ["Display", "All Caps"]
   },
   {
     "_id": "allura",

@@ -41,8 +41,8 @@ a {
 /* ===== TYPOGRAPHY ===== */
 h1 {
     color: var(--black);
-    font-family: "21 display condensed";
-    font-size: 10vw;
+    font-size: 7.5vw;
+    line-height: 7.5vw;
     margin: 0;
 }
 
@@ -73,6 +73,23 @@ h5 {
     font-size: 1vw;
     margin: 0;
 }
+
+h6 {
+    position: absolute;
+  top: -8px;
+  right: -8px;
+  color: var(--light_grey);
+  background-color: var(--purple);
+  border-radius: 10vh;
+  padding: 4px 8px;
+  width: auto;
+  font-family: "roboto regular";
+  font-size: 0.8vw;
+  margin: 0;
+  z-index: 500;
+}
+
+
 
 /* ===== HEADER ===== */
 header {
@@ -125,6 +142,10 @@ nav {
 }
 
 .selected {
+    background-color: var(--purple);
+}
+
+.selected:hover {
     background-color: var(--purple);
 }
 
@@ -192,6 +213,10 @@ main {
     background: var(--black);
 }
 
+#filters_btn {
+  position: relative;
+}
+
 
 /* ===== TAGS SECTION ===== */
 #tags {
@@ -252,6 +277,17 @@ main {
     background-color: var(--purple);
 }
 
+#remove_all_filters, #close_filters {
+    width: fit-content;
+}
+
+#close_filters {
+    position: relative;
+}
+
+
+
+
 /* ===== GRID SYSTEM ===== */
 .grid {
     display: grid;
@@ -266,6 +302,9 @@ main {
     gap: 1vw;
     width: calc(100% - 24.2vw);
 }
+
+
+/* ===== GRID VIEW ===== */
 
 .grid_view article {
     position: relative;
@@ -287,11 +326,13 @@ main {
 }
 
 .grid_view article h1 {
-    flex-grow: 1;
+    flex-grow: 1; 
     display: flex;
-    align-items: center;
-    justify-content: center;
+    align-items: center;           
+    justify-content: center;  
+    padding: 2vh 0;   
 }
+
 
 .grid_information {
     display: flex;
@@ -302,6 +343,43 @@ main {
     box-sizing: border-box;
     min-width: 0;
 }
+
+/* ===== LIST VIEW ===== */
+
+.list {
+    position: relative;
+    grid-column: 1/5;
+    border: 2px solid var(--black);
+    border-radius: 5vh;
+    padding: 1.5vw;
+}
+
+.list h1 {
+    font-size: 3.5vw;
+    line-height: 3.5vw;
+    padding-top: 4vh;
+}
+
+.list_information_bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.list_information {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 2vw;
+}
+
+.grid.list_view {
+    display: flex;
+    flex-direction: column;
+    gap: 1vw;
+    width: 100%;
+}
+
 
 /* ===== SAVE MENU ===== */
 .save {
@@ -315,13 +393,25 @@ main {
     margin-left: 1.5vw;
 }
 
-.save > h4 {
+.save_list {
+    position: absolute;
+    top: 8vh;
+    right: 1.8vw; 
+    background-color: var(--grey);
+    width: 15vw;
+    border-radius: 2vh;
+    padding: 0.5%;
+    z-index: 50;
+    margin-left: 1.5vw;
+}
+
+.save > h4, .save_list > h4  {
     text-align: center;
     padding-top: 1vh;
     padding-bottom: 2vh;
 }
 
-.save a {
+.save a, .save_list a {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -331,11 +421,11 @@ main {
     border-radius: 1vh;
 }
 
-.save a:hover {
+.save a:hover, .save_list a:hover {
     background-color: var(--dark-grey);
 }
 
-.save a div {
+.save a div, .save_list a div  {
     display: flex;
     gap: 0.5vw;
 }
