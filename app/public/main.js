@@ -10,48 +10,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     // =========================
     // VIEW MODE (GRID/LIST)
     // =========================
+    let isGridView = true;
+    
     function setupViewModeToggle(articles, fonts) {
         const gridViewBtn = document.querySelector('#view_mode_selected');
         const listViewBtn = document.querySelector('#second_bar section a:last-of-type');
         const mainGrid = document.querySelector('.grid.grid_view');
-        const listContainer = document.querySelector('.list');
         
-        if (!gridViewBtn || !listViewBtn || !mainGrid || !listContainer) return;
-        
-        let isGridView = true;
-        
-        function toggleArticlesVisibility(isGridMode) {
-            console.log(`Modo Grid: ${isGridMode}, Número de articles: ${articles.length}`);
-            
-            if (isGridMode) {
-                for (const article of articles) {
-                    article.style.display = 'block';
-                }
-                listContainer.style.display = 'none';
-            } else {
-                for (const article of articles) {
-                    article.style.display = 'none';
-                }
-                listContainer.style.display = 'block';
-                updateListContent(fonts[0]);
-            }
-        }
-        
-        function updateListContent(font) {
-            const h1 = listContainer.querySelector('h1');
-            if (h1 && font._id) {
-                h1.style.fontFamily = `'${font._id}-font'`;
-            }
-            
-            const fontNameElements = listContainer.querySelectorAll('.list_information h3');
-            if (fontNameElements.length > 0 && font.name) {
-                fontNameElements[0].textContent = font.name;
-                fontNameElements[2].textContent = `${font.weights.length} styles`;
-                fontNameElements[3].textContent = font.variable ? "Variable" : "Static";
-            }
-        }
-        
-        toggleArticlesVisibility(isGridView);
+        if (!gridViewBtn || !listViewBtn || !mainGrid) return;
         
         function toggleViewMode() {
             if (isGridView) {
@@ -68,8 +34,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                 
                 mainGrid.classList.remove('grid_view');
                 mainGrid.classList.add('list_view');
-                toggleArticlesVisibility(false);
                 isGridView = false;
+                
+                filterFonts();
             } else {
                 listViewBtn.id = '';
                 gridViewBtn.id = 'view_mode_selected';
@@ -84,8 +51,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                 
                 mainGrid.classList.remove('list_view');
                 mainGrid.classList.add('grid_view');
-                toggleArticlesVisibility(true);
                 isGridView = true;
+                
+                filterFonts();
             }
         }
         
@@ -103,17 +71,104 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
         });
         
-        setupListEvents();
+        document.addEventListener("click", (e) => {
+            document.querySelectorAll(".save_list").forEach(saveMenu => {
+                const saveBtn = saveMenu.parentElement.querySelector(".save-btn");
+                if (!saveMenu.contains(e.target) && (!saveBtn || !saveBtn.contains(e.target))) {
+                    saveMenu.style.display = "none";
+                    if (saveBtn) saveBtn.classList.remove("selected");
+                }
+            });
+        });
     }
     
     // =========================
-    // LIST EVENTS
+    // GERAR ITENS DE LISTA
     // =========================
-    function setupListEvents() {
-        const listContainer = document.querySelector('.list');
-        if (!listContainer) return;
+    function truncateToSingleLine(element) {
+    const originalText = element.innerText;
+    let low = 0;
+    let high = originalText.length;
+    let truncated = originalText;
+
+    while (low <= high) {
+        const mid = Math.floor((low + high) / 2);
+        element.innerText = originalText.slice(0, mid) + "…";
+
+        if (element.scrollHeight > element.clientHeight) {
+            high = mid - 1;
+        } else {
+            truncated = element.innerText;
+            low = mid + 1;
+        }
+    }
+
+    element.innerText = truncated;
+}
+
+   function generateListItems(fonts) {
+    const grid = document.querySelector(".grid.grid_view");
+    if (!grid) return;
+    
+    fonts.forEach(font => {
+        const defaultWeight = font.weights.find(w => w.default) || font.weights[0];
+        const numStyles = font.weights.length;
+        const designList = font.design ? font.design.join(", ") : "Unknown";
         
-        const favBtn = listContainer.querySelector('.fav-btn img');
+        const hasAllCaps = font.tags && font.tags.includes("All Caps");
+        const sampleText = "The quick brown fox jumps over the lazy dog.";
+        const displayText = hasAllCaps ? sampleText.toUpperCase() : sampleText;
+        
+        const listDiv = document.createElement("div");
+        listDiv.className = "list";
+        
+        listDiv.innerHTML = `
+            <div class="list_information_bar">
+                <section class="list_information">
+                    <h3>${font.name}</h3>
+                    ${font.foundry !== "Unknown" ? `<h3>${font.foundry}</h3>` : ""}
+                    <h3>${numStyles} ${numStyles === 1 ? 'style' : 'styles'}</h3>
+                    ${font.variable ? '<h3>Variable</h3>' : ''}
+                </section>
+                <section class="list_information">
+                    <a href="#" class="fav-btn"><img src="assets/imgs/fav.svg" alt="favourite"/></a>
+                    <a href="#" class="button save-btn">
+                        <h4>Save</h4>
+                    </a>
+                </section>
+                <section class="save_list">
+                    <h4>Save font on...</h4>
+                    <a href="#"><div><h4>Aa</h4><h4>Web</h4></div><h5 class="add-text">add</h5><img src="assets/imgs/check.svg" class="check-icon" alt="check icon"></a>
+                    <a href="#"><div><h4>Aa</h4><h4>Print</h4></div><h5 class="add-text">add</h5><img src="assets/imgs/check.svg" class="check-icon" alt="check icon"></a>
+                </section>
+            </div>
+            <h1 style="font-family:'${font._id}-font'">${displayText}</h1>
+        `;
+        
+        grid.appendChild(listDiv);
+
+        const style = document.createElement("style");
+        style.textContent = `
+            @font-face {
+                font-family:'${font._id}-font';
+                src:url('assets/fonts/${defaultWeight.file}');
+            }
+        `;
+        document.head.appendChild(style);
+
+        const h1 = listDiv.querySelector("h1");
+        truncateToSingleLine(h1);
+        
+        setupListItemEvents(listDiv, font);
+    });
+}
+    
+    // =========================
+    // CONFIGURAR EVENTOS DOS ITENS DE LISTA
+    // =========================
+    function setupListItemEvents(listItem, font) {
+        // FAVOURITE
+        const favBtn = listItem.querySelector('.fav-btn img');
         if (favBtn) {
             favBtn.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -123,33 +178,141 @@ document.addEventListener("DOMContentLoaded", async () => {
             });
         }
         
-        const saveMenu = listContainer.querySelector('.save_list');
-        const saveBtn = listContainer.querySelector('.save-btn');
+        // SAVE MENU
+        const saveMenu = listItem.querySelector('.save_list');
+        const saveBtn = listItem.querySelector('.save-btn');
         
-        if (saveMenu && saveBtn) {
-            saveMenu.style.display = "none";
-            
+        if (saveMenu) saveMenu.style.display = "none";
+        
+        if (saveBtn) {
             saveBtn.addEventListener("click", (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                
-                for (const menu of document.querySelectorAll(".save_list")) {
+
+                document.querySelectorAll(".save, .save_list").forEach(menu => {
                     if (menu !== saveMenu) {
                         menu.style.display = "none";
+                        menu.parentElement.querySelector(".save-btn")?.classList.remove("selected");
                     }
-                }
+                });
+
+                const isOpening = saveMenu.style.display === "none";
                 
-                saveMenu.style.display = saveMenu.style.display === "none" ? "block" : "none";
-            });
-            
-            document.addEventListener("click", (e) => {
-                if (!saveMenu.contains(e.target) && !saveBtn.contains(e.target)) {
-                    saveMenu.style.display = "none";
+                if (saveMenu) saveMenu.style.display = isOpening ? "block" : "none";
+                
+                if (isOpening) {
+                    saveBtn.classList.add("selected");
+                } else {
+                    saveBtn.classList.remove("selected");
                 }
             });
         }
-    }
 
+        // SAVE OPTIONS
+        const saveOptions = listItem.querySelectorAll('.save_list a');
+        saveOptions.forEach(option => {
+            option.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                option.classList.toggle('selected-option');
+            });
+        });
+    }
+    
+    // =========================
+    // FILTER LIST VIEW
+    // =========================
+    function filterListItems(selectedTags, selectedFoundries, selectedFamilySizes, selectedVariables, fonts) {
+        const listItems = document.querySelectorAll('.list');
+        let visibleCount = 0;
+        
+        listItems.forEach((listItem, index) => {
+            const font = fonts[index];
+            if (!font) {
+                listItem.style.display = 'none';
+                return;
+            }
+            
+            let show = checkFontAgainstFilters(font, selectedTags, selectedFoundries, selectedFamilySizes, selectedVariables);
+
+            listItem.style.display = show ? 'block' : 'none';
+            if (show) visibleCount++;
+        });
+        
+        return visibleCount;
+    }
+    
+    // =========================
+    // HELPER
+    // =========================
+    function checkFontAgainstFilters(font, selectedTags, selectedFoundries, selectedFamilySizes, selectedVariables) {
+        let show = true;
+
+        // TAGS
+        if (selectedTags.length > 0 && font.tags) {
+            if (!selectedTags.some(tag => font.tags.includes(tag))) {
+                show = false;
+            }
+        }
+
+        // FOUNDRY
+        if (selectedFoundries.length > 0) {
+            if (!selectedFoundries.includes(font.foundry)) {
+                show = false;
+            }
+        }
+
+        // FAMILY SIZE
+        if (selectedFamilySizes.length > 0) {
+            const n = font.weights.length;
+            let size = "";
+            
+            if (n === 1) size = "single";
+            else if (n <= 6) size = "small";
+            else if (n <= 10) size = "medium";
+            else if (n <= 20) size = "large";
+            else size = "xlarge";
+
+            if (!selectedFamilySizes.includes(size)) {
+                show = false;
+            }
+        }
+
+        // VARIABLE
+        if (selectedVariables.length > 0) {
+            const type = font.variable ? "Variable" : "Static";
+            if (!selectedVariables.includes(type)) {
+                show = false;
+            }
+        }
+
+        return show;
+    }
+    
+    // =========================
+    // FILTER GRID VIEW
+    // =========================
+    function filterArticles(selectedTags, selectedFoundries, selectedFamilySizes, selectedVariables, fonts) {
+        const articles = document.querySelectorAll('article');
+        let visibleCount = 0;
+        
+        articles.forEach((article, index) => {
+            const font = fonts[index];
+            if (!font) {
+                article.style.display = 'none';
+                return;
+            }
+            
+            let show = checkFontAgainstFilters(font, selectedTags, selectedFoundries, selectedFamilySizes, selectedVariables);
+
+            article.style.display = show ? 'block' : 'none';
+            if (show) visibleCount++;
+        });
+        
+        return visibleCount;
+    }
+    
     // =========================
     // INITIALIZATION
     // =========================
@@ -195,9 +358,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         const isFiltersOpen = filtersPanel.style.display === "flex";
         
         if (count > 0 && !isFiltersOpen) {
-            filtersCountBubble.style.display = "flex";
-            filtersCountBubble.textContent = count;
-        } else {
+            if (filtersCountBubble) {
+                filtersCountBubble.style.display = "flex";
+                filtersCountBubble.textContent = count;
+            }
+        } else if (filtersCountBubble) {
             filtersCountBubble.style.display = "none";
         }
     }
@@ -217,7 +382,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         filtersBtn.classList.toggle("selected", newStateOpen);
 
         if (newStateOpen) {
-            filtersCountBubble.style.display = "none";
+            if (filtersCountBubble) filtersCountBubble.style.display = "none";
         } else {
             updateCounter();
         }
@@ -271,7 +436,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         allTags.sort();
 
-
         // TAG BUTTONS
         if (tagsContainer) {
             tagsContainer.innerHTML = '';
@@ -292,7 +456,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 });
             }
         }
-
 
         // FILTER SECTIONS
         const filterSections = document.querySelectorAll('#filters .filters_section');
@@ -402,6 +565,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         let initialMaxHeight = 0;
         const articles = [];
 
+        generateListItems(fonts);
+        
         for (const [index, font] of fonts.entries()) {
             const defaultWeight = font.weights.find(w => w.default) || font.weights[0];
             const fontPath = `assets/fonts/${defaultWeight.file}`;
@@ -416,15 +581,21 @@ document.addEventListener("DOMContentLoaded", async () => {
                 <section class="grid_information">
                     <a href="#" class="button save-btn">
                         <h4>Save</h4>
-                        <img src="assets/imgs/arrow.svg" alt="arrow"/>
                     </a>
                     <a href="#" class="fav-btn"><img src="assets/imgs/fav.svg" alt="favourite"/></a>
                 </section>
-
                 <section class="save">
                     <h4>Save font on...</h4>
-                    <a href="#"><div><h4>Aa</h4><h4>Web</h4></div><h5>add</h5></a>
-                    <a href="#"><div><h4>Aa</h4><h4>Print</h4></div><h5>add</h5></a>
+                    <a href="#" class="save-option" data-type="web">
+                        <div><h4>Aa</h4><h4>Web</h4></div>
+                        <h5 class="add-text">add</h5>
+                        <img src="assets/imgs/check.svg" class="check-icon" alt="check icon">
+                    </a>
+                    <a href="#" class="save-option" data-type="print">
+                        <div><h4>Aa</h4><h4>Print</h4></div>
+                        <h5 class="add-text">add</h5>
+                        <img src="assets/imgs/check.svg" class="check-icon" alt="check icon">
+                    </a>
                 </section>
 
                 <h1 style="font-family:'${font._id}-font'">${sampleLetter}</h1>
@@ -456,7 +627,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 favImg.src = selected ? "assets/imgs/fav.svg" : "assets/imgs/fav_selected.svg";
             });
 
-            // SAVE
+            // SAVE BUTTON
             const saveMenu = article.querySelector(".save");
             const saveBtn = article.querySelector(".save-btn");
             saveMenu.style.display = "none";
@@ -465,47 +636,52 @@ document.addEventListener("DOMContentLoaded", async () => {
                 e.preventDefault();
                 e.stopPropagation();
 
-                for (const menu of document.querySelectorAll(".save")) {
+                document.querySelectorAll(".save, .save_list").forEach(menu => {
                     if (menu !== saveMenu) {
                         menu.style.display = "none";
+                        menu.parentElement.querySelector(".save-btn")?.classList.remove("selected");
                     }
-                }
+                });
 
-                saveMenu.style.display = saveMenu.style.display === "none" ? "block" : "none";
+                const isOpening = saveMenu.style.display === "none";
+                
+                saveMenu.style.display = isOpening ? "block" : "none";
+                
+                if (isOpening) {
+                    saveBtn.classList.add("selected");
+                } else {
+                    saveBtn.classList.remove("selected");
+                }
             });
 
-            document.addEventListener("click", () => {
+            // SAVE OPTIONS 
+            const saveOptions = article.querySelectorAll('.save-option');
+            saveOptions.forEach(option => {
+                option.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    option.classList.toggle('selected-option');
+                });
+            });
+
+            article.addEventListener("mouseleave", () => {
                 saveMenu.style.display = "none";
+                saveBtn.classList.remove("selected");
+            });
+
+            document.addEventListener("click", (e) => {
+                if (!saveMenu.contains(e.target) && !saveBtn.contains(e.target)) {
+                    saveMenu.style.display = "none";
+                    saveBtn.classList.remove("selected");
+                }
             });
         }
 
         setupViewModeToggle(articles, fonts);
 
         // =========================
-        // CARDS HEIGHTS
-        // =========================
-        function setInitialCardHeights() {
-            if (!articles.length) return;
-
-            for (const c of articles) {
-                c.style.height = "auto";
-            }
-
-            initialMaxHeight = 0;
-            for (const c of articles) {
-                const height = c.offsetHeight;
-                if (height > initialMaxHeight) {
-                    initialMaxHeight = height;
-                }
-            }
-
-            for (const c of articles) {
-                c.style.height = initialMaxHeight + "px";
-            }
-        }
-
-        // =========================
-        // FILTERING
+        // FILTERING FUNCTION
         // =========================
         function filterFonts() {
             const selectedTags = Array.from(document.querySelectorAll("#tags .selected"))
@@ -523,51 +699,25 @@ document.addEventListener("DOMContentLoaded", async () => {
                 Array.from(variableSection.querySelectorAll(".option_selected.selected"))
                     .map(sel => sel.closest("a.option").querySelector("h5").textContent) : [];
 
-            for (const [i, article] of Array.from(document.querySelectorAll(".grid_view article")).entries()) {
-                const font = fonts[i];
-                if (!font) continue;
+            let visibleCount = 0;
+
+            if (isGridView) {
+                visibleCount = filterArticles(selectedTags, selectedFoundries, selectedFamilySizes, selectedVariables, fonts);
                 
-                let show = true;
+                document.querySelectorAll('.list').forEach(listItem => {
+                    listItem.style.display = 'none';
+                });
+            } else {
+                visibleCount = filterListItems(selectedTags, selectedFoundries, selectedFamilySizes, selectedVariables, fonts);
+                
+                document.querySelectorAll('article').forEach(article => {
+                    article.style.display = 'none';
+                });
+            }
 
-                // by tags
-                if (selectedTags.length > 0 && font.tags) {
-                    if (!selectedTags.some(tag => font.tags.includes(tag))) {
-                        show = false;
-                    }
-                }
-
-                // by foundry
-                if (selectedFoundries.length > 0) {
-                    if (!selectedFoundries.includes(font.foundry)) {
-                        show = false;
-                    }
-                }
-
-                // by family size
-                if (selectedFamilySizes.length > 0) {
-                    const n = font.weights.length;
-                    let size = "";
-                    
-                    if (n === 1) size = "single";
-                    else if (n <= 6) size = "small";
-                    else if (n <= 10) size = "medium";
-                    else if (n <= 20) size = "large";
-                    else size = "xlarge";
-
-                    if (!selectedFamilySizes.includes(size)) {
-                        show = false;
-                    }
-                }
-
-                //  by variable
-                if (selectedVariables.length > 0) {
-                    const type = font.variable ? "Variable" : "Static";
-                    if (!selectedVariables.includes(type)) {
-                        show = false;
-                    }
-                }
-
-                article.style.display = show ? "block" : "none";
+            const noResults = document.getElementById("no_results");
+            if (noResults) {
+                noResults.style.display = visibleCount === 0 ? "block" : "none";
             }
         }
 
@@ -599,16 +749,41 @@ document.addEventListener("DOMContentLoaded", async () => {
                 }
             }
 
-            for (const a of document.querySelectorAll(".grid_view article")) {
-                a.style.display = "block";
-            }
-            
+            filterFonts();
             updateCounter();
         });
 
         // =========================
         // INITIAL CALLS
         // =========================
+        document.querySelectorAll('.list').forEach(listItem => {
+            listItem.style.display = 'none';
+        });
+        
+        document.querySelectorAll('article').forEach(article => {
+            article.style.display = 'block';
+        });
+
+        function setInitialCardHeights() {
+            if (!articles.length) return;
+
+            for (const c of articles) {
+                c.style.height = "auto";
+            }
+
+            initialMaxHeight = 0;
+            for (const c of articles) {
+                const height = c.offsetHeight;
+                if (height > initialMaxHeight) {
+                    initialMaxHeight = height;
+                }
+            }
+
+            for (const c of articles) {
+                c.style.height = initialMaxHeight + "px";
+            }
+        }
+
         setTimeout(() => {
             setInitialCardHeights();
             updateCounter();

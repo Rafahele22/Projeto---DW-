@@ -36,6 +36,7 @@ body {
 
 a {
     text-decoration: none;
+    cursor: pointer;
 }
 
 /* ===== TYPOGRAPHY ===== */
@@ -136,10 +137,12 @@ nav {
     background-color: var(--dark-grey);
 }
 
-.button img {
+.button img, .check-icon {
     width: 1vw;
     height: auto;
 }
+
+
 
 .selected {
     background-color: var(--purple);
@@ -217,6 +220,13 @@ main {
   position: relative;
 }
 
+#no_results {
+    display:none; 
+    text-align:center; 
+    margin-top:5vh;
+    width: 100%;
+}
+
 
 /* ===== TAGS SECTION ===== */
 #tags {
@@ -249,6 +259,7 @@ main {
 #tags .button.tag-btn.selected h4 {
     color: var(--light_grey);
 }
+
 
 /* ===== FILTER SECTIONS ===== */
 .filters_section {
@@ -310,11 +321,7 @@ main {
     position: relative;
     border: 2px solid var(--black);
     border-radius: 5vh;
-    min-width: 0;
-    min-height: 0;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
+    cursor: pointer;
 }
 
 .grid_view article > * {
@@ -330,9 +337,22 @@ main {
     display: flex;
     align-items: center;           
     justify-content: center;  
-    padding: 2vh 0;   
+    padding: 2vh 0;  
+    padding-bottom: 12vh; 
 }
 
+.grid_view article h1 {
+    flex-grow: 1; 
+    display: flex;
+    align-items: center;           
+    justify-content: center;  
+    padding: 2vh 0;  
+    padding-bottom: 12vh; 
+}
+
+.grid_view article:hover {
+    background-color: var(--grey);
+}
 
 .grid_information {
     display: flex;
@@ -344,20 +364,29 @@ main {
     min-width: 0;
 }
 
+.grid_information:last-of-type {
+    position: absolute;
+    bottom: 0;
+}
+
 /* ===== LIST VIEW ===== */
 
 .list {
     position: relative;
-    grid-column: 1/5;
     border: 2px solid var(--black);
     border-radius: 5vh;
     padding: 1.5vw;
+    width: auto;
 }
 
 .list h1 {
     font-size: 3.5vw;
     line-height: 3.5vw;
     padding-top: 4vh;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 11vh;
 }
 
 .list_information_bar {
@@ -370,7 +399,14 @@ main {
     display: flex;
     justify-content: flex-start;
     align-items: center;
+}
+
+.list_information_bar .list_information:first-of-type {
     gap: 2vw;
+}
+
+.list_information_bar .list_information {
+    gap: 0.5vw;
 }
 
 .grid.list_view {
@@ -385,7 +421,7 @@ main {
 .save {
     position: absolute;
     top: 9vh;
-    background-color: var(--grey);
+    background-color: var(--light_grey);
     width: 15vw;
     border-radius: 2vh;
     padding: 2%;
@@ -416,16 +452,61 @@ main {
     align-items: center;
     justify-content: space-between;
     padding: 10px 10px;
-    background-color: var(--grey);
+    background-color: var(--light_grey);
     gap: 0.5vw;
     border-radius: 1vh;
 }
 
 .save a:hover, .save_list a:hover {
-    background-color: var(--dark-grey);
+    background-color: var(--grey);
 }
 
 .save a div, .save_list a div  {
     display: flex;
     gap: 0.5vw;
 }
+
+.grid_view article:hover .save-btn:not(.selected) {
+    background-color: var(--light_grey);
+}
+
+.save-btn.selected,
+.save-btn.selected:hover,
+.save-btn:hover:not(.selected),
+.save-btn:hover,
+.grid_view article .save-btn.selected,
+.grid_view article:hover .save-btn.selected {
+    background-color: var(--purple) !important;
+}
+
+.save-btn.selected h4,
+.save-btn.selected:hover h4,
+.save-btn:hover:not(.selected) h4,
+.save-btn:hover h4,
+.grid_view article .save-btn.selected h4,
+.grid_view article:hover .save-btn.selected h4 {
+    color: var(--light_grey) !important;
+}
+
+.save a .check-icon,
+.save_list a .check-icon,
+.save a.selected-option .add-text,
+.save_list a.selected-option .add-text {
+    display: none !important;
+}
+
+.save a .add-text,
+.save_list a .add-text {
+    display: none; 
+}
+
+.save a:hover:not(.selected-option) .add-text,
+.save_list a:hover:not(.selected-option) .add-text {
+    display: block !important;
+}
+
+.save a.selected-option .check-icon,
+.save_list a.selected-option .check-icon {
+    display: block !important;
+}
+
