@@ -2,7 +2,7 @@
   "name": "fontoscope",
   "version": "1.0.0",
   "description": "Font management application with Electron",
-  "main": "electron/main.js",
+  "main": "electron/app.js",
   "scripts": {
     "start": "electron .",
     "server": "node server/server.js",
