@@ -1,0 +1,24 @@
+{
+  "name": "fontoscope",
+  "version": "1.0.0",
+  "description": "Font management application with Electron",
+  "main": "electron/main.js",
+  "scripts": {
+    "start": "electron .",
+    "server": "node server/server.js",
+    "import": "node data/import.js"
+  },
+  "keywords": [
+    "electron",
+    "fonts",
+    "mongodb"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^28.3.3"
+  },
+  "dependencies": {
+    "mongodb": "^6.21.0"
+  }
+}

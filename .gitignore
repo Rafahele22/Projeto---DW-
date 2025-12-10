@@ -1,0 +1,9 @@
+node_modules/
+.DS_Store
+*.log
+npm-debug.log*
+dist/
+.env
+.vscode/
+Project-1.pdf
+data/
