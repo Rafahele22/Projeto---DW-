@@ -30,8 +30,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         const listImg = listViewBtn.querySelector('img');
         
         if (gridImg && listImg) {
-            gridImg.src = 'assets/imgs/grid.svg';
-            listImg.src = 'assets/imgs/list_selected.svg';
+            gridImg.src = '../assets/imgs/grid.svg';
+            listImg.src = '../assets/imgs/list_selected.svg';
         }
         
         mainGrid.classList.remove('grid_view');
@@ -51,8 +51,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         const listImg = listViewBtn.querySelector('img');
         
         if (gridImg && listImg) {
-            gridImg.src = 'assets/imgs/grid_selected.svg';
-            listImg.src = 'assets/imgs/list.svg';
+            gridImg.src = '../assets/imgs/grid_selected.svg';
+            listImg.src = '../assets/imgs/list.svg';
         }
         
         mainGrid.classList.remove('list_view');
@@ -138,15 +138,15 @@ document.addEventListener("DOMContentLoaded", async () => {
                     ${font.variable ? '<h3>Variable</h3>' : ''}
                 </section>
                 <section class="list_information">
-                    <a href="#" class="fav-btn"><img src="assets/imgs/fav.svg" alt="favourite"/></a>
+                    <a href="#" class="fav-btn"><img src="../assets/imgs/fav.svg" alt="favourite"/></a>
                     <a href="#" class="button save-btn">
                         <h4>Save</h4>
                     </a>
                 </section>
                 <section class="save_list">
                     <h4>Save font on...</h4>
-                    <a href="#"><div><h4>Aa</h4><h4>Web</h4></div><h5 class="add-text">add</h5><img src="assets/imgs/check.svg" class="check-icon" alt="check icon"></a>
-                    <a href="#"><div><h4>Aa</h4><h4>Print</h4></div><h5 class="add-text">add</h5><img src="assets/imgs/check.svg" class="check-icon" alt="check icon"></a>
+                    <a href="#"><div><h4>Aa</h4><h4>Web</h4></div><h5 class="add-text">add</h5><img src="../assets/imgs/check.svg" class="check-icon" alt="check icon"></a>
+                    <a href="#"><div><h4>Aa</h4><h4>Print</h4></div><h5 class="add-text">add</h5><img src="../assets/imgs/check.svg" class="check-icon" alt="check icon"></a>
                 </section>
             </div>
             <h1 style="font-family:'${font._id}-font'">${displayText}</h1>
@@ -413,7 +413,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // LOAD JSON AND BUILD UI
     // =========================
     try {
-        const response = await fetch("./assets/data.json");
+        const response = await fetch("../assets/data.json");
         const fonts = await response.json();
         
         const allTags = [];
@@ -586,7 +586,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     <a href="#" class="button save-btn">
                         <h4>Save</h4>
                     </a>
-                    <a href="#" class="fav-btn"><img src="assets/imgs/fav.svg" alt="favourite"/></a>
+                    <a href="#" class="fav-btn"><img src="../assets/imgs/fav.svg" alt="favourite"/></a>
                 </section>
                 <section class="save">
                     <h4>Save font on...</h4>
