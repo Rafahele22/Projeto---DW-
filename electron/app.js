@@ -14,7 +14,7 @@ function createWindow() {
         show: false
     });
 
-    mainWindow.loadURL('http://localhost:4000');
+    mainWindow.loadFile(path.join(__dirname, '../public/main.html'));
 
     mainWindow.once('ready-to-show', () => {
         mainWindow.show();
