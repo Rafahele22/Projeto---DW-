@@ -416,6 +416,11 @@ main {
     width: 100%;
 }
 
+.grid.list_view.shifted {
+    margin-left: 24.2vw;
+    width: calc(100% - 24.2vw);
+}
+
 .list:hover {
     background-color: var(--grey);
 }

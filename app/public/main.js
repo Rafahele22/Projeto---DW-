@@ -20,42 +20,52 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (!gridViewBtn || !listViewBtn || !mainGrid) return;
         
         function toggleViewMode() {
-            if (isGridView) {
-                gridViewBtn.id = '';
-                listViewBtn.id = 'view_mode_selected';
-                
-                const gridImg = gridViewBtn.querySelector('img');
-                const listImg = listViewBtn.querySelector('img');
-                
-                if (gridImg && listImg) {
-                    gridImg.src = 'assets/imgs/grid.svg';
-                    listImg.src = 'assets/imgs/list_selected.svg';
-                }
-                
-                mainGrid.classList.remove('grid_view');
-                mainGrid.classList.add('list_view');
-                isGridView = false;
-                
-                filterFonts();
-            } else {
-                listViewBtn.id = '';
-                gridViewBtn.id = 'view_mode_selected';
-                
-                const gridImg = gridViewBtn.querySelector('img');
-                const listImg = listViewBtn.querySelector('img');
-                
-                if (gridImg && listImg) {
-                    gridImg.src = 'assets/imgs/grid_selected.svg';
-                    listImg.src = 'assets/imgs/list.svg';
-                }
-                
-                mainGrid.classList.remove('list_view');
-                mainGrid.classList.add('grid_view');
-                isGridView = true;
-                
-                filterFonts();
-            }
+    const filtersOpen = filtersPanel.style.display === "flex";
+    
+    if (isGridView) {
+        gridViewBtn.id = '';
+        listViewBtn.id = 'view_mode_selected';
+        
+        const gridImg = gridViewBtn.querySelector('img');
+        const listImg = listViewBtn.querySelector('img');
+        
+        if (gridImg && listImg) {
+            gridImg.src = 'assets/imgs/grid.svg';
+            listImg.src = 'assets/imgs/list_selected.svg';
         }
+        
+        mainGrid.classList.remove('grid_view');
+        mainGrid.classList.add('list_view');
+        isGridView = false;
+        
+        if (filtersOpen) {
+            mainGrid.classList.add('shifted');
+        }
+        
+        filterFonts();
+    } else {
+        listViewBtn.id = '';
+        gridViewBtn.id = 'view_mode_selected';
+        
+        const gridImg = gridViewBtn.querySelector('img');
+        const listImg = listViewBtn.querySelector('img');
+        
+        if (gridImg && listImg) {
+            gridImg.src = 'assets/imgs/grid_selected.svg';
+            listImg.src = 'assets/imgs/list.svg';
+        }
+        
+        mainGrid.classList.remove('list_view');
+        mainGrid.classList.add('grid_view');
+        isGridView = true;
+        
+        if (filtersOpen) {
+            mainGrid.classList.add('shifted');
+        }
+        
+        filterFonts();
+    }
+}
         
         gridViewBtn.addEventListener('click', (e) => {
             e.preventDefault();
@@ -82,9 +92,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
     
-    // =========================
-    // GERAR ITENS DE LISTA
-    // =========================
     function truncateToSingleLine(element) {
     const originalText = element.innerText;
     let low = 0;
@@ -163,9 +170,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 }
     
-    // =========================
-    // CONFIGURAR EVENTOS DOS ITENS DE LISTA
-    // =========================
     function setupListItemEvents(listItem, font) {
         // FAVOURITE
         const favBtn = listItem.querySelector('.fav-btn img');
