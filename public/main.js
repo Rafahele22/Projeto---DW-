@@ -158,7 +158,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         style.textContent = `
             @font-face {
                 font-family:'${font._id}-font';
-                src:url('assets/fonts/${defaultWeight.file}');
+                src:url('../assets/fonts/${defaultWeight.file}');
             }
         `;
         document.head.appendChild(style);
