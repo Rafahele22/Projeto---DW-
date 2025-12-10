@@ -278,7 +278,7 @@ main {
 }
 
 .option_selected {
-    border: 2px solid var(--purple);
+    border: 1px solid var(--purple);
     border-radius: 5vh;
     width: 1vw;
     height: 1vw;
@@ -319,7 +319,7 @@ main {
 
 .grid_view article {
     position: relative;
-    border: 2px solid var(--black);
+    border: 1px solid var(--black);
     border-radius: 5vh;
     cursor: pointer;
 }
@@ -373,7 +373,7 @@ main {
 
 .list {
     position: relative;
-    border: 2px solid var(--black);
+    border: 1px solid var(--black);
     border-radius: 5vh;
     padding: 1.5vw;
     width: auto;
