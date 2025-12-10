@@ -814,3 +814,5 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.error("Error loading JSON:", err);
     }
 });
+
+console.log(require("process").platform)
