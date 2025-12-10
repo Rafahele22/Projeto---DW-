@@ -416,6 +416,10 @@ main {
     width: 100%;
 }
 
+.list:hover {
+    background-color: var(--grey);
+}
+
 
 /* ===== SAVE MENU ===== */
 .save {
@@ -433,7 +437,7 @@ main {
     position: absolute;
     top: 8vh;
     right: 1.8vw; 
-    background-color: var(--grey);
+    background-color: var(--light_grey);
     width: 15vw;
     border-radius: 2vh;
     padding: 0.5%;
@@ -466,25 +470,21 @@ main {
     gap: 0.5vw;
 }
 
-.grid_view article:hover .save-btn:not(.selected) {
+.grid_view article:hover .save-btn:not(.selected), .list:hover .save-btn:not(.selected) {
     background-color: var(--light_grey);
 }
 
 .save-btn.selected,
 .save-btn.selected:hover,
 .save-btn:hover:not(.selected),
-.save-btn:hover,
-.grid_view article .save-btn.selected,
-.grid_view article:hover .save-btn.selected {
+.save-btn:hover {
     background-color: var(--purple) !important;
 }
 
 .save-btn.selected h4,
 .save-btn.selected:hover h4,
 .save-btn:hover:not(.selected) h4,
-.save-btn:hover h4,
-.grid_view article .save-btn.selected h4,
-.grid_view article:hover .save-btn.selected h4 {
+.save-btn:hover h4 {
     color: var(--light_grey) !important;
 }
 
@@ -509,4 +509,3 @@ main {
 .save_list a.selected-option .check-icon {
     display: block !important;
 }
-
