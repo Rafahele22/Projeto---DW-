@@ -1,4 +1,12 @@
-document.addEventListener("DOMContentLoaded", async () => {
+async function main() {
+    // Verificar login e atualizar UI
+    const abaCollections = document.getElementById('abaCollections');
+    const userLoggedIn = localStorage.getItem('user') !== null;
+    
+    if (abaCollections) {
+        abaCollections.style.display = userLoggedIn ? '' : 'none';
+    }
+
     const grid = document.querySelector(".grid.grid_view");
     const filtersBtn = document.querySelector('#filters_btn');
     const filtersPanel = document.querySelector("#filters");
@@ -813,6 +821,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     } catch (err) {
         console.error("Error loading JSON:", err);
     }
-});
+};
 
+main();
 console.log(require("process").platform)

@@ -519,3 +519,38 @@ main {
 .save_list a.selected-option .check-icon {
     display: block !important;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* login */
+
+
+
+
+.loginContentor {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
+
+
+    height: 40vh;
+    width: 20vw;
+    background-color: #e0e0e0;
+    transform: translate(75vw, 17.25vh);
+    border-radius: 12pt;
+
+    padding: 1vh;
+}
