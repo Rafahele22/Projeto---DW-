@@ -430,6 +430,12 @@ main {
     background-color: var(--grey);
 }
 
+.divLabel {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
 
 /* ===== SAVE MENU ===== */
 .save {
@@ -535,9 +541,6 @@ main {
 
 /* login */
 
-
-
-
 .loginContentor {
     position: absolute;
     display: flex;
@@ -554,3 +557,109 @@ main {
 
     padding: 1vh;
 }
+
+
+
+
+input[type="range"]{
+    -webkit-appearance: none;
+    appearance: none;
+    width: 7vw;
+    background: transparent;
+    cursor: pointer;
+}
+
+input[type="range"]:focus {
+    outline: none;
+}
+
+
+.divLabel {
+    height: 3vh;
+    width: 7.5vw;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+}
+
+
+.divLabel>label, .divLabel>.range-container{
+    position: absolute;
+}
+
+.rangeLabel{
+    position: absolute;
+    /* height: 5vh; */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2vh;
+}
+
+.divLabel span{
+    font-family: "roboto medium";
+    font-size: 1.15vh;
+}
+
+
+
+
+/*barra do ranger*/
+
+input[type="range"]::-moz-range-track {
+    background: rgb(30,30,30);
+    height: 0.1vh;
+    border-radius: 1vh;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+    background: rgb(30,30,30);
+    height: 0.1vh;
+    border-radius: 1vh;
+}
+
+input[type="range"]::-ms-track {
+    background: rgb(30,30,30);
+    height: 0.1vh;
+    border-radius: 1vh;
+    border: none;
+    color: transparent;
+}
+
+/*botao do ranger*/
+
+input[type="range"]::-moz-range-thumb {
+    width: 1vw;
+    height: 1vw;
+    background: rgb(30,30,30);
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 1vw;
+    height: 1vw;
+    background: rgb(30,30,30);
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+    margin-top: -0.45vh;
+}
+
+input[type="range"]::-ms-thumb {
+    width: 1vw;
+    height: 1vw;
+    background: rgb(30,30,30);
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+}
+
+
+

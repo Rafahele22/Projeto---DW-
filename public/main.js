@@ -144,6 +144,35 @@ async function main() {
                     ${font.foundry !== "Unknown" ? `<h3>${font.foundry}</h3>` : ""}
                     <h3>${numStyles} ${numStyles === 1 ? 'style' : 'styles'}</h3>
                     ${font.variable ? '<h3>Variable</h3>' : ''}
+
+
+                    <div class="divLabel">
+                        <label class="rangeLabel" for="fontSize">
+                            <span>Font size</span>
+                            <span class="range-value" id="fontSizeValue">48pt</span>
+                        </label>
+                        <div class="range-container">
+                            <input type="range" id="fontSize" min="12" max="200" value="48">
+                        </div>
+                    </div>
+                    <div class="divLabel">
+                        <label class="rangeLabel" for="letterSpacing">
+                            <span>Characters spacing</span>  
+                            <span class="range-value" id="letterSpacingValue">0pt</span>
+                        </label>
+                        <div class="range-container">
+                            <input type="range" id="letterSpacing" min="-5" max="50" value="0" step="0.5">
+                        </div>
+                    </div>
+                    <div class="divLabel">
+                        <label class="rangeLabel" for="lineHeight">
+                            <span>Line spacing</span>
+                            <span class="range-value" id="lineHeightValue">1.5</span>
+                        </label>
+                        <div class="range-container">
+                            <input type="range" id="lineHeight" min="0.8" max="3" value="1.5" step="0.1">
+                        </div>
+                    </div>
                 </section>
                 <section class="list_information">
                     <a href="#" class="fav-btn"><img src="../assets/imgs/fav.svg" alt="favourite"/></a>
@@ -157,7 +186,7 @@ async function main() {
                     <a href="#"><div><h4>Aa</h4><h4>Print</h4></div><h5 class="add-text">add</h5><img src="../assets/imgs/check.svg" class="check-icon" alt="check icon"></a>
                 </section>
             </div>
-            <h1 style="font-family:'${font._id}-font'">${displayText}</h1>
+            <h1 contenteditable="true" style="font-family:'${font._id}-font'; word-wrap: break-word; overflow-wrap: break-word; white-space: normal; outline: none;">${displayText}</h1>
         `;
         
         grid.appendChild(listDiv);
@@ -172,11 +201,10 @@ async function main() {
         document.head.appendChild(style);
 
         const h1 = listDiv.querySelector("h1");
-        truncateToSingleLine(h1);
         
         setupListItemEvents(listDiv, font);
     });
-}
+   }
     
     function setupListItemEvents(listItem, font) {
         // FAVOURITE
@@ -228,6 +256,54 @@ async function main() {
                 e.stopPropagation();
                 
                 option.classList.toggle('selected-option');
+            });
+        });
+        
+        // FONT CONTROLS - Dynamic font testing
+        const h1 = listItem.querySelector('h1');
+        const fontSize = listItem.querySelector('#fontSize');
+        const letterSpacing = listItem.querySelector('#letterSpacing');
+        const lineHeight = listItem.querySelector('#lineHeight');
+        
+        const fontSizeValue = listItem.querySelector('#fontSizeValue');
+        const letterSpacingValue = listItem.querySelector('#letterSpacingValue');
+        const lineHeightValue = listItem.querySelector('#lineHeightValue');
+        
+        if (fontSize && fontSizeValue && h1) {
+            fontSize.addEventListener('input', function() {
+                fontSizeValue.textContent = this.value + 'pt';
+                h1.style.fontSize = this.value + 'pt';
+            });
+        }
+        
+        if (letterSpacing && letterSpacingValue && h1) {
+            letterSpacing.addEventListener('input', function() {
+                letterSpacingValue.textContent = this.value + 'pt';
+                h1.style.letterSpacing = this.value + 'pt';
+            });
+        }
+        
+        if (lineHeight && lineHeightValue && h1) {
+            lineHeight.addEventListener('input', function() {
+                lineHeightValue.textContent = this.value;
+                h1.style.lineHeight = this.value;
+            });
+        }
+        
+        // SHOW/HIDE CONTROLS ON HOVER
+        const divLabels = listItem.querySelectorAll('.divLabel');
+        
+        listItem.addEventListener('mouseenter', () => {
+            divLabels.forEach(label => {
+                label.style.opacity = '1';
+                label.style.pointerEvents = 'auto';
+            });
+        });
+        
+        listItem.addEventListener('mouseleave', () => {
+            divLabels.forEach(label => {
+                label.style.opacity = '0';
+                label.style.pointerEvents = 'none';
             });
         });
     }
@@ -824,4 +900,5 @@ async function main() {
 };
 
 main();
+
 console.log(require("process").platform)
