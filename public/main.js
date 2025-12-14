@@ -121,7 +121,7 @@ async function main() {
     element.innerText = truncated;
 }
 
-   function generateListItems(fonts) {
+      function generateListItems(fonts) {
     const grid = document.querySelector(".grid.grid_view");
     if (!grid) return;
     
@@ -137,6 +137,7 @@ async function main() {
         const listDiv = document.createElement("div");
         listDiv.className = "list";
         
+        // HTML SEM SLIDERS (LIMPO)
         listDiv.innerHTML = `
             <div class="list_information_bar">
                 <section class="list_information">
@@ -144,35 +145,6 @@ async function main() {
                     ${font.foundry !== "Unknown" ? `<h3>${font.foundry}</h3>` : ""}
                     <h3>${numStyles} ${numStyles === 1 ? 'style' : 'styles'}</h3>
                     ${font.variable ? '<h3>Variable</h3>' : ''}
-
-
-                    <div class="divLabel">
-                        <label class="rangeLabel" for="fontSize">
-                            <span>Font size</span>
-                            <span class="range-value" id="fontSizeValue">48pt</span>
-                        </label>
-                        <div class="range-container">
-                            <input type="range" id="fontSize" min="12" max="200" value="48">
-                        </div>
-                    </div>
-                    <div class="divLabel">
-                        <label class="rangeLabel" for="letterSpacing">
-                            <span>Characters spacing</span>  
-                            <span class="range-value" id="letterSpacingValue">0pt</span>
-                        </label>
-                        <div class="range-container">
-                            <input type="range" id="letterSpacing" min="-5" max="50" value="0" step="0.5">
-                        </div>
-                    </div>
-                    <div class="divLabel">
-                        <label class="rangeLabel" for="lineHeight">
-                            <span>Line spacing</span>
-                            <span class="range-value" id="lineHeightValue">1.5</span>
-                        </label>
-                        <div class="range-container">
-                            <input type="range" id="lineHeight" min="0.8" max="3" value="1.5" step="0.1">
-                        </div>
-                    </div>
                 </section>
                 <section class="list_information">
                     <a href="#" class="fav-btn"><img src="../assets/imgs/fav.svg" alt="favourite"/></a>
@@ -189,6 +161,20 @@ async function main() {
             <h1 contenteditable="true" style="font-family:'${font._id}-font'; word-wrap: break-word; overflow-wrap: break-word; white-space: normal; outline: none;">${displayText}</h1>
         `;
         
+        // ADICIONAR O CLIQUE PARA ABRIR A SINGLE VIEW
+listDiv.addEventListener('click', (e) => {
+    // Evitar disparar se clicou em botões, inputs, ou no H1 editável
+    if (e.target.closest('a') || 
+        e.target.closest('input') || 
+        e.target.closest('.save_list') || 
+        e.target.closest('.range-container') ||
+        e.target.closest('h1[contenteditable="true"]')) {
+        return;
+    }
+    showSingleFont(font);
+});
+
+
         grid.appendChild(listDiv);
 
         const style = document.createElement("style");
@@ -199,14 +185,13 @@ async function main() {
             }
         `;
         document.head.appendChild(style);
-
-        const h1 = listDiv.querySelector("h1");
         
         setupListItemEvents(listDiv, font);
     });
    }
+
     
-    function setupListItemEvents(listItem, font) {
+        function setupListItemEvents(listItem, font) {
         // FAVOURITE
         const favBtn = listItem.querySelector('.fav-btn img');
         if (favBtn) {
@@ -291,22 +276,26 @@ async function main() {
         }
         
         // SHOW/HIDE CONTROLS ON HOVER
-        const divLabels = listItem.querySelectorAll('.divLabel');
-        
-        listItem.addEventListener('mouseenter', () => {
-            divLabels.forEach(label => {
-                label.style.opacity = '1';
-                label.style.pointerEvents = 'auto';
+        // SÓ ADICIONA O EVENTO SE NÃO ESTIVER EM MODO SINGLE VIEW (FORCE-VISIBLE)
+        if (!listItem.classList.contains('force-visible')) {
+            const divLabels = listItem.querySelectorAll('.divLabel');
+            
+            listItem.addEventListener('mouseenter', () => {
+                divLabels.forEach(label => {
+                    label.style.opacity = '1';
+                    label.style.pointerEvents = 'auto';
+                });
             });
-        });
-        
-        listItem.addEventListener('mouseleave', () => {
-            divLabels.forEach(label => {
-                label.style.opacity = '0';
-                label.style.pointerEvents = 'none';
+            
+            listItem.addEventListener('mouseleave', () => {
+                divLabels.forEach(label => {
+                    label.style.opacity = '0';
+                    label.style.pointerEvents = 'none';
+                });
             });
-        });
+        }
     }
+
     
     // =========================
     // FILTER LIST VIEW
@@ -655,7 +644,7 @@ async function main() {
 
         generateListItems(fonts);
         
-        for (const [index, font] of fonts.entries()) {
+               for (const [index, font] of fonts.entries()) {
             const defaultWeight = font.weights.find(w => w.default) || font.weights[0];
             const fontPath = `assets/fonts/${defaultWeight.file}`;
             const numStyles = font.weights.length;
@@ -664,6 +653,15 @@ async function main() {
 
             const article = document.createElement("article");
             article.dataset.fontId = font._id;
+
+            // ADICIONAR CLIQUE PARA SINGLE VIEW NO GRID
+            article.addEventListener('click', (e) => {
+                // Prevenir clique nos botões
+                if (e.target.closest('a') || e.target.closest('button') || e.target.closest('.save')) {
+                    return; 
+                }
+                showSingleFont(font);
+            });
 
             article.innerHTML = `
                 <section class="grid_information">
@@ -706,7 +704,10 @@ async function main() {
             grid.appendChild(article);
             articles.push(article);
 
-            // FAVOURITE
+            // ... (O resto dos seus event listeners de FAV e SAVE já existentes no loop mantêm-se aqui) ...
+            // Certifique-se apenas que o bloco article.addEventListener('click'... está lá.
+            
+            // --- CÓDIGO DO SAVE/FAV EXISTENTE ---
             const favImg = article.querySelector(".fav-btn img");
             favImg.addEventListener("click", (e) => {
                 e.preventDefault();
@@ -715,7 +716,6 @@ async function main() {
                 favImg.src = selected ? "assets/imgs/fav.svg" : "assets/imgs/fav_selected.svg";
             });
 
-            // SAVE BUTTON
             const saveMenu = article.querySelector(".save");
             const saveBtn = article.querySelector(".save-btn");
             saveMenu.style.display = "none";
@@ -732,7 +732,6 @@ async function main() {
                 });
 
                 const isOpening = saveMenu.style.display === "none";
-                
                 saveMenu.style.display = isOpening ? "block" : "none";
                 
                 if (isOpening) {
@@ -741,14 +740,12 @@ async function main() {
                     saveBtn.classList.remove("selected");
                 }
             });
-
-            // SAVE OPTIONS 
+            
             const saveOptions = article.querySelectorAll('.save-option');
             saveOptions.forEach(option => {
                 option.addEventListener('click', (e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    
                     option.classList.toggle('selected-option');
                 });
             });
@@ -764,6 +761,7 @@ async function main() {
                     saveBtn.classList.remove("selected");
                 }
             });
+            // ------------------------------------
         }
 
         setupViewModeToggle(articles, fonts);
@@ -902,3 +900,193 @@ async function main() {
 main();
 
 console.log(require("process").platform)
+
+
+    // ==========================================
+    // NOVA FUNÇÃO: SINGLE FONT VIEW (ESTRUTURA SEPARADA)
+    // ==========================================
+    function showSingleFont(font) {
+        const grid = document.querySelector(".grid");
+        
+        // 1. Limpar a grelha e preparar o modo
+        grid.innerHTML = '';
+        grid.classList.remove('grid_view');
+        grid.classList.add('list_view');
+        grid.classList.add('single-view-mode');
+
+        // 2. Preparar dados
+        const defaultWeight = font.weights.find(w => w.default) || font.weights[0];
+        const numStyles = font.weights.length;
+        const hasAllCaps = font.tags && font.tags.includes("All Caps");
+        const sampleText = "The quick brown fox jumps over the lazy dog.";
+        const displayText = hasAllCaps ? sampleText.toUpperCase() : sampleText;
+
+        // 3. CRIAR A BARRA DE CONTROLOS (FORA DA BORDA)
+        const controlsDiv = document.createElement("div");
+        controlsDiv.className = "bar_individual_font"; 
+        // Adicionamos esta classe para garantir que os sliders ficam visíveis via CSS
+        controlsDiv.classList.add("force-visible-controls"); 
+        
+        controlsDiv.innerHTML = `
+            <a href="#" class="button" id="backToCollection">
+                <img src="../assets/imgs/collections.svg" alt="icon my collections"/>
+                <h4>Choose style</h4>
+            </a>
+            
+            <div class="sliders">
+                <div class="divLabel">
+                    <label class="rangeLabel" for="fontSize">
+                        <span>font size</span>
+                        <span class="range-value" id="fontSizeValue">48pt</span>
+                    </label>
+                    <div class="range-container">
+                        <input type="range" id="fontSize" min="12" max="200" value="48">
+                    </div>
+                </div>
+                <div class="divLabel">
+                    <label class="rangeLabel" for="letterSpacing">
+                        <span>tracking</span>  
+                        <span class="range-value" id="letterSpacingValue">0pt</span>
+                    </label>
+                    <div class="range-container">
+                        <input type="range" id="letterSpacing" min="-5" max="50" value="0" step="0.5">
+                    </div>
+                </div>
+                <div class="divLabel">
+                    <label class="rangeLabel" for="lineHeight">
+                        <span>leading</span>
+                        <span class="range-value" id="lineHeightValue">1.5</span>
+                    </label>
+                    <div class="range-container">
+                        <input type="range" id="lineHeight" min="0.8" max="3" value="1.5" step="0.1">
+                    </div>
+                </div>
+            </div>
+
+            <div class="actions-wrapper" style="display:flex; gap:1vw;">
+                <section class="list_information">
+                    <a href="#" class="button save-btn">
+                        <h4>Serif</h4>
+                    </a>
+                    <a href="#" class="button save-btn">
+                        <h4>All Caps</h4>
+                    </a>
+                </section>
+                
+            </div>
+        `;
+
+        // 4. CRIAR O BLOCO DA FONTE (COM BORDA - CLASSE .LIST)
+        const listDiv = document.createElement("div");
+        listDiv.className = "list";
+        
+        listDiv.innerHTML = `
+            <div class="list_information_bar">
+                <section class="list_information">
+                    <h3>${font.name}</h3>
+                    ${font.foundry !== "Unknown" ? `<h3>${font.foundry}</h3>` : ""}
+                    <h3>${numStyles} ${numStyles === 1 ? 'style' : 'styles'}</h3>
+                    ${font.variable ? '<h3>Variable</h3>' : ''}
+                </section>
+                <div class="actions-wrapper" style="display:flex; gap:1vw;">
+                <section class="list_information">
+                    <a href="#" class="fav-btn"><img src="../assets/imgs/fav.svg" alt="favourite"/></a>
+                    <a href="#" class="button save-btn">
+                        <h4>Save</h4>
+                    </a>
+                </section>
+                
+                <section class="save_list">
+                    <h4>Save font on...</h4>
+                    <a href="#"><div><h4>Aa</h4><h4>Web</h4></div><h5 class="add-text">add</h5><img src="../assets/imgs/check.svg" class="check-icon" alt="check icon"></a>
+                    <a href="#"><div><h4>Aa</h4><h4>Print</h4></div><h5 class="add-text">add</h5><img src="../assets/imgs/check.svg" class="check-icon" alt="check icon"></a>
+                </section>
+            </div>
+            </div>
+
+            <h1 contenteditable="true" style="font-family:'${font._id}-font'; word-wrap: break-word; overflow-wrap: break-word; white-space: normal; outline: none;">${displayText}</h1>
+        `;
+
+        // 5. INSERIR AMBOS NA GRID
+        grid.appendChild(controlsDiv);
+        grid.appendChild(listDiv);
+        
+        // 6. CONFIGURAR EVENTOS
+        // Passamos o 'controlsDiv' para configurar os sliders/botões, 
+        // mas precisamos dizer à função onde está o H1 que vai mudar (está no listDiv)
+        setupSingleViewEvents(controlsDiv, listDiv, font);
+
+        // Evento Voltar
+        const backBtn = controlsDiv.querySelector("#backToCollection");
+        if(backBtn) {
+            backBtn.addEventListener("click", (e) => {
+                e.preventDefault();
+                location.reload(); 
+            });
+        }
+    }
+
+    // ==========================================
+    // NOVA FUNÇÃO HELPER PARA EVENTOS DA SINGLE VIEW
+    // (Porque agora os controlos e o H1 estão em divs diferentes)
+    // ==========================================
+    function setupSingleViewEvents(controlsContainer, displayContainer, font) {
+        // FAVOURITE
+        const favBtn = controlsContainer.querySelector('.fav-btn img');
+        if (favBtn) {
+            favBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const selected = favBtn.src.includes("fav_selected.svg");
+                favBtn.src = selected ? "assets/imgs/fav.svg" : "assets/imgs/fav_selected.svg";
+            });
+        }
+        
+        // SAVE MENU
+        const saveMenu = controlsContainer.querySelector('.save_list');
+        const saveBtn = controlsContainer.querySelector('.save-btn');
+        
+        if (saveMenu) saveMenu.style.display = "none";
+        
+        if (saveBtn) {
+            saveBtn.addEventListener("click", (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const isOpening = saveMenu.style.display === "none";
+                saveMenu.style.display = isOpening ? "block" : "none";
+                if (isOpening) saveBtn.classList.add("selected");
+                else saveBtn.classList.remove("selected");
+            });
+        }
+
+        // FONT CONTROLS (Estão no controlsContainer, afetam o displayContainer)
+        const h1 = displayContainer.querySelector('h1');
+        const fontSize = controlsContainer.querySelector('#fontSize');
+        const letterSpacing = controlsContainer.querySelector('#letterSpacing');
+        const lineHeight = controlsContainer.querySelector('#lineHeight');
+        
+        const fontSizeValue = controlsContainer.querySelector('#fontSizeValue');
+        const letterSpacingValue = controlsContainer.querySelector('#letterSpacingValue');
+        const lineHeightValue = controlsContainer.querySelector('#lineHeightValue');
+        
+        if (fontSize && fontSizeValue && h1) {
+            fontSize.addEventListener('input', function() {
+                fontSizeValue.textContent = this.value + 'pt';
+                h1.style.fontSize = this.value + 'pt';
+            });
+        }
+        
+        if (letterSpacing && letterSpacingValue && h1) {
+            letterSpacing.addEventListener('input', function() {
+                letterSpacingValue.textContent = this.value + 'pt';
+                h1.style.letterSpacing = this.value + 'pt';
+            });
+        }
+        
+        if (lineHeight && lineHeightValue && h1) {
+            lineHeight.addEventListener('input', function() {
+                lineHeightValue.textContent = this.value;
+                h1.style.lineHeight = this.value;
+            });
+        }
+    }

@@ -63,7 +63,7 @@ h3 {
 
 h4 {
     color: var(--black);
-    font-family: "roboto medium";
+    font-family: "roboto regular";
     font-size: 1vw;
     margin: 0;
 }
@@ -73,7 +73,7 @@ h4 {
 }
 
 
-h5 {
+h5, .rangeLabel span {
     color: var(--black);
     font-family: "roboto regular";
     font-size: 1vw;
@@ -529,16 +529,6 @@ main {
 
 
 
-
-
-
-
-
-
-
-
-
-
 /* login */
 
 .loginContentor {
@@ -564,7 +554,7 @@ main {
 input[type="range"]{
     -webkit-appearance: none;
     appearance: none;
-    width: 7vw;
+    width: 10vw;
     background: transparent;
     cursor: pointer;
 }
@@ -574,35 +564,77 @@ input[type="range"]:focus {
 }
 
 
+.list.force-visible .divLabel {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+}
+
+
 .divLabel {
-    height: 3vh;
-    width: 7.5vw;
-    position: relative;
     display: flex;
+    justify-content: baseline;
     align-items: center;
-    justify-content: center;
-    
+    width:100%;
 }
 
 
-.divLabel>label, .divLabel>.range-container{
-    position: absolute;
+/* Assegurar que os controlos na barra superior da Single View estão sempre visíveis */
+.bar_individual_font .divLabel {
+    opacity: 1 !important;
+    pointer-events: auto !important;
 }
 
-.rangeLabel{
-    position: absolute;
-    /* height: 5vh; */
+/* Ajustes de layout para a barra separada */
+.bar_individual_font {
     display: flex;
-    flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    gap: 2vh;
+    width: 100%;
+    margin-bottom: 2vh; /* Espaço entre a barra e o bloco da fonte */
+    padding: 0 1vw; /* Alinhar visualmente com a borda do bloco abaixo */
+    box-sizing: border-box;
 }
 
-.divLabel span{
-    font-family: "roboto medium";
-    font-size: 1.15vh;
+.sliders {
+    display: flex;
+    gap: 2vw; /* Espaçamento entre sliders */
 }
+
+/* IMPORTANTE: Ajuste para os labels dos sliders não ficarem absolutos de forma estranha nesta barra */
+.bar_individual_font .divLabel {
+    position: relative; 
+    width: auto;
+    min-width: 8vw;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.bar_individual_font .rangeLabel {
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 0.5vh;
+}
+
+.bar_individual_font .range-container {
+    position: relative;
+}
+
+/* Ajuste para o menu Save aparecer no sítio certo (relativo à barra superior) */
+.bar_individual_font .save_list {
+    top: 100%; /* Aparece logo abaixo do botão */
+    right: 0;
+    margin-top: 1vh;
+}
+
+.actions-wrapper {
+    position: relative; /* Para o save menu posicionar-se relativamente a isto */
+}
+
+
 
 
 
