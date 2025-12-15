@@ -1,5 +1,4 @@
 async function main() {
-    // Verificar login e atualizar UI
     const abaCollections = document.getElementById('abaCollections');
     const userLoggedIn = localStorage.getItem('user') !== null;
     
@@ -14,6 +13,8 @@ async function main() {
     const removeAllFiltersBtn = document.querySelector("#remove_all_filters");
     const tagsContainer = document.querySelector("#tags");
     const filtersCountBubble = filtersBtn?.querySelector("h6");
+    let globalSampleText = "The quick brown fox jumps over the lazy dog.";
+
 
     // =========================
     // VIEW MODE (GRID/LIST)
@@ -121,6 +122,12 @@ async function main() {
     element.innerText = truncated;
 }
 
+
+function normalizeForAllCaps(text) {
+  return (text || "").toUpperCase();
+}
+
+
       function generateListItems(fonts) {
     const grid = document.querySelector(".grid.grid_view");
     if (!grid) return;
@@ -136,8 +143,9 @@ async function main() {
         
         const listDiv = document.createElement("div");
         listDiv.className = "list";
+
+        listDiv.dataset.allCaps = hasAllCaps ? "1" : "0";
         
-        // HTML SEM SLIDERS (LIMPO)
         listDiv.innerHTML = `
             <div class="list_information_bar">
                 <section class="list_information">
@@ -158,12 +166,10 @@ async function main() {
                     <a href="#"><div><h4>Aa</h4><h4>Print</h4></div><h5 class="add-text">add</h5><img src="../assets/imgs/check.svg" class="check-icon" alt="check icon"></a>
                 </section>
             </div>
-            <h1 contenteditable="true" style="font-family:'${font._id}-font'; word-wrap: break-word; overflow-wrap: break-word; white-space: normal; outline: none;">${displayText}</h1>
+            <h1 class="sampleText" contenteditable="true" style="font-family:'${font._id}-font'; word-wrap: break-word; overflow-wrap: break-word; white-space: normal; outline: none;">${displayText}</h1>
         `;
         
-        // ADICIONAR O CLIQUE PARA ABRIR A SINGLE VIEW
 listDiv.addEventListener('click', (e) => {
-    // Evitar disparar se clicou em botões, inputs, ou no H1 editável
     if (e.target.closest('a') || 
         e.target.closest('input') || 
         e.target.closest('.save_list') || 
@@ -198,8 +204,8 @@ listDiv.addEventListener('click', (e) => {
             favBtn.addEventListener('click', (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                const selected = favBtn.src.includes("fav_selected.svg");
-                favBtn.src = selected ? "assets/imgs/fav.svg" : "assets/imgs/fav_selected.svg";
+                const selected = favBtn.src.includes("../assets/imgs/fav_selected.svg");
+                favBtn.src = selected ? "../assets/imgs/fav.svg" : "../assets/imgs/fav_selected.svg";
             });
         }
         
@@ -244,7 +250,7 @@ listDiv.addEventListener('click', (e) => {
             });
         });
         
-        // FONT CONTROLS - Dynamic font testing
+        // FONT CONTROLS
         const h1 = listItem.querySelector('h1');
         const fontSize = listItem.querySelector('#fontSize');
         const letterSpacing = listItem.querySelector('#letterSpacing');
@@ -275,8 +281,6 @@ listDiv.addEventListener('click', (e) => {
             });
         }
         
-        // SHOW/HIDE CONTROLS ON HOVER
-        // SÓ ADICIONA O EVENTO SE NÃO ESTIVER EM MODO SINGLE VIEW (FORCE-VISIBLE)
         if (!listItem.classList.contains('force-visible')) {
             const divLabels = listItem.querySelectorAll('.divLabel');
             
@@ -294,6 +298,92 @@ listDiv.addEventListener('click', (e) => {
                 });
             });
         }
+
+       const editable = listItem.querySelector('h1.sampleText');
+
+function renderGlobalTextEverywhere() {
+  document.querySelectorAll('h1.sampleText').forEach(h1 => {
+    if (h1 === document.activeElement) return;
+
+    h1.innerText = globalSampleText;
+  });
+}
+
+//WRITE TXT
+let isCapsLockOn = false;
+document.addEventListener('keydown', (e) => isCapsLockOn = e.getModifierState("CapsLock"));
+document.addEventListener('keyup', (e) => isCapsLockOn = e.getModifierState("CapsLock"));
+
+if (editable) {
+  renderGlobalTextEverywhere();
+
+  editable.addEventListener('input', (e) => {
+    const parent = editable.closest('.list');
+    const isAllCapsBox = parent?.dataset.allCaps === "1";
+    
+    if (!isAllCapsBox) {
+        globalSampleText = editable.innerText;
+        renderGlobalTextEverywhere();
+        return;
+    }
+    
+    const visualText = editable.innerText; 
+    const oldText = globalSampleText;      
+    
+    if (Math.abs(visualText.length - oldText.length) > 1) {
+         globalSampleText = isCapsLockOn ? visualText : visualText.toLowerCase();
+         renderGlobalTextEverywhere();
+         return;
+    }
+
+    if (visualText.length > oldText.length) {
+        
+        let newChar = "";
+        for(let i=0; i<visualText.length; i++) {
+            if (visualText[i] !== oldText[i]?.toUpperCase()) {
+                newChar = visualText[i];
+                break;
+            }
+        }
+        
+        if (!newChar) newChar = visualText[visualText.length - 1];
+
+        const finalChar = isCapsLockOn ? newChar.toUpperCase() : newChar.toLowerCase();
+        
+        if (!isCapsLockOn) {
+            globalSampleText = visualText.toLowerCase();
+        } else {
+
+            let reconstructed = "";
+            let j = 0;
+            
+            for (let i = 0; i < visualText.length; i++) {
+                const visualChar = visualText[i];
+                const oldChar = oldText[j];
+                
+                if (oldChar && visualChar === oldChar.toUpperCase()) {
+                    reconstructed += oldChar;
+                    j++;
+                } else {
+                    reconstructed += isCapsLockOn ? visualChar.toUpperCase() : visualChar.toLowerCase();
+                }
+            }
+            globalSampleText = reconstructed;
+        }
+    } else {
+        if (!isCapsLockOn) {
+             globalSampleText = visualText.toLowerCase();
+        } else {
+             globalSampleText = visualText; 
+        }
+    }
+
+    renderGlobalTextEverywhere();
+  });
+}
+
+
+
     }
 
     
@@ -646,7 +736,7 @@ listDiv.addEventListener('click', (e) => {
         
                for (const [index, font] of fonts.entries()) {
             const defaultWeight = font.weights.find(w => w.default) || font.weights[0];
-            const fontPath = `assets/fonts/${defaultWeight.file}`;
+            const fontPath = `../assets/fonts/${defaultWeight.file}`;
             const numStyles = font.weights.length;
 
             const sampleLetter = font.tags?.includes("All Caps") ? "AA" : "Aa";
@@ -654,9 +744,7 @@ listDiv.addEventListener('click', (e) => {
             const article = document.createElement("article");
             article.dataset.fontId = font._id;
 
-            // ADICIONAR CLIQUE PARA SINGLE VIEW NO GRID
             article.addEventListener('click', (e) => {
-                // Prevenir clique nos botões
                 if (e.target.closest('a') || e.target.closest('button') || e.target.closest('.save')) {
                     return; 
                 }
@@ -675,12 +763,12 @@ listDiv.addEventListener('click', (e) => {
                     <a href="#" class="save-option" data-type="web">
                         <div><h4>Aa</h4><h4>Web</h4></div>
                         <h5 class="add-text">add</h5>
-                        <img src="assets/imgs/check.svg" class="check-icon" alt="check icon">
+                        <img src="../assets/imgs/check.svg" class="check-icon" alt="check icon">
                     </a>
                     <a href="#" class="save-option" data-type="print">
                         <div><h4>Aa</h4><h4>Print</h4></div>
                         <h5 class="add-text">add</h5>
-                        <img src="assets/imgs/check.svg" class="check-icon" alt="check icon">
+                        <img src="../assets/imgs/check.svg" class="check-icon" alt="check icon">
                     </a>
                 </section>
 
@@ -703,17 +791,13 @@ listDiv.addEventListener('click', (e) => {
 
             grid.appendChild(article);
             articles.push(article);
-
-            // ... (O resto dos seus event listeners de FAV e SAVE já existentes no loop mantêm-se aqui) ...
-            // Certifique-se apenas que o bloco article.addEventListener('click'... está lá.
             
-            // --- CÓDIGO DO SAVE/FAV EXISTENTE ---
             const favImg = article.querySelector(".fav-btn img");
             favImg.addEventListener("click", (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                const selected = favImg.src.includes("fav_selected.svg");
-                favImg.src = selected ? "assets/imgs/fav.svg" : "assets/imgs/fav_selected.svg";
+                const selected = favImg.src.includes("../assets/imgs/fav_selected.svg");
+                favImg.src = selected ? "../assets/imgs/fav.svg" : "../assets/imgs/fav_selected.svg";
             });
 
             const saveMenu = article.querySelector(".save");
@@ -761,7 +845,6 @@ listDiv.addEventListener('click', (e) => {
                     saveBtn.classList.remove("selected");
                 }
             });
-            // ------------------------------------
         }
 
         setupViewModeToggle(articles, fonts);
@@ -903,28 +986,24 @@ console.log(require("process").platform)
 
 
     // ==========================================
-    // NOVA FUNÇÃO: SINGLE FONT VIEW (ESTRUTURA SEPARADA)
+    // SINGLE FONT VIEW 
     // ==========================================
     function showSingleFont(font) {
         const grid = document.querySelector(".grid");
         
-        // 1. Limpar a grelha e preparar o modo
         grid.innerHTML = '';
         grid.classList.remove('grid_view');
         grid.classList.add('list_view');
         grid.classList.add('single-view-mode');
 
-        // 2. Preparar dados
         const defaultWeight = font.weights.find(w => w.default) || font.weights[0];
         const numStyles = font.weights.length;
         const hasAllCaps = font.tags && font.tags.includes("All Caps");
         const sampleText = "The quick brown fox jumps over the lazy dog.";
         const displayText = hasAllCaps ? sampleText.toUpperCase() : sampleText;
 
-        // 3. CRIAR A BARRA DE CONTROLOS (FORA DA BORDA)
         const controlsDiv = document.createElement("div");
         controlsDiv.className = "bar_individual_font"; 
-        // Adicionamos esta classe para garantir que os sliders ficam visíveis via CSS
         controlsDiv.classList.add("force-visible-controls"); 
         
         controlsDiv.innerHTML = `
@@ -976,9 +1055,9 @@ console.log(require("process").platform)
             </div>
         `;
 
-        // 4. CRIAR O BLOCO DA FONTE (COM BORDA - CLASSE .LIST)
         const listDiv = document.createElement("div");
-        listDiv.className = "list";
+listDiv.className = "list";
+
         
         listDiv.innerHTML = `
             <div class="list_information_bar">
@@ -1007,16 +1086,11 @@ console.log(require("process").platform)
             <h1 contenteditable="true" style="font-family:'${font._id}-font'; word-wrap: break-word; overflow-wrap: break-word; white-space: normal; outline: none;">${displayText}</h1>
         `;
 
-        // 5. INSERIR AMBOS NA GRID
         grid.appendChild(controlsDiv);
         grid.appendChild(listDiv);
-        
-        // 6. CONFIGURAR EVENTOS
-        // Passamos o 'controlsDiv' para configurar os sliders/botões, 
-        // mas precisamos dizer à função onde está o H1 que vai mudar (está no listDiv)
+
         setupSingleViewEvents(controlsDiv, listDiv, font);
 
-        // Evento Voltar
         const backBtn = controlsDiv.querySelector("#backToCollection");
         if(backBtn) {
             backBtn.addEventListener("click", (e) => {
@@ -1026,10 +1100,6 @@ console.log(require("process").platform)
         }
     }
 
-    // ==========================================
-    // NOVA FUNÇÃO HELPER PARA EVENTOS DA SINGLE VIEW
-    // (Porque agora os controlos e o H1 estão em divs diferentes)
-    // ==========================================
     function setupSingleViewEvents(controlsContainer, displayContainer, font) {
         // FAVOURITE
         const favBtn = controlsContainer.querySelector('.fav-btn img');
@@ -1037,8 +1107,8 @@ console.log(require("process").platform)
             favBtn.addEventListener('click', (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                const selected = favBtn.src.includes("fav_selected.svg");
-                favBtn.src = selected ? "assets/imgs/fav.svg" : "assets/imgs/fav_selected.svg";
+                const selected = favBtn.src.includes("../assets/imgs/fav_selected.svg");
+                favBtn.src = selected ? "../assets/imgs/fav.svg" : "../assets/imgs/fav_selected.svg";
             });
         }
         
@@ -1059,7 +1129,7 @@ console.log(require("process").platform)
             });
         }
 
-        // FONT CONTROLS (Estão no controlsContainer, afetam o displayContainer)
+        // FONT CONTROLS
         const h1 = displayContainer.querySelector('h1');
         const fontSize = controlsContainer.querySelector('#fontSize');
         const letterSpacing = controlsContainer.querySelector('#letterSpacing');

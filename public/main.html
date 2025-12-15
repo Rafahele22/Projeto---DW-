@@ -30,22 +30,32 @@
         </a>
       </nav>
 
-      <a href="#" class="button" style="z-index: 1;">
+      <a href="#" id="profile" class="button">
         <img src="../assets/imgs/profile.svg" alt="icon profile">
         <h4>Profile</h4>
       </a>
 
       <div class="loginContentor" style="display: none;">
         <form id="login">
+          <h4>Sign in</h4>
+          <h5>Don't have an account? <a href="#" id="goRegister">Register</a></h5>
           <input type="email" placeholder="Email" required>
           <input type="password" placeholder="Password" required>
-          <button type="submit">Login</button>
+          <button type="submit">
+            <img  alt="icon profile">
+            <h4>Login</h4>
+          </button>
         </form>
         <form id="register">
-          <input type="username" placeholder="username" required>
+          <h4>Create Account</h4>
+          <h5>Do you have an account? <a a href="#" id="goLogin">Login</a></h5>
+          <input type="username" placeholder="Username" required>
           <input type="email" placeholder="Email" required>
           <input type="password" placeholder="Password" required>
-          <button type="submit">Register</button>
+          <button type="submit">
+            <img src="../assets/imgs/login.svg" alt="icon profile">
+            <h4>Register</h4>
+          </button>
         </form>
       </div>
       </div>

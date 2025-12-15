@@ -64,14 +64,10 @@ h3 {
 h4 {
     color: var(--black);
     font-family: "roboto regular";
-    font-size: 1vw;
+    line-height: 0.9rem;
+    font-size: 0.9rem;
     margin: 0;
 }
-
-.save_list a h4 {
-    font-family: "roboto regular";
-}
-
 
 h5, .rangeLabel span {
     color: var(--black);
@@ -82,26 +78,161 @@ h5, .rangeLabel span {
 
 h6 {
     position: absolute;
-  top: -8px;
-  right: -8px;
-  color: var(--light_grey);
-  background-color: var(--purple);
-  border-radius: 10vh;
-  padding: 4px 8px;
-  width: auto;
-  font-family: "roboto regular";
-  font-size: 0.8vw;
-  margin: 0;
-  z-index: 500;
+    top: -8px;
+    right: -8px;
+    color: var(--light_grey);
+    background-color: var(--purple);
+    border-radius: 10vh;
+    padding: 4px 8px;
+    width: auto;
+    font-family: "roboto regular";
+    font-size: 0.8vw;
+    margin: 0;
+    z-index: 500;
 }
 
+.save_list a h4, 
+.loginContentor form h4 {
+    font-family: "roboto regular";
+}
 
+form h5 {
+    font-size: 0.8vw;
+    width: 100%;
+    text-align: center;
+    padding-bottom: 3vh;
+}
 
-/* ===== HEADER ===== */
+form h5 a {
+    font-family: "roboto medium";
+}
+
+/* ===== BUTTONS & INPUTS ===== */
+.button {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 1.2vh 15px;
+    background-color: var(--grey);
+    gap: 0.5vw;
+    border-radius: 100vh;
+    width: fit-content;
+}
+
+.button:hover {
+    background-color: var(--dark-grey);
+}
+
+.button img, 
+.check-icon, 
+button[type="submit"] img {
+    width: 1vw;
+    height: auto;
+}
+
+button[type="submit"] {
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0vh 15px;
+    background-color: var(--light_grey);
+    border-radius: 100vh;
+    width: fit-content;
+    gap: 0.5vw;
+}
+
+button[type="submit"]:hover {
+    background-color: var(--purple);
+}
+
+button[type="submit"] h4 {
+    margin-top: 0.4vh;
+}
+
+button[type="submit"]:hover h4 {
+    color: var(--light_grey);
+}
+
+input[type="email"], 
+input[type="password"], 
+input[type="username"] {
+    border: none;
+    padding: 1.2vh 15px;
+    background-color: var(--light_grey);
+    border-radius: 100vh;
+    width: 100%;
+    margin-bottom: 1vh;
+}
+
+/* Range Inputs */
+input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 10vw;
+    background: transparent;
+    cursor: pointer;
+}
+
+input[type="range"]:focus {
+    outline: none;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+    background: rgb(30,30,30);
+    height: 0.1vh;
+    border-radius: 1vh;
+}
+
+input[type="range"]::-moz-range-track {
+    background: rgb(30,30,30);
+    height: 0.1vh;
+    border-radius: 1vh;
+}
+
+input[type="range"]::-ms-track {
+    background: rgb(30,30,30);
+    height: 0.1vh;
+    border-radius: 1vh;
+    border: none;
+    color: transparent;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 1vw;
+    height: 1vw;
+    background: rgb(30,30,30);
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+    margin-top: -0.45vh;
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 1vw;
+    height: 1vw;
+    background: rgb(30,30,30);
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+}
+
+input[type="range"]::-ms-thumb {
+    width: 1vw;
+    height: 1vw;
+    background: rgb(30,30,30);
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+}
+
+/* ===== HEADER & NAVIGATION ===== */
 header {
     position: fixed;
-    padding: 2% 2% 0% 2%;
-    z-index: 200;
+    padding: 3vh 2% 0% 2%;
+    z-index: 500;
     background-color: var(--light_grey);
     width: 100%;
     height: auto;
@@ -109,10 +240,12 @@ header {
 }
 
 header > div:first-of-type {
-    display: flex;
-    justify-content: space-between;
+    position: absolute;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
     align-items: center;
-    width: 96%;
+    width: 92.5%;
+    z-index: 100;
 }
 
 #logo {
@@ -120,6 +253,7 @@ header > div:first-of-type {
 }
 
 nav {
+    justify-self: center;
     display: flex;
     width: auto;
     justify-content: space-between;
@@ -127,38 +261,9 @@ nav {
     gap: 1vw;
 }
 
-/* ===== BUTTONS ===== */
-.button {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    padding: 10px 15px;
-    background-color: var(--grey);
-    gap: 0.5vw;
-    border-radius: 100vh;
-}
-
-.button:hover {
-    background-color: var(--dark-grey);
-}
-
-.button img, .check-icon {
-    width: 1vw;
-    height: auto;
-}
-
-
-
-.selected {
-    background-color: var(--purple);
-}
-
-.selected:hover {
-    background-color: var(--purple);
-}
-
-.selected h4 {
-    color: var(--light_grey);
+#profile {
+    justify-self: right;
+    z-index: 102;
 }
 
 /* ===== MAIN LAYOUT ===== */
@@ -169,25 +274,33 @@ main {
     padding: 2%;
 }
 
-/* ===== SECONDARY NAVIGATION BAR ===== */
+/* Secondary Bar (Search, Filters Trigger, View Toggle) */
 #second_bar {
-    display: flex;
-    justify-content: space-between;
-    width: 96%;
+    position: absolute;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    align-items: center;
+    width: 92.3%;
     padding-bottom: 1vh;
-    margin-top: 10vh;
+    padding-top: 15vh;
+    background-color: var(--light_grey);
 }
 
 #search_bar {
+    justify-self: center;
     display: flex;
     justify-content: space-between;
-    width: 25%;
+    width: 100%;
+}
+
+#second_bar section {
+    justify-self: right;
 }
 
 /* ===== FILTERS PANEL ===== */
 #filters {
     position: fixed;
-    top: 18.1vh;
+    top: 18vh;
     left: 0;
     background-color: var(--grey);
     height: 80vh;
@@ -209,31 +322,36 @@ main {
 #filters-content::-webkit-scrollbar {
     width: 0.4vw;
 }
+
 #filters-content::-webkit-scrollbar-track {
     background: var(--grey);
     border-radius: 1vh;
 }
+
 #filters-content::-webkit-scrollbar-thumb {
     background: var(--darker-grey);
     border-radius: 1vh;
 }
+
 #filters-content::-webkit-scrollbar-thumb:hover {
     background: var(--black);
 }
 
 #filters_btn {
-  position: relative;
+    position: relative;
+    width: fit-content;
 }
 
-#no_results {
-    display:none; 
-    text-align:center; 
-    margin-top:5vh;
-    width: 100%;
+#close_filters, 
+#remove_all_filters {
+    width: fit-content;
 }
 
+#close_filters {
+    position: relative;
+}
 
-/* ===== TAGS SECTION ===== */
+/* Tags Section */
 #tags {
     display: flex;
     flex-wrap: wrap;
@@ -265,8 +383,7 @@ main {
     color: var(--light_grey);
 }
 
-
-/* ===== FILTER SECTIONS ===== */
+/* Filter Options */
 .filters_section {
     padding: 1vw;
 }
@@ -293,18 +410,7 @@ main {
     background-color: var(--purple);
 }
 
-#remove_all_filters, #close_filters {
-    width: fit-content;
-}
-
-#close_filters {
-    position: relative;
-}
-
-
-
-
-/* ===== GRID SYSTEM ===== */
+/* ===== GRID & LIST VIEWS ===== */
 .grid {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -319,9 +425,14 @@ main {
     width: calc(100% - 24.2vw);
 }
 
+#no_results {
+    display: none; 
+    text-align: center; 
+    margin-top: 5vh;
+    width: 100%;
+}
 
-/* ===== GRID VIEW ===== */
-
+/* Grid View Item (Article) */
 .grid_view article {
     position: relative;
     border: 1px solid var(--black);
@@ -346,15 +457,6 @@ main {
     padding-bottom: 12vh; 
 }
 
-.grid_view article h1 {
-    flex-grow: 1; 
-    display: flex;
-    align-items: center;           
-    justify-content: center;  
-    padding: 2vh 0;  
-    padding-bottom: 12vh; 
-}
-
 .grid_view article:hover {
     background-color: var(--grey);
 }
@@ -363,7 +465,7 @@ main {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1.5vw;
+    padding: 8%;
     width: 100%;
     box-sizing: border-box;
     min-width: 0;
@@ -374,7 +476,18 @@ main {
     bottom: 0;
 }
 
-/* ===== LIST VIEW ===== */
+/* List View Item */
+.grid.list_view {
+    display: flex;
+    flex-direction: column;
+    gap: 1vw;
+    width: 100%;
+}
+
+.grid.list_view.shifted {
+    margin-left: 24.2vw;
+    width: calc(100% - 24.2vw);
+}
 
 .list {
     position: relative;
@@ -382,6 +495,10 @@ main {
     border-radius: 5vh;
     padding: 1.5vw;
     width: auto;
+}
+
+.list:hover {
+    background-color: var(--grey);
 }
 
 .list h1 {
@@ -414,30 +531,78 @@ main {
     gap: 0.5vw;
 }
 
-.grid.list_view {
-    display: flex;
-    flex-direction: column;
-    gap: 1vw;
-    width: 100%;
+/* Special Behaviors */
+.list[data-all-caps="1"] h1.sampleText {
+    text-transform: uppercase;
 }
 
-.grid.list_view.shifted {
-    margin-left: 24.2vw;
-    width: calc(100% - 24.2vw);
-}
-
-.list:hover {
-    background-color: var(--grey);
+.list.force-visible .divLabel {
+    opacity: 1 !important;
+    pointer-events: auto !important;
 }
 
 .divLabel {
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.3s ease;
+    display: flex;
+    justify-content: baseline;
+    align-items: center;
+    width: 100%;
 }
 
+/* ===== SINGLE FONT VIEW / CONTROLS ===== */
+.bar_individual_font {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 2vh;
+    padding: 0 1vw; 
+    box-sizing: border-box;
+}
 
-/* ===== SAVE MENU ===== */
+.bar_individual_font .divLabel {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    position: relative; 
+    width: auto;
+    min-width: 8vw;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.bar_individual_font .rangeLabel {
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 0.5vh;
+}
+
+.bar_individual_font .range-container {
+    position: relative;
+}
+
+/* Fix for Save Menu position in Single View */
+.bar_individual_font .save_list {
+    top: 100%;
+    right: 0;
+    margin-top: 1vh;
+}
+
+.actions-wrapper {
+    position: relative; 
+}
+
+.sliders {
+    display: flex;
+    gap: 2vw;
+}
+
+/* ===== SAVE MENU & POPUPS ===== */
 .save {
     position: absolute;
     top: 9vh;
@@ -461,13 +626,15 @@ main {
     margin-left: 1.5vw;
 }
 
-.save > h4, .save_list > h4  {
+.save > h4, 
+.save_list > h4 {
     text-align: center;
     padding-top: 1vh;
-    padding-bottom: 2vh;
+    padding-bottom: 1.5vh;
 }
 
-.save a, .save_list a {
+.save a, 
+.save_list a {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -477,16 +644,20 @@ main {
     border-radius: 1vh;
 }
 
-.save a:hover, .save_list a:hover {
+.save a:hover, 
+.save_list a:hover {
     background-color: var(--grey);
 }
 
-.save a div, .save_list a div  {
+.save a div, 
+.save_list a div {
     display: flex;
     gap: 0.5vw;
 }
 
-.grid_view article:hover .save-btn:not(.selected), .list:hover .save-btn:not(.selected) {
+/* Save Button Interaction Logic */
+.grid_view article:hover .save-btn:not(.selected), 
+.list:hover .save-btn:not(.selected) {
     background-color: var(--light_grey);
 }
 
@@ -504,6 +675,7 @@ main {
     color: var(--light_grey) !important;
 }
 
+/* Save Menu Content Toggles */
 .save a .check-icon,
 .save_list a .check-icon,
 .save a.selected-option .add-text,
@@ -526,172 +698,48 @@ main {
     display: block !important;
 }
 
-
-
-
-/* login */
-
+/* ===== LOGIN / REGISTER FORMS ===== */
 .loginContentor {
-    position: absolute;
+    position: fixed;
     display: flex;
     flex-direction: column;
-
-    justify-content: center;
-
-
-    height: 40vh;
-    width: 20vw;
-    background-color: #e0e0e0;
-    transform: translate(75vw, 17.25vh);
-    border-radius: 12pt;
-
-    padding: 1vh;
-}
-
-
-
-
-input[type="range"]{
-    -webkit-appearance: none;
-    appearance: none;
-    width: 10vw;
-    background: transparent;
-    cursor: pointer;
-}
-
-input[type="range"]:focus {
-    outline: none;
-}
-
-
-.list.force-visible .divLabel {
-    opacity: 1 !important;
-    pointer-events: auto !important;
-}
-
-
-.divLabel {
-    display: flex;
-    justify-content: baseline;
-    align-items: center;
-    width:100%;
-}
-
-
-/* Assegurar que os controlos na barra superior da Single View estão sempre visíveis */
-.bar_individual_font .divLabel {
-    opacity: 1 !important;
-    pointer-events: auto !important;
-}
-
-/* Ajustes de layout para a barra separada */
-.bar_individual_font {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    margin-bottom: 2vh; /* Espaço entre a barra e o bloco da fonte */
-    padding: 0 1vw; /* Alinhar visualmente com a borda do bloco abaixo */
-    box-sizing: border-box;
-}
-
-.sliders {
-    display: flex;
-    gap: 2vw; /* Espaçamento entre sliders */
-}
-
-/* IMPORTANTE: Ajuste para os labels dos sliders não ficarem absolutos de forma estranha nesta barra */
-.bar_individual_font .divLabel {
-    position: relative; 
-    width: auto;
-    min-width: 8vw;
+    z-index: 101;
     height: auto;
-    display: flex;
-    flex-direction: column;
+    width: 20vw;
+    background-color: var(--grey);
+    right: 2vw;
+    top: 8.5vh;
+    border-radius: 2vh;
+    padding: 2vh;
 }
 
-.bar_individual_font .rangeLabel {
-    position: relative;
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    margin-bottom: 0.5vh;
+.loginContentor form h4 {
+    text-align: center;
+    padding-top: 1vh;
+    padding-bottom: 1.5vh;
 }
 
-.bar_individual_font .range-container {
-    position: relative;
+#register {
+    display: none;
 }
 
-/* Ajuste para o menu Save aparecer no sítio certo (relativo à barra superior) */
-.bar_individual_font .save_list {
-    top: 100%; /* Aparece logo abaixo do botão */
-    right: 0;
-    margin-top: 1vh;
+form button img {
+    content: url("../../assets/imgs/login.svg");
 }
 
-.actions-wrapper {
-    position: relative; /* Para o save menu posicionar-se relativamente a isto */
+form button:hover img {
+    content: url("../../assets/imgs/login_selected.svg");
 }
 
-
-
-
-
-
-/*barra do ranger*/
-
-input[type="range"]::-moz-range-track {
-    background: rgb(30,30,30);
-    height: 0.1vh;
-    border-radius: 1vh;
+/* ===== UTILITIES ===== */
+.selected {
+    background-color: var(--purple);
 }
 
-input[type="range"]::-webkit-slider-runnable-track {
-    background: rgb(30,30,30);
-    height: 0.1vh;
-    border-radius: 1vh;
+.selected:hover {
+    background-color: var(--purple);
 }
 
-input[type="range"]::-ms-track {
-    background: rgb(30,30,30);
-    height: 0.1vh;
-    border-radius: 1vh;
-    border: none;
-    color: transparent;
+.selected h4 {
+    color: var(--light_grey);
 }
-
-/*botao do ranger*/
-
-input[type="range"]::-moz-range-thumb {
-    width: 1vw;
-    height: 1vw;
-    background: rgb(30,30,30);
-    border-radius: 50%;
-    cursor: pointer;
-    border: none;
-}
-
-input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 1vw;
-    height: 1vw;
-    background: rgb(30,30,30);
-    border-radius: 50%;
-    cursor: pointer;
-    border: none;
-    margin-top: -0.45vh;
-}
-
-input[type="range"]::-ms-thumb {
-    width: 1vw;
-    height: 1vw;
-    background: rgb(30,30,30);
-    border-radius: 50%;
-    cursor: pointer;
-    border: none;
-}
-
-
-
