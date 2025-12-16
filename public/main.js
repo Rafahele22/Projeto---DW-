@@ -14,6 +14,7 @@ async function main() {
     const tagsContainer = document.querySelector("#tags");
     const filtersCountBubble = filtersBtn?.querySelector("h6");
     let globalSampleText = "The quick brown fox jumps over the lazy dog.";
+    let allFonts = [];
 
 
     // ==========================================
@@ -39,7 +40,6 @@ function openSingleFontView() {
 
   singleFontView.style.display = "block";
 
-  // fechar filtros ao entrar na single view
   if (filtersPanel) filtersPanel.style.display = "none";
   grid.classList.remove("shifted");
   filtersBtn?.classList.remove("selected");
@@ -55,9 +55,174 @@ function closeSingleFontView() {
   window.scrollTo(0, lastScrollY);
 }
 
-// ==========================================
-// SINGLE FONT VIEW (sem destruir a grid)
-// ==========================================
+function escapeHtml(str) {
+  return String(str)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll("\"", "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function renderFontTags(font) {
+  const tags = Array.isArray(font?.tags) ? font.tags : [];
+  if (!tags.length) return "";
+
+  return `
+    <section class="list_information font-tags">
+      ${tags.map(tag => `
+        <a href="#" class="button tag-btn"><h4>${escapeHtml(tag)}</h4></a>
+      `).join("")}
+    </section>
+  `;
+}
+
+function sameTags(tagsA, tagsB) {
+  const a = Array.isArray(tagsA) ? tagsA : [];
+  const b = Array.isArray(tagsB) ? tagsB : [];
+  if (a.length !== b.length) return false;
+
+  const setA = new Set(a);
+  if (setA.size !== b.length) return false;
+  return b.every(t => setA.has(t));
+}
+
+function pickRandom(arr, n) {
+  const copy = [...arr];
+  copy.sort(() => Math.random() - 0.5);
+  return copy.slice(0, n);
+}
+
+function ensureFontFace(font) {
+  const defaultWeight = font.weights.find(w => w.default) || font.weights[0];
+  const fontPath = `../assets/fonts/${defaultWeight.file}`;
+  const styleId = `font-face-${font._id}`;
+  if (document.getElementById(styleId)) return;
+
+  const style = document.createElement("style");
+  style.id = styleId;
+  style.textContent = `
+    @font-face {
+      font-family:'${font._id}-font';
+      src:url('${fontPath}');
+    }
+  `;
+  document.head.appendChild(style);
+}
+
+function wireMiniCardEvents(articleEl, fontObj) {
+  // Fav
+  const favImg = articleEl.querySelector(".fav-btn img");
+  favImg?.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const selected = favImg.src.includes("../assets/imgs/fav_selected.svg");
+    favImg.src = selected ? "../assets/imgs/fav.svg" : "../assets/imgs/fav_selected.svg";
+  });
+
+  // Save menu
+  const saveMenu = articleEl.querySelector(".save");
+  const saveBtn = articleEl.querySelector(".save-btn");
+  if (saveMenu) saveMenu.style.display = "none";
+
+  saveBtn?.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    document.querySelectorAll(".save, .save_list").forEach(menu => {
+      if (menu !== saveMenu) {
+        menu.style.display = "none";
+        menu.parentElement.querySelector(".save-btn")?.classList.remove("selected");
+      }
+    });
+
+    const isOpening = saveMenu && saveMenu.style.display === "none";
+    if (saveMenu) saveMenu.style.display = isOpening ? "block" : "none";
+    saveBtn.classList.toggle("selected", isOpening);
+  });
+
+  articleEl.querySelectorAll(".save-option").forEach(option => {
+    option.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      option.classList.toggle("selected-option");
+    });
+  });
+
+  articleEl.addEventListener("click", (e) => {
+    if (e.target.closest("a") || e.target.closest("button") || e.target.closest(".save")) return;
+    showSingleFont(fontObj);
+  });
+}
+
+function buildSimilarSection(currentFont, fontsAll) {
+  const wrapper = document.createElement("div");
+  wrapper.className = "similar-wrapper";
+
+  const title = document.createElement("h2");
+  title.textContent = "Similar";
+  wrapper.appendChild(title);
+
+  const similarGrid = document.createElement("div");
+  similarGrid.className = "grid grid_view";
+  wrapper.appendChild(similarGrid);
+
+  const currentTags = Array.isArray(currentFont?.tags) ? currentFont.tags : [];
+
+  const candidates = (Array.isArray(fontsAll) ? fontsAll : [])
+    .filter(f => f && f._id !== currentFont._id)
+    .filter(f => sameTags(f.tags, currentTags));
+
+  const chosen = pickRandom(candidates, 4);
+
+  chosen.forEach(font => {
+    ensureFontFace(font);
+
+    const defaultWeight = font.weights.find(w => w.default) || font.weights[0];
+    const numStyles = font.weights.length;
+    const sampleLetter = font.tags?.includes("All Caps") ? "AA" : "Aa";
+
+    const article = document.createElement("article");
+    article.dataset.fontId = font._id;
+
+    article.innerHTML = `
+      <section class="grid_information">
+        <a href="#" class="button save-btn">
+          <h4>Save</h4>
+        </a>
+        <a href="#" class="fav-btn"><img src="../assets/imgs/fav.svg" alt="favourite"/></a>
+      </section>
+
+      <section class="save">
+        <h4>Save font on...</h4>
+        <a href="#" class="save-option" data-type="web">
+          <div><h4>Aa</h4><h4>Web</h4></div>
+          <h5 class="add-text">add</h5>
+          <img src="../assets/imgs/check.svg" class="check-icon" alt="check icon">
+        </a>
+        <a href="#" class="save-option" data-type="print">
+          <div><h4>Aa</h4><h4>Print</h4></div>
+          <h5 class="add-text">add</h5>
+          <img src="../assets/imgs/check.svg" class="check-icon" alt="check icon">
+        </a>
+      </section>
+
+      <h1 style="font-family:'${font._id}-font'">${sampleLetter}</h1>
+
+      <section class="grid_information">
+        <h2>${font.name}</h2>
+        <h3>${numStyles} styles</h3>
+      </section>
+    `;
+
+    wireMiniCardEvents(article, font);
+    similarGrid.appendChild(article);
+  });
+
+  return wrapper;
+}
+
+
 function showSingleFont(font) {
   openSingleFontView();
 
@@ -84,7 +249,7 @@ function showSingleFont(font) {
           <span class="range-value" id="fontSizeValue">48pt</span>
         </label>
         <div class="range-container">
-          <input type="range" id="fontSize" min="12" max="200" value="48">
+          <input type="range" id="fontSize" min="12" max="150" value="48">
         </div>
       </div>
 
@@ -120,47 +285,46 @@ function showSingleFont(font) {
 
   const listDiv = document.createElement("div");
   listDiv.className = "list_individual";
+  const tagsHTML = renderFontTags(font);
 
   listDiv.innerHTML = `
-    <div class="list_information_bar">
-      <section class="list_information">
-        <h3>${font.name}</h3>
-        ${font.foundry !== "Unknown" ? `<h3>${font.foundry}</h3>` : ""}
-        <h3>${numStyles} ${numStyles === 1 ? "style" : "styles"}</h3>
-        ${font.variable ? "<h3>Variable</h3>" : ""}
-      </section>
+  <div class="list_information_bar">
+    <section class="list_information">
+      <h3>${font.name}</h3>
+      ${font.foundry !== "Unknown" ? `<h3>${font.foundry}</h3>` : ""}
+      <h3>${numStyles} ${numStyles === 1 ? "style" : "styles"}</h3>
+      ${font.variable ? "<h3>Variable</h3>" : ""}
+    </section>
 
-      <div class="actions-wrapper" style="display:flex; gap:1vw;">
-        <section class="list_information">
-          <a href="#" class="fav-btn"><img src="../assets/imgs/fav.svg" alt="favourite"/></a>
-          <a href="#" class="button save-btn"><h4>Save</h4></a>
-        </section>
+    <section class="list_information">
+      <a href="#" class="fav-btn"><img src="../assets/imgs/fav.svg" alt="favourite"/></a>
+      <a href="#" class="button save-btn"><h4>Save</h4></a>
+    </section>
 
-        <section class="save_list">
-          <h4>Save font on...</h4>
-          <a href="#"><div><h4>Aa</h4><h4>Web</h4></div><h5 class="add-text">add</h5><img src="../assets/imgs/check.svg" class="check-icon" alt="check icon"></a>
-          <a href="#"><div><h4>Aa</h4><h4>Print</h4></div><h5 class="add-text">add</h5><img src="../assets/imgs/check.svg" class="check-icon" alt="check icon"></a>
-        </section>
-      </div>
-    </div>
+    <section class="save_list">
+      <h4>Save font on...</h4>
+      <a href="#"><div><h4>Aa</h4><h4>Web</h4></div><h5 class="add-text">add</h5><img src="../assets/imgs/check.svg" class="check-icon" alt="check icon"></a>
+      <a href="#"><div><h4>Aa</h4><h4>Print</h4></div><h5 class="add-text">add</h5><img src="../assets/imgs/check.svg" class="check-icon" alt="check icon"></a>
+    </section>
+  </div>
 
-    <h1 contenteditable="true"
-        style="font-family:'${font._id}-font'; line-height: 4.5vw; word-wrap: break-word; overflow-wrap: break-word; white-space: normal; outline: none;">
-      ${displayText}
-    </h1>
-    <div class="actions-wrapper" style="display:flex; gap:1vw;">
-      <section class="list_information">
-        <a href="#" class="button save-btn"><h4>Serif</h4></a>
-        <a href="#" class="button save-btn"><h4>All Caps</h4></a>
-      </section>
-    </div>
-  `;
+  <h1 contenteditable="true"
+      style="font-family:'${font._id}-font'; line-height: 4.5vw; word-wrap: break-word; overflow-wrap: break-word; white-space: normal; outline: none;">
+    ${displayText}
+  </h1>
 
-  singleFontView.innerHTML = "";
-  singleFontView.appendChild(controlsDiv);
-  singleFontView.appendChild(listDiv);
+  ${tagsHTML}
+`;
 
-  setupSingleViewEvents(controlsDiv, listDiv, font);
+const similarSection = buildSimilarSection(font, allFonts);
+
+singleFontView.innerHTML = "";
+singleFontView.appendChild(controlsDiv);
+singleFontView.appendChild(listDiv);
+singleFontView.appendChild(similarSection);
+
+setupSingleViewEvents(controlsDiv, listDiv, font);
+
 
   const backBtn = controlsDiv.querySelector("#backToCollection");
   backBtn?.addEventListener("click", (e) => {
@@ -887,6 +1051,7 @@ if (editable) {
     try {
         const response = await fetch("../assets/data.json");
         const fonts = await response.json();
+        allFonts = fonts;
         
         const allTags = [];
         const foundriesMap = {};

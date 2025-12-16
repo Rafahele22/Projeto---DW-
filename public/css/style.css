@@ -64,16 +64,24 @@ h3 {
 h4 {
     color: var(--black);
     font-family: "roboto regular";
-    line-height: 0.9rem;
-    font-size: 0.9rem;
+    line-height: 1vw;
+    font-size: 1vw;
     margin: 0;
 }
 
-h5, .rangeLabel span {
+h5 {
     color: var(--black);
     font-family: "roboto regular";
     font-size: 1vw;
     margin: 0;
+}
+
+.rangeLabel span {
+    color: var(--black);
+    font-family: "roboto regular";
+    font-size: 1vw;
+    margin: 0;
+    margin-bottom: 1vh;
 }
 
 h6 {
@@ -165,13 +173,13 @@ input[type="username"] {
     margin-bottom: 1vh;
 }
 
-/* Range Inputs */
 input[type="range"] {
     -webkit-appearance: none;
     appearance: none;
     width: 10vw;
     background: transparent;
     cursor: pointer;
+    align-items: center;
 }
 
 input[type="range"]:focus {
@@ -179,19 +187,19 @@ input[type="range"]:focus {
 }
 
 input[type="range"]::-webkit-slider-runnable-track {
-    background: rgb(30,30,30);
+    border: 1px solid var(--black);
     height: 0.1vh;
     border-radius: 1vh;
 }
 
 input[type="range"]::-moz-range-track {
-    background: rgb(30,30,30);
+    background: var(--black);
     height: 0.1vh;
     border-radius: 1vh;
 }
 
 input[type="range"]::-ms-track {
-    background: rgb(30,30,30);
+    background: var(--black);
     height: 0.1vh;
     border-radius: 1vh;
     border: none;
@@ -201,19 +209,19 @@ input[type="range"]::-ms-track {
 input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 1vw;
-    height: 1vw;
-    background: rgb(30,30,30);
+    width: 0.8vw;
+    height: 0.8vw;
+    background: var(--black);
     border-radius: 50%;
     cursor: pointer;
     border: none;
-    margin-top: -0.45vh;
+    margin-top: -0.7vh;
 }
 
 input[type="range"]::-moz-range-thumb {
     width: 1vw;
     height: 1vw;
-    background: rgb(30,30,30);
+    background: var(--black);
     border-radius: 50%;
     cursor: pointer;
     border: none;
@@ -222,13 +230,22 @@ input[type="range"]::-moz-range-thumb {
 input[type="range"]::-ms-thumb {
     width: 1vw;
     height: 1vw;
-    background: rgb(30,30,30);
+    background: var(--black);
     border-radius: 50%;
     cursor: pointer;
     border: none;
 }
 
 /* ===== HEADER & NAVIGATION ===== */
+#background {
+    position: fixed;
+    background-color: var(--light_grey);
+    height: 20vh;
+    z-index: 5;
+    width: 100vw;
+    top: 0;
+}
+
 header {
     position: fixed;
     padding: 3vh 2% 0% 2%;
@@ -274,7 +291,7 @@ main {
     padding: 2%;
 }
 
-/* Secondary Bar (Search, Filters Trigger, View Toggle) */
+/* Secondary Bar */
 #second_bar {
     position: absolute;
     display: grid;
@@ -300,10 +317,10 @@ main {
 /* ===== FILTERS PANEL ===== */
 #filters {
     position: fixed;
-    top: 18vh;
+    top: 14vh;
     left: 0;
     background-color: var(--grey);
-    height: 80vh;
+    height: 83vh;
     width: 22vw;
     border-radius: 2vh;
     display: flex;
@@ -432,7 +449,7 @@ main {
     width: 100%;
 }
 
-/* Grid View Item (Article) */
+/* Grid View Item */
 .grid_view article {
     position: relative;
     border: 1px solid var(--black);
@@ -505,18 +522,33 @@ main {
     background-color: var(--grey);
 }
 
+.list_individual .list_information:last-of-type {
+    padding-top: 1vh;
+    gap: 0.5vw;
+}
+
+
 .list:hover {
     background-color: var(--grey);
 }
 
-.list h1, .list_individual h1 {
+.list h1{
     font-size: 3.5vw;
     line-height: 3.5vw;
     padding-top: 4vh;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    line-height: 11vh;
+}
+
+.list_individual h1 {
+    font-size: 3.5vw;
+    line-height: 3.5vw;
+    padding-top: 4vh;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-height: 30vh;
 }
 
 .list_information_bar {
@@ -539,7 +571,6 @@ main {
     gap: 0.5vw;
 }
 
-/* Special Behaviors */
 .list[data-all-caps="1"] h1.sampleText, .list_individual[data-all-caps="1"] h1.sampleText {
     text-transform: uppercase;
 }
@@ -583,17 +614,14 @@ body.single-font-open #filters {
   display: none !important;
 }
 
-/* Esconder a grelha/lista sem apagar DOM (preserva filtros/texto) */
 .grid.is-hidden {
   display: none !important;
 }
 
-/* Container da single view (criado via JS) */
 #singleFontView {
   width: 100%;
 }
 
-/* (Opcional) se o teu CSS estiver a usar .barindividualfont mas o JS cria bar_individual_font */
 .bar_individual_font,
 .barindividualfont {
   width: 100%;
@@ -605,12 +633,12 @@ body.single-font-open #filters {
     justify-self: right;
 }
 
-.styles_menu{
+.styles_menu {
   position: absolute;
   top: 0vh;
   left: 0;
   width: 21vw;
-  max-height: 80vh;
+  max-height: 47.4vh;
   overflow-y: auto;
 
   background: var(--grey);
@@ -618,11 +646,11 @@ body.single-font-open #filters {
   padding: 1vw;
   padding-top: 6vh;
 
-  z-index: 12; /* (não uses negativo) */
+  z-index: 2;
 }
 
 #choose_style_btn { 
-    z-index: 13; 
+    z-index: 3; 
     position: relative; 
     width: 21vw;
     display: flex;
@@ -642,15 +670,11 @@ body.single-font-open #filters {
   margin-right: 24.2vw;
 }
 
-/* opcional: garantir que não cria scroll horizontal */
 .list_individual{
   box-sizing: border-box;
 }
 
-/* Dá o mesmo “fill” roxo quando selecionado (como foundry) */
 .styles_menu .option_selected.selected { background-color: var(--purple); }
-
-
 
 
 .bar_individual_font .divLabel {
@@ -677,7 +701,30 @@ body.single-font-open #filters {
     position: relative;
 }
 
-/* Fix for Save Menu position in Single View */
+.actions-wrapper {
+    gap: 1vw;
+}
+
+.font-tags a {
+    background-color: var(--light_grey);
+}
+.font-tags a:hover {
+    background-color: var(--purple);  
+}
+
+.font-tags a:hover h4 {
+color: var(--light_grey);
+}
+
+.similar-wrapper {
+    margin-top: 10vh;
+}
+
+.similar-wrapper h2 {
+    margin-bottom: 2vh;
+}
+
+
 .bar_individual_font .save_list {
     top: 100%;
     right: 0;
@@ -747,7 +794,6 @@ body.single-font-open #filters {
     gap: 0.5vw;
 }
 
-/* Save Button Interaction Logic */
 .grid_view article:hover .save-btn:not(.selected), 
 .list:hover .save-btn:not(.selected), .list_individual .save-btn:not(.selected) {
     background-color: var(--light_grey);
@@ -767,7 +813,6 @@ body.single-font-open #filters {
     color: var(--light_grey) !important;
 }
 
-/* Save Menu Content Toggles */
 .save a .check-icon,
 .save_list a .check-icon,
 .save a.selected-option .add-text,
