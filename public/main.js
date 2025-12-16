@@ -16,6 +16,315 @@ async function main() {
     let globalSampleText = "The quick brown fox jumps over the lazy dog.";
 
 
+    // ==========================================
+    // SINGLE FONT VIEW 
+    // ==========================================
+let singleFontView = document.getElementById("singleFontView");
+if (!singleFontView) {
+  singleFontView = document.createElement("div");
+  singleFontView.id = "singleFontView";
+  singleFontView.style.display = "none";
+
+  const mainEl = document.querySelector("main");
+  mainEl.appendChild(singleFontView);
+}
+
+let lastScrollY = 0;
+
+function openSingleFontView() {
+  lastScrollY = window.scrollY || 0;
+
+  document.body.classList.add("single-font-open");
+  grid.classList.add("is-hidden");
+
+  singleFontView.style.display = "block";
+
+  // fechar filtros ao entrar na single view
+  if (filtersPanel) filtersPanel.style.display = "none";
+  grid.classList.remove("shifted");
+  filtersBtn?.classList.remove("selected");
+}
+
+function closeSingleFontView() {
+  singleFontView.innerHTML = "";
+  singleFontView.style.display = "none";
+
+  grid.classList.remove("is-hidden");
+  document.body.classList.remove("single-font-open");
+
+  window.scrollTo(0, lastScrollY);
+}
+
+// ==========================================
+// SINGLE FONT VIEW (sem destruir a grid)
+// ==========================================
+function showSingleFont(font) {
+  openSingleFontView();
+
+  const defaultWeight = font.weights.find(w => w.default) || font.weights[0];
+  const numStyles = font.weights.length;
+  const hasAllCaps = font.tags && font.tags.includes("All Caps");
+  const sampleText = "The quick brown fox jumps over the lazy dog.";
+  const displayText = hasAllCaps ? sampleText.toUpperCase() : sampleText;
+
+  const controlsDiv = document.createElement("div");
+  controlsDiv.className = "bar_individual_font";
+  controlsDiv.classList.add("force-visible-controls");
+
+  controlsDiv.innerHTML = `
+    <a href="#" class="button" id="backToCollection">
+      <img src="../assets/imgs/back_arrow.svg" alt="icon arrow left"/>
+      <h4>Back</h4>
+    </a>
+
+    <div class="sliders">
+      <div class="divLabel">
+        <label class="rangeLabel" for="fontSize">
+          <span>font size</span>
+          <span class="range-value" id="fontSizeValue">48pt</span>
+        </label>
+        <div class="range-container">
+          <input type="range" id="fontSize" min="12" max="200" value="48">
+        </div>
+      </div>
+
+      <div class="divLabel">
+        <label class="rangeLabel" for="letterSpacing">
+          <span>tracking</span>
+          <span class="range-value" id="letterSpacingValue">0pt</span>
+        </label>
+        <div class="range-container">
+          <input type="range" id="letterSpacing" min="-5" max="50" value="0" step="0.5">
+        </div>
+      </div>
+
+      <div class="divLabel">
+        <label class="rangeLabel" for="lineHeight">
+          <span>leading</span>
+          <span class="range-value" id="lineHeightValue">1.5</span>
+        </label>
+        <div class="range-container">
+          <input type="range" id="lineHeight" min="0.8" max="3" value="1.5" step="0.1">
+        </div>
+      </div>
+    </div>
+
+    <div class="choose-style-wrapper">
+    <a href="#" class="button" id="choose_style_btn">
+      <h4>Choose style</h4>
+      <img src="../assets/imgs/arrow.svg" alt="icon arrow down"/>
+    </a>
+    <div id="styles_menu" class="styles_menu" style="display:none;"></div>
+  </div>
+  `;
+
+  const listDiv = document.createElement("div");
+  listDiv.className = "list_individual";
+
+  listDiv.innerHTML = `
+    <div class="list_information_bar">
+      <section class="list_information">
+        <h3>${font.name}</h3>
+        ${font.foundry !== "Unknown" ? `<h3>${font.foundry}</h3>` : ""}
+        <h3>${numStyles} ${numStyles === 1 ? "style" : "styles"}</h3>
+        ${font.variable ? "<h3>Variable</h3>" : ""}
+      </section>
+
+      <div class="actions-wrapper" style="display:flex; gap:1vw;">
+        <section class="list_information">
+          <a href="#" class="fav-btn"><img src="../assets/imgs/fav.svg" alt="favourite"/></a>
+          <a href="#" class="button save-btn"><h4>Save</h4></a>
+        </section>
+
+        <section class="save_list">
+          <h4>Save font on...</h4>
+          <a href="#"><div><h4>Aa</h4><h4>Web</h4></div><h5 class="add-text">add</h5><img src="../assets/imgs/check.svg" class="check-icon" alt="check icon"></a>
+          <a href="#"><div><h4>Aa</h4><h4>Print</h4></div><h5 class="add-text">add</h5><img src="../assets/imgs/check.svg" class="check-icon" alt="check icon"></a>
+        </section>
+      </div>
+    </div>
+
+    <h1 contenteditable="true"
+        style="font-family:'${font._id}-font'; line-height: 4.5vw; word-wrap: break-word; overflow-wrap: break-word; white-space: normal; outline: none;">
+      ${displayText}
+    </h1>
+    <div class="actions-wrapper" style="display:flex; gap:1vw;">
+      <section class="list_information">
+        <a href="#" class="button save-btn"><h4>Serif</h4></a>
+        <a href="#" class="button save-btn"><h4>All Caps</h4></a>
+      </section>
+    </div>
+  `;
+
+  singleFontView.innerHTML = "";
+  singleFontView.appendChild(controlsDiv);
+  singleFontView.appendChild(listDiv);
+
+  setupSingleViewEvents(controlsDiv, listDiv, font);
+
+  const backBtn = controlsDiv.querySelector("#backToCollection");
+  backBtn?.addEventListener("click", (e) => {
+    e.preventDefault();
+    closeSingleFontView();
+  });
+}
+
+function setupSingleViewEvents(controlsContainer, displayContainer, font) {
+
+  // -------------------------
+  // FAVOURITE + SAVE 
+  // -------------------------
+  const favBtn = displayContainer.querySelector(".fav-btn img");
+  favBtn?.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const selected = favBtn.src.includes("../assets/imgs/fav_selected.svg");
+    favBtn.src = selected ? "../assets/imgs/fav.svg" : "../assets/imgs/fav_selected.svg";
+  });
+
+  const saveMenu = displayContainer.querySelector(".save_list");
+  const saveBtn = displayContainer.querySelector(".save-btn");
+
+  if (saveMenu) saveMenu.style.display = "none";
+
+  if (saveBtn && saveMenu) {
+    saveBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const isOpening = saveMenu.style.display === "none";
+      saveMenu.style.display = isOpening ? "block" : "none";
+      saveBtn.classList.toggle("selected", isOpening);
+    });
+  }
+
+  // -------------------------
+  // SLIDERS
+  // -------------------------
+  const h1 = displayContainer.querySelector("h1");
+  const fontSize = controlsContainer.querySelector("#fontSize");
+  const letterSpacing = controlsContainer.querySelector("#letterSpacing");
+  const lineHeight = controlsContainer.querySelector("#lineHeight");
+
+  const fontSizeValue = controlsContainer.querySelector("#fontSizeValue");
+  const letterSpacingValue = controlsContainer.querySelector("#letterSpacingValue");
+  const lineHeightValue = controlsContainer.querySelector("#lineHeightValue");
+
+  fontSize?.addEventListener("input", function () {
+    if (fontSizeValue) fontSizeValue.textContent = this.value + "pt";
+    if (h1) h1.style.fontSize = this.value + "pt";
+  });
+
+  letterSpacing?.addEventListener("input", function () {
+    if (letterSpacingValue) letterSpacingValue.textContent = this.value + "pt";
+    if (h1) h1.style.letterSpacing = this.value + "pt";
+  });
+
+  lineHeight?.addEventListener("input", function () {
+    if (lineHeightValue) lineHeightValue.textContent = this.value;
+    if (h1) h1.style.lineHeight = this.value;
+  });
+
+  // -------------------------
+  // CHOOSE STYLE 
+  // -------------------------
+  const chooseBtn = controlsContainer.querySelector("#choose_style_btn");
+  const menu = controlsContainer.querySelector("#styles_menu");
+
+  const singleFamily = `${font._id}-font-single`;
+
+  let singleFace = document.getElementById("single-font-face");
+  if (!singleFace) {
+    singleFace = document.createElement("style");
+    singleFace.id = "single-font-face";
+    document.head.appendChild(singleFace);
+  }
+
+  function applyWeight(weight) {
+    singleFace.textContent = `
+      @font-face {
+        font-family: '${singleFamily}';
+        src: url('../assets/fonts/${weight.file}');
+      }
+    `;
+    if (h1) h1.style.fontFamily = `'${singleFamily}'`;
+  }
+
+  function buildStylesMenu() {
+    if (!menu) return;
+    menu.innerHTML = "";
+
+    const defaultWeight = font.weights.find(w => w.default) || font.weights[0];
+
+    font.weights.forEach((w) => {
+      const optionLink = document.createElement("a");
+      optionLink.href = "#";
+      optionLink.className = "option style-option";
+
+      const optionSelected = document.createElement("div");
+      optionSelected.className = "option_selected";
+      if (w === defaultWeight) optionSelected.classList.add("selected");
+
+      const optionText = document.createElement("h5");
+      optionText.textContent = w.style;
+
+      optionLink.appendChild(optionSelected);
+      optionLink.appendChild(optionText);
+      menu.appendChild(optionLink);
+
+      optionLink.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        menu.querySelectorAll(".option_selected").forEach(sel => sel.classList.remove("selected"));
+        optionSelected.classList.add("selected");
+
+        applyWeight(w);
+
+        menu.style.display = "none";
+        chooseBtn?.classList.remove("selected");
+      });
+    });
+
+    applyWeight(defaultWeight);
+  }
+
+  buildStylesMenu();
+
+ chooseBtn?.addEventListener("click", (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  if (!menu) return;
+
+  const isOpening = menu.style.display === "none";
+  menu.style.display = isOpening ? "block" : "none";
+  chooseBtn.classList.toggle("selected", isOpening);
+
+  displayContainer.classList.toggle("shifted", isOpening);
+});
+
+document.addEventListener("click", (e) => {
+  if (menu && chooseBtn && !menu.contains(e.target) && !chooseBtn.contains(e.target)) {
+    menu.style.display = "none";
+    chooseBtn.classList.remove("selected");
+    displayContainer.classList.remove("shifted");
+  }
+});
+
+  document.addEventListener("click", (e) => {
+    if (menu && chooseBtn && !menu.contains(e.target) && !chooseBtn.contains(e.target)) {
+      menu.style.display = "none";
+      chooseBtn.classList.remove("selected");
+    }
+    if (saveMenu && saveBtn && !saveMenu.contains(e.target) && !saveBtn.contains(e.target)) {
+      saveMenu.style.display = "none";
+      saveBtn.classList.remove("selected");
+    }
+  });
+}
+
+
+
+
     // =========================
     // VIEW MODE (GRID/LIST)
     // =========================
@@ -166,7 +475,7 @@ function normalizeForAllCaps(text) {
                     <a href="#"><div><h4>Aa</h4><h4>Print</h4></div><h5 class="add-text">add</h5><img src="../assets/imgs/check.svg" class="check-icon" alt="check icon"></a>
                 </section>
             </div>
-            <h1 class="sampleText" contenteditable="true" style="font-family:'${font._id}-font'; word-wrap: break-word; overflow-wrap: break-word; white-space: normal; outline: none;">${displayText}</h1>
+            <h1 class="sampleText" contenteditable="true" style="font-family:'${font._id}-font'; line-height: 4.5vw; word-wrap: break-word; overflow-wrap: break-word; white-space: normal; outline: none;">${displayText}</h1>
         `;
         
 listDiv.addEventListener('click', (e) => {
@@ -983,180 +1292,3 @@ if (editable) {
 main();
 
 console.log(require("process").platform)
-
-
-    // ==========================================
-    // SINGLE FONT VIEW 
-    // ==========================================
-    function showSingleFont(font) {
-        const grid = document.querySelector(".grid");
-        
-        grid.innerHTML = '';
-        grid.classList.remove('grid_view');
-        grid.classList.add('list_view');
-        grid.classList.add('single-view-mode');
-
-        const defaultWeight = font.weights.find(w => w.default) || font.weights[0];
-        const numStyles = font.weights.length;
-        const hasAllCaps = font.tags && font.tags.includes("All Caps");
-        const sampleText = "The quick brown fox jumps over the lazy dog.";
-        const displayText = hasAllCaps ? sampleText.toUpperCase() : sampleText;
-
-        const controlsDiv = document.createElement("div");
-        controlsDiv.className = "bar_individual_font"; 
-        controlsDiv.classList.add("force-visible-controls"); 
-        
-        controlsDiv.innerHTML = `
-            <a href="#" class="button" id="backToCollection">
-                <img src="../assets/imgs/collections.svg" alt="icon my collections"/>
-                <h4>Choose style</h4>
-            </a>
-            
-            <div class="sliders">
-                <div class="divLabel">
-                    <label class="rangeLabel" for="fontSize">
-                        <span>font size</span>
-                        <span class="range-value" id="fontSizeValue">48pt</span>
-                    </label>
-                    <div class="range-container">
-                        <input type="range" id="fontSize" min="12" max="200" value="48">
-                    </div>
-                </div>
-                <div class="divLabel">
-                    <label class="rangeLabel" for="letterSpacing">
-                        <span>tracking</span>  
-                        <span class="range-value" id="letterSpacingValue">0pt</span>
-                    </label>
-                    <div class="range-container">
-                        <input type="range" id="letterSpacing" min="-5" max="50" value="0" step="0.5">
-                    </div>
-                </div>
-                <div class="divLabel">
-                    <label class="rangeLabel" for="lineHeight">
-                        <span>leading</span>
-                        <span class="range-value" id="lineHeightValue">1.5</span>
-                    </label>
-                    <div class="range-container">
-                        <input type="range" id="lineHeight" min="0.8" max="3" value="1.5" step="0.1">
-                    </div>
-                </div>
-            </div>
-
-            <div class="actions-wrapper" style="display:flex; gap:1vw;">
-                <section class="list_information">
-                    <a href="#" class="button save-btn">
-                        <h4>Serif</h4>
-                    </a>
-                    <a href="#" class="button save-btn">
-                        <h4>All Caps</h4>
-                    </a>
-                </section>
-                
-            </div>
-        `;
-
-        const listDiv = document.createElement("div");
-listDiv.className = "list";
-
-        
-        listDiv.innerHTML = `
-            <div class="list_information_bar">
-                <section class="list_information">
-                    <h3>${font.name}</h3>
-                    ${font.foundry !== "Unknown" ? `<h3>${font.foundry}</h3>` : ""}
-                    <h3>${numStyles} ${numStyles === 1 ? 'style' : 'styles'}</h3>
-                    ${font.variable ? '<h3>Variable</h3>' : ''}
-                </section>
-                <div class="actions-wrapper" style="display:flex; gap:1vw;">
-                <section class="list_information">
-                    <a href="#" class="fav-btn"><img src="../assets/imgs/fav.svg" alt="favourite"/></a>
-                    <a href="#" class="button save-btn">
-                        <h4>Save</h4>
-                    </a>
-                </section>
-                
-                <section class="save_list">
-                    <h4>Save font on...</h4>
-                    <a href="#"><div><h4>Aa</h4><h4>Web</h4></div><h5 class="add-text">add</h5><img src="../assets/imgs/check.svg" class="check-icon" alt="check icon"></a>
-                    <a href="#"><div><h4>Aa</h4><h4>Print</h4></div><h5 class="add-text">add</h5><img src="../assets/imgs/check.svg" class="check-icon" alt="check icon"></a>
-                </section>
-            </div>
-            </div>
-
-            <h1 contenteditable="true" style="font-family:'${font._id}-font'; word-wrap: break-word; overflow-wrap: break-word; white-space: normal; outline: none;">${displayText}</h1>
-        `;
-
-        grid.appendChild(controlsDiv);
-        grid.appendChild(listDiv);
-
-        setupSingleViewEvents(controlsDiv, listDiv, font);
-
-        const backBtn = controlsDiv.querySelector("#backToCollection");
-        if(backBtn) {
-            backBtn.addEventListener("click", (e) => {
-                e.preventDefault();
-                location.reload(); 
-            });
-        }
-    }
-
-    function setupSingleViewEvents(controlsContainer, displayContainer, font) {
-        // FAVOURITE
-        const favBtn = controlsContainer.querySelector('.fav-btn img');
-        if (favBtn) {
-            favBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                const selected = favBtn.src.includes("../assets/imgs/fav_selected.svg");
-                favBtn.src = selected ? "../assets/imgs/fav.svg" : "../assets/imgs/fav_selected.svg";
-            });
-        }
-        
-        // SAVE MENU
-        const saveMenu = controlsContainer.querySelector('.save_list');
-        const saveBtn = controlsContainer.querySelector('.save-btn');
-        
-        if (saveMenu) saveMenu.style.display = "none";
-        
-        if (saveBtn) {
-            saveBtn.addEventListener("click", (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                const isOpening = saveMenu.style.display === "none";
-                saveMenu.style.display = isOpening ? "block" : "none";
-                if (isOpening) saveBtn.classList.add("selected");
-                else saveBtn.classList.remove("selected");
-            });
-        }
-
-        // FONT CONTROLS
-        const h1 = displayContainer.querySelector('h1');
-        const fontSize = controlsContainer.querySelector('#fontSize');
-        const letterSpacing = controlsContainer.querySelector('#letterSpacing');
-        const lineHeight = controlsContainer.querySelector('#lineHeight');
-        
-        const fontSizeValue = controlsContainer.querySelector('#fontSizeValue');
-        const letterSpacingValue = controlsContainer.querySelector('#letterSpacingValue');
-        const lineHeightValue = controlsContainer.querySelector('#lineHeightValue');
-        
-        if (fontSize && fontSizeValue && h1) {
-            fontSize.addEventListener('input', function() {
-                fontSizeValue.textContent = this.value + 'pt';
-                h1.style.fontSize = this.value + 'pt';
-            });
-        }
-        
-        if (letterSpacing && letterSpacingValue && h1) {
-            letterSpacing.addEventListener('input', function() {
-                letterSpacingValue.textContent = this.value + 'pt';
-                h1.style.letterSpacing = this.value + 'pt';
-            });
-        }
-        
-        if (lineHeight && lineHeightValue && h1) {
-            lineHeight.addEventListener('input', function() {
-                lineHeightValue.textContent = this.value;
-                h1.style.lineHeight = this.value;
-            });
-        }
-    }

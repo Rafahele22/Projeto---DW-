@@ -270,7 +270,7 @@ nav {
 main {
     display: block;
     width: 96%;
-    margin-top: 22vh;
+    margin-top: 17vh;
     padding: 2%;
 }
 
@@ -282,7 +282,7 @@ main {
     align-items: center;
     width: 92.3%;
     padding-bottom: 1vh;
-    padding-top: 15vh;
+    padding-top: 11vh;
     background-color: var(--light_grey);
 }
 
@@ -497,11 +497,19 @@ main {
     width: auto;
 }
 
+.list_individual {
+    position: relative;
+    border-radius: 5vh;
+    padding: 1.5vw;
+    width: auto;
+    background-color: var(--grey);
+}
+
 .list:hover {
     background-color: var(--grey);
 }
 
-.list h1 {
+.list h1, .list_individual h1 {
     font-size: 3.5vw;
     line-height: 3.5vw;
     padding-top: 4vh;
@@ -532,11 +540,11 @@ main {
 }
 
 /* Special Behaviors */
-.list[data-all-caps="1"] h1.sampleText {
+.list[data-all-caps="1"] h1.sampleText, .list_individual[data-all-caps="1"] h1.sampleText {
     text-transform: uppercase;
 }
 
-.list.force-visible .divLabel {
+.list.force-visible .divLabel, .list_individual.force-visible .divLabel {
     opacity: 1 !important;
     pointer-events: auto !important;
 }
@@ -553,14 +561,97 @@ main {
 
 /* ===== SINGLE FONT VIEW / CONTROLS ===== */
 .bar_individual_font {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
     align-items: center;
+    
     width: 100%;
     margin-bottom: 2vh;
-    padding: 0 1vw; 
+    padding: 0; 
     box-sizing: border-box;
 }
+
+#backToCollection {
+    position: fixed;
+    top: 14vh;
+    margin:0;
+    z-index: 1000;
+}
+
+body.single-font-open #second_bar,
+body.single-font-open #filters {
+  display: none !important;
+}
+
+/* Esconder a grelha/lista sem apagar DOM (preserva filtros/texto) */
+.grid.is-hidden {
+  display: none !important;
+}
+
+/* Container da single view (criado via JS) */
+#singleFontView {
+  width: 100%;
+}
+
+/* (Opcional) se o teu CSS estiver a usar .barindividualfont mas o JS cria bar_individual_font */
+.bar_individual_font,
+.barindividualfont {
+  width: 100%;
+}
+
+.choose-style-wrapper { 
+    position: relative; 
+    width: fit-content; 
+    justify-self: right;
+}
+
+.styles_menu{
+  position: absolute;
+  top: 0vh;
+  left: 0;
+  width: 21vw;
+  max-height: 80vh;
+  overflow-y: auto;
+
+  background: var(--grey);
+  border-radius: 1.5vh;
+  padding: 1vw;
+  padding-top: 6vh;
+
+  z-index: 12; /* (não uses negativo) */
+}
+
+#choose_style_btn { 
+    z-index: 13; 
+    position: relative; 
+    width: 21vw;
+    display: flex;
+    justify-content: space-between;
+    justify-self: right;
+}
+
+#choose_style_btn.selected {
+    background-color: var(--grey);
+}
+
+#choose_style_btn.selected h4 {
+    color: var(--black);
+}
+
+.list_individual.shifted{
+  margin-right: 24.2vw;
+}
+
+/* opcional: garantir que não cria scroll horizontal */
+.list_individual{
+  box-sizing: border-box;
+}
+
+/* Dá o mesmo “fill” roxo quando selecionado (como foundry) */
+.styles_menu .option_selected.selected { background-color: var(--purple); }
+
+
+
 
 .bar_individual_font .divLabel {
     opacity: 1 !important;
@@ -600,6 +691,7 @@ main {
 .sliders {
     display: flex;
     gap: 2vw;
+    grid-column: 2/3;
 }
 
 /* ===== SAVE MENU & POPUPS ===== */
@@ -657,7 +749,7 @@ main {
 
 /* Save Button Interaction Logic */
 .grid_view article:hover .save-btn:not(.selected), 
-.list:hover .save-btn:not(.selected) {
+.list:hover .save-btn:not(.selected), .list_individual .save-btn:not(.selected) {
     background-color: var(--light_grey);
 }
 
