@@ -49,9 +49,7 @@ function buildSimilarSection({ currentFont, fontsAll, onOpenFont }) {
 
     article.innerHTML = `
       <section class="grid_information">
-        <a href="#" class="button save-btn">
-          <h4>Save</h4>
-        </a>
+        <a href="#" class="button save-btn"><h4>Save</h4></a>
         <a href="#" class="fav-btn"><img src="../assets/imgs/fav.svg" alt="favourite"/></a>
       </section>
 
@@ -79,12 +77,11 @@ function buildSimilarSection({ currentFont, fontsAll, onOpenFont }) {
 
     // Fav
     const favImg = article.querySelector(".fav-btn img");
-favImg?.addEventListener("click", (e) => {
-  e.preventDefault();
-  e.stopPropagation();
-  toggleFavIcon(favImg);
-});
-
+    favImg?.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleFavIcon(favImg);
+    });
 
     // Save menu
     const saveMenu = article.querySelector(".save");
@@ -174,15 +171,15 @@ export function createSingleFontView({ gridEl, filtersPanelEl, filtersBtnEl, get
 
     // FAVOURITE
     const favBtn = displayContainer.querySelector(".fav-btn img");
-favBtn?.addEventListener(
-  "click",
-  (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    toggleFavIcon(favBtn);
-  },
-  { signal }
-);
+    favBtn?.addEventListener(
+      "click",
+      (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        toggleFavIcon(favBtn);
+      },
+      { signal }
+    );
 
     // SAVE MENU
     const saveMenu = displayContainer.querySelector(".save_list");
@@ -204,47 +201,93 @@ favBtn?.addEventListener(
     );
 
     // SLIDERS
-    const h1 = displayContainer.querySelector("h1");
-    const fontSize = controlsContainer.querySelector("#fontSize");
-    const letterSpacing = controlsContainer.querySelector("#letterSpacing");
-    const lineHeight = controlsContainer.querySelector("#lineHeight");
+const h1 = displayContainer.querySelector("h1.sampleText") || displayContainer.querySelector("h1");
 
-    const fontSizeValue = controlsContainer.querySelector("#fontSizeValue");
-    const letterSpacingValue = controlsContainer.querySelector("#letterSpacingValue");
-    const lineHeightValue = controlsContainer.querySelector("#lineHeightValue");
+const fontSize = controlsContainer.querySelector("#fontSize");
+const letterSpacing = controlsContainer.querySelector("#letterSpacing");
+const lineHeight = controlsContainer.querySelector("#lineHeight");
 
-    fontSize?.addEventListener(
-      "input",
-      function () {
-        if (fontSizeValue) fontSizeValue.textContent = this.value + "pt";
-        if (h1) h1.style.fontSize = this.value + "pt";
-      },
-      { signal }
-    );
+const fontSizeValue = controlsContainer.querySelector("#fontSizeValue");
+const letterSpacingValue = controlsContainer.querySelector("#letterSpacingValue");
+const lineHeightValue = controlsContainer.querySelector("#lineHeightValue");
 
-    letterSpacing?.addEventListener(
-      "input",
-      function () {
-        if (letterSpacingValue) letterSpacingValue.textContent = this.value + "pt";
-        if (h1) h1.style.letterSpacing = this.value + "pt";
-      },
-      { signal }
-    );
+function clamp(min, max, v) {
+  return Math.min(max, Math.max(min, v));
+}
 
-    lineHeight?.addEventListener(
-      "input",
-      function () {
-        if (lineHeightValue) lineHeightValue.textContent = this.value;
-        if (h1) h1.style.lineHeight = this.value;
-      },
-      { signal }
-    );
+// aplica valores iniciais ao abrir
+if (fontSizeValue && fontSize) fontSizeValue.textContent = fontSize.value + "pt";
+if (letterSpacingValue && letterSpacing) letterSpacingValue.textContent = letterSpacing.value + "pt";
+if (lineHeightValue && lineHeight) lineHeightValue.textContent = lineHeight.value + "%";
+
+if (h1 && fontSize) h1.style.fontSize = fontSize.value + "pt";
+if (h1 && letterSpacing) h1.style.letterSpacing = letterSpacing.value + "pt";
+if (h1 && lineHeight) h1.style.lineHeight = lineHeight.value + "%";
+
+// animação do leading (%) (suave)
+let leadingAnim = null;
+
+function animateLineHeightPercentTo(targetPercent, duration = 200) {
+  if (!lineHeight) return;
+
+  const start = lineHeight.valueAsNumber; // número do range [web:323]
+  const end = targetPercent;
+  const t0 = performance.now();
+
+  if (leadingAnim) cancelAnimationFrame(leadingAnim);
+
+  function tick(now) {
+    const t = clamp(0, 1, (now - t0) / duration);
+    const eased = 1 - Math.pow(1 - t, 3);
+    const v = start + (end - start) * eased;
+
+    const vRounded = Math.round(v);
+
+    lineHeight.value = String(vRounded);
+    if (lineHeightValue) lineHeightValue.textContent = vRounded + "%";
+    if (h1) h1.style.lineHeight = vRounded + "%";
+
+    if (t < 1) leadingAnim = requestAnimationFrame(tick);
+  }
+
+  leadingAnim = requestAnimationFrame(tick);
+}
+
+// fontSize: só muda o tamanho (o leading em % mantém a proporção automaticamente)
+fontSize?.addEventListener(
+  "input",
+  function () {
+    if (fontSizeValue) fontSizeValue.textContent = this.value + "pt";
+    if (h1) h1.style.fontSize = this.value + "pt";
+  },
+  { signal }
+);
+
+// tracking: só tracking
+letterSpacing?.addEventListener(
+  "input",
+  function () {
+    if (letterSpacingValue) letterSpacingValue.textContent = this.value + "pt";
+    if (h1) h1.style.letterSpacing = this.value + "pt";
+  },
+  { signal }
+);
+
+// leading: o utilizador mexe -> aplica % (com animação opcional)
+lineHeight?.addEventListener(
+  "input",
+  function () {
+    const target = this.valueAsNumber; // [web:323]
+    animateLineHeightPercentTo(target, 120);
+  },
+  { signal }
+);
+
 
     // CHOOSE STYLE
     const chooseBtn = controlsContainer.querySelector("#choose_style_btn");
-const menu = controlsContainer.querySelector("#styles_menu");
-const menuScroll = menu?.querySelector(".styles_menu_scroll");
-
+    const menu = controlsContainer.querySelector("#styles_menu");
+    const menuScroll = menu?.querySelector(".styles_menu_scroll");
 
     const singleFamily = `${font._id}-font-single`;
 
@@ -267,8 +310,7 @@ const menuScroll = menu?.querySelector(".styles_menu_scroll");
 
     function buildStylesMenu() {
       if (!menuScroll) return;
-menuScroll.innerHTML = "";
-
+      menuScroll.innerHTML = "";
 
       const defaultWeight = font.weights.find((w) => w.default) || font.weights[0];
 
@@ -288,21 +330,19 @@ menuScroll.innerHTML = "";
         optionLink.appendChild(optionText);
         menuScroll.appendChild(optionLink);
 
-
         optionLink.addEventListener(
-  "click",
-  (e) => {
-    e.preventDefault();
-    e.stopPropagation();
+          "click",
+          (e) => {
+            e.preventDefault();
+            e.stopPropagation();
 
-    menuScroll?.querySelectorAll(".option_selected").forEach((sel) => sel.classList.remove("selected"));
+            menuScroll.querySelectorAll(".option_selected").forEach((sel) => sel.classList.remove("selected"));
+            optionSelected.classList.add("selected");
 
-    applyWeight(w);
-
-  },
-  { signal }
-);
-
+            applyWeight(w);
+          },
+          { signal }
+        );
       });
 
       applyWeight(defaultWeight);
@@ -348,6 +388,7 @@ menuScroll.innerHTML = "";
 
     const numStyles = font.weights.length;
     const hasAllCaps = font.tags && font.tags.includes("All Caps");
+
     const globalText = getGlobalSampleText() || "The quick brown fox jumps over the lazy dog.";
     const displayText = hasAllCaps ? globalText.toUpperCase() : globalText;
 
@@ -383,15 +424,15 @@ menuScroll.innerHTML = "";
         </div>
 
         <div class="divLabel">
-          <label class="rangeLabel" for="lineHeight">
-            <span>leading</span>
-            <span class="range-value" id="lineHeightValue">1.5</span>
-          </label>
-          <div class="range-container">
-            <input type="range" id="lineHeight" min="0.8" max="3" value="1.5" step="0.1">
-          </div>
-        </div>
-      </div>
+  <label class="rangeLabel" for="lineHeight">
+    <span>leading</span>
+    <span class="range-value" id="lineHeightValue">100%</span>
+  </label>
+  <div class="range-container">
+    <input type="range" id="lineHeight" min="80" max="300" value="100" step="1">
+  </div>
+</div>
+</div>
 
       <div class="choose-style-wrapper">
         <a href="#" class="button" id="choose_style_btn">
@@ -399,15 +440,15 @@ menuScroll.innerHTML = "";
           <img src="../assets/imgs/arrow.svg" alt="icon arrow down"/>
         </a>
         <div id="styles_menu" class="styles_menu" style="display:none;">
-  <div class="styles_menu_scroll"></div>
-</div>
-
+          <div class="styles_menu_scroll"></div>
+        </div>
       </div>
     `;
 
     const listDiv = document.createElement("div");
     listDiv.className = "list_individual";
     listDiv.dataset.allCaps = hasAllCaps ? "1" : "0";
+
     const tagsHTML = renderFontTags(font);
     const designers = Array.isArray(font?.design) ? font.design : [];
     const designersText = designers.length ? designers.map(escapeHtml).join(", ") : "";
@@ -415,12 +456,12 @@ menuScroll.innerHTML = "";
     listDiv.innerHTML = `
       <div class="list_information_bar">
         <section class="list_information">
-  <h3>${font.name}</h3>
-  ${font.foundry !== "Unknown" ? `<h3>${font.foundry}</h3>` : ""}
-  ${designersText ? `<h3>${designersText}</h3>` : ""}
-  <h3>${numStyles} ${numStyles === 1 ? "style" : "styles"}</h3>
-  ${font.variable ? "<h3>Variable</h3>" : ""}
-</section>
+          <h3>${font.name}</h3>
+          ${font.foundry !== "Unknown" ? `<h3>${font.foundry}</h3>` : ""}
+          ${designersText ? `<h3>${designersText}</h3>` : ""}
+          <h3>${numStyles} ${numStyles === 1 ? "style" : "styles"}</h3>
+          ${font.variable ? "<h3>Variable</h3>" : ""}
+        </section>
 
         <section class="list_information">
           <a href="#" class="fav-btn"><img src="../assets/imgs/fav.svg" alt="favourite"/></a>
@@ -435,10 +476,9 @@ menuScroll.innerHTML = "";
       </div>
 
       <h1 class="sampleText" contenteditable="true"
-    style="font-family:'${font._id}-font'; line-height: 4.5vw; word-wrap: break-word; overflow-wrap: break-word; white-space: normal; outline: none;">
-  ${displayText}
-</h1>
-
+          style="font-family:'${font._id}-font'; line-height: 4.5vw; word-wrap: break-word; overflow-wrap: break-word; white-space: normal; outline: none;">
+        ${displayText}
+      </h1>
 
       ${tagsHTML}
     `;
