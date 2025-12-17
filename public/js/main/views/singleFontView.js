@@ -403,15 +403,18 @@ export function createSingleFontView({ gridEl, filtersPanelEl, filtersBtnEl, get
     const listDiv = document.createElement("div");
     listDiv.className = "list_individual";
     const tagsHTML = renderFontTags(font);
+    const designers = Array.isArray(font?.design) ? font.design : [];
+    const designersText = designers.length ? designers.map(escapeHtml).join(", ") : "";
 
     listDiv.innerHTML = `
       <div class="list_information_bar">
         <section class="list_information">
-          <h3>${font.name}</h3>
-          ${font.foundry !== "Unknown" ? `<h3>${font.foundry}</h3>` : ""}
-          <h3>${numStyles} ${numStyles === 1 ? "style" : "styles"}</h3>
-          ${font.variable ? "<h3>Variable</h3>" : ""}
-        </section>
+  <h3>${font.name}</h3>
+  ${font.foundry !== "Unknown" ? `<h3>${font.foundry}</h3>` : ""}
+  ${designersText ? `<h3>${designersText}</h3>` : ""}
+  <h3>${numStyles} ${numStyles === 1 ? "style" : "styles"}</h3>
+  ${font.variable ? "<h3>Variable</h3>" : ""}
+</section>
 
         <section class="list_information">
           <a href="#" class="fav-btn"><img src="../assets/imgs/fav.svg" alt="favourite"/></a>
