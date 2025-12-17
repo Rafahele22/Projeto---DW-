@@ -93,7 +93,7 @@ article.innerHTML = `
 `;
 
 
-// Fav
+// FAVOURITE
 const favImg = article.querySelector(".fav-btn img");
 favImg?.addEventListener("click", (e) => {
 e.preventDefault();
@@ -103,7 +103,7 @@ toggleFavIcon(favImg);
 
 
 
-// Save menu
+// SAVE MENU
 const saveMenu = article.querySelector(".save");
 const saveBtn = article.querySelector(".save-btn");
 if (saveMenu) saveMenu.style.display = "none";
@@ -287,6 +287,38 @@ lineHeight?.addEventListener(
   },
   { signal }
 );
+
+const tagLinks = displayContainer.querySelectorAll(".font-tags a.tag-btn");
+
+tagLinks.forEach((link) => {
+  link.addEventListener(
+    "click",
+    (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const tag = link.textContent.trim();
+
+      closeSingleFontView();
+
+      if (filtersPanelEl) filtersPanelEl.style.display = "block";
+      gridEl?.classList.add("shifted");
+      filtersBtnEl?.classList.add("selected");
+
+      requestAnimationFrame(() => {
+        const filterTagButtons = Array.from(document.querySelectorAll(".tag-btn"));
+
+        const targetBtn = filterTagButtons.find((btn) => btn.textContent.trim() === tag);
+        if (!targetBtn) return;
+
+        targetBtn.scrollIntoView({ block: "center" }); 
+        targetBtn.click(); 
+      });
+    },
+    { signal }
+  );
+});
+
 
 
 
