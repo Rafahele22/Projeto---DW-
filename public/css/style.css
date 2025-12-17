@@ -287,7 +287,7 @@ nav {
 main {
     display: block;
     width: 96%;
-    margin-top: 17vh;
+    margin-top: 18vh;
     padding: 2%;
 }
 
@@ -303,11 +303,15 @@ main {
     background-color: var(--light_grey);
 }
 
+#second_bar section a img {
+    height: 3.4vh;
+}
+
 #search_bar {
     justify-self: center;
     display: flex;
     justify-content: space-between;
-    width: 100%;
+    width: 80%;
 }
 
 #search_bar:hover {
@@ -319,6 +323,8 @@ main {
     background: transparent;
     width: 100%;
     outline: none;
+    line-height: 1vw;
+    font-size: 1vw;
 }
 
 #second_bar section {
@@ -493,7 +499,7 @@ main {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 8%;
+    padding: 2.8vh;
     width: 100%;
     box-sizing: border-box;
     min-width: 0;
@@ -846,6 +852,10 @@ color: var(--light_grey);
     display: block !important;
 }
 
+.fav-btn img {
+    height: 3.4vh;
+}
+
 /* ===== LOGIN / REGISTER FORMS ===== */
 .loginContentor {
     position: fixed;
@@ -890,4 +900,66 @@ form button:hover img {
 
 .selected h4 {
     color: var(--light_grey);
+}
+
+
+@media (max-width: 950px) {
+   
+    main {
+    margin-top: 20vh;
+}
+
+  h2, h3 {
+    font-size: 2vw;
+}
+
+h4, h5, .rangeLabel span, #search_bar input[type="text"] {
+    font-size: 1.5vw;
+}
+
+h6, form h5 {
+    font-size: 1.2vw;
+}
+
+#logo {
+    width: 18vw;
+}
+
+.button img, 
+.check-icon, 
+button[type="submit"] img {
+    width: 1.5vw;
+}
+
+.button {
+    padding: 1.3vh 15px;
+    gap: 0.8vw;
+}
+
+.fav-btn img, #second_bar section a img {
+    height: 3vh;
+}
+
+.grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.grid.shifted {
+    margin-left: 32.4vw;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: calc(100% - 32.4vw);
+}
+
+#filters {
+    width: 30vw;
+}
+
+.list {
+    padding: 2.2vw;
+}
+
+
+
+
+
 }
