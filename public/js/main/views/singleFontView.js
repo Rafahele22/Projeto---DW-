@@ -42,9 +42,7 @@ function buildSimilarSection({ currentFont, fontsAll, onOpenFont }) {
     ensureFontFace(font);
 
     const numStyles = font.weights.length;
-    const globalText = getGlobalSampleText() || "Aa";
-    const sampleText = font.tags?.includes("All Caps") ? globalText.toUpperCase() : globalText;
-
+    const sampleLetter = font.tags?.includes("All Caps") ? "AA" : "Aa";
 
     const article = document.createElement("article");
     article.dataset.fontId = font._id;
@@ -71,7 +69,7 @@ function buildSimilarSection({ currentFont, fontsAll, onOpenFont }) {
         </a>
       </section>
 
-      <h1 style="font-family:'${font._id}-font'">${escapeHtml(sampleText)}</h1>
+      <h1 style="font-family:'${font._id}-font'">${sampleLetter}</h1>
 
       <section class="grid_information">
         <h2>${font.name}</h2>
@@ -244,7 +242,9 @@ favBtn?.addEventListener(
 
     // CHOOSE STYLE
     const chooseBtn = controlsContainer.querySelector("#choose_style_btn");
-    const menu = controlsContainer.querySelector("#styles_menu");
+const menu = controlsContainer.querySelector("#styles_menu");
+const menuScroll = menu?.querySelector(".styles_menu_scroll");
+
 
     const singleFamily = `${font._id}-font-single`;
 
@@ -266,8 +266,9 @@ favBtn?.addEventListener(
     }
 
     function buildStylesMenu() {
-      if (!menu) return;
-      menu.innerHTML = "";
+      if (!menuScroll) return;
+menuScroll.innerHTML = "";
+
 
       const defaultWeight = font.weights.find((w) => w.default) || font.weights[0];
 
@@ -285,7 +286,8 @@ favBtn?.addEventListener(
 
         optionLink.appendChild(optionSelected);
         optionLink.appendChild(optionText);
-        menu.appendChild(optionLink);
+        menuScroll.appendChild(optionLink);
+
 
         optionLink.addEventListener(
   "click",
@@ -293,8 +295,7 @@ favBtn?.addEventListener(
     e.preventDefault();
     e.stopPropagation();
 
-    menu.querySelectorAll(".option_selected").forEach((sel) => sel.classList.remove("selected"));
-    optionSelected.classList.add("selected");
+    menuScroll?.querySelectorAll(".option_selected").forEach((sel) => sel.classList.remove("selected"));
 
     applyWeight(w);
 
@@ -397,7 +398,10 @@ favBtn?.addEventListener(
           <h4>Choose style</h4>
           <img src="../assets/imgs/arrow.svg" alt="icon arrow down"/>
         </a>
-        <div id="styles_menu" class="styles_menu" style="display:none;"></div>
+        <div id="styles_menu" class="styles_menu" style="display:none;">
+  <div class="styles_menu_scroll"></div>
+</div>
+
       </div>
     `;
 

@@ -656,16 +656,19 @@ body.single-font-open #filters {
   position: absolute;
   top: 0vh;
   left: 0;
-  width: 21vw;
-  max-height: 47.4vh;
-  overflow-y: auto;
-
+  width: 95.8%;
   background: var(--grey);
-  border-radius: 1.5vh;
-  padding: 1vw;
-  padding-top: 6vh;
-
+  border-radius: 2vh;
+  padding-left: 1vw;
+  padding-bottom: 1vw;
   z-index: 2;
+  overflow: hidden;
+}
+
+.styles_menu_scroll {
+  margin-top: 6vh;
+  max-height: calc(47vh);
+  overflow-y: auto;
 }
 
 #choose_style_btn { 
@@ -696,6 +699,10 @@ body.single-font-open #filters {
 #choose_style_btn.selected img {
     transform: rotate(-180deg);
 }
+
+
+
+
 
 .list_individual.shifted{
   margin-right: 24.2vw;
