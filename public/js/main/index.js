@@ -157,13 +157,37 @@ async function main() {
       }
 
       const viewMode = setupViewModeToggle({
-        gridViewBtn,
-        listViewBtn,
-        mainGrid,
-        filtersPanel,
-        onToggle: () => filterFonts(),
-      });
-      getIsGridView = viewMode.getIsGridView;
+  gridViewBtn,
+  listViewBtn,
+  mainGrid,
+  filtersPanel,
+  onToggle: () => filterFonts(),
+});
+getIsGridView = viewMode.getIsGridView;
+
+// =========================
+// LOGO
+// =========================
+const logoLink = document.getElementById("logo")?.closest("a");
+
+logoLink?.addEventListener("click", (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+
+  singleFont.closeSingleFontView();
+
+  if (filtersPanel) filtersPanel.style.display = "none";
+  gridEl?.classList.remove("shifted");
+  filtersBtn?.classList.remove("selected");
+
+  viewMode.setGridView();
+
+  document.querySelectorAll(".list").forEach((li) => (li.style.display = "none"));
+  document.querySelectorAll("article").forEach((a) => (a.style.display = "block"));
+
+  window.scrollTo(0, 0);
+});
+
 
       const mount = window.mountFiltersAndSearch;
       if (typeof mount !== "function") {

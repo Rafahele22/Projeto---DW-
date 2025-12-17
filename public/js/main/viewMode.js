@@ -57,5 +57,15 @@ export function setupViewModeToggle({ gridViewBtn, listViewBtn, mainGrid, filter
     if (isGridView) toggleViewMode();
   });
 
-  return { getIsGridView: () => isGridView };
+  return {
+  getIsGridView() {
+    return isGridView;
+  },
+  setGridView() {
+    if (!isGridView) toggleViewMode();
+  },
+  setListView() {
+    if (isGridView) toggleViewMode();
+  },
+};
 }
