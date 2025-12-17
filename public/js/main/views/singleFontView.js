@@ -1,4 +1,5 @@
 import { escapeHtml, ensureFontFace, pickRandom, sameTags, toggleFavIcon } from "../utils.js";
+import { getGlobalSampleText } from "../state.js";
 
 function renderFontTags(font) {
   const tags = Array.isArray(font?.tags) ? font.tags : [];
@@ -41,7 +42,9 @@ function buildSimilarSection({ currentFont, fontsAll, onOpenFont }) {
     ensureFontFace(font);
 
     const numStyles = font.weights.length;
-    const sampleLetter = font.tags?.includes("All Caps") ? "AA" : "Aa";
+    const globalText = getGlobalSampleText() || "Aa";
+    const sampleText = font.tags?.includes("All Caps") ? globalText.toUpperCase() : globalText;
+
 
     const article = document.createElement("article");
     article.dataset.fontId = font._id;
@@ -68,7 +71,7 @@ function buildSimilarSection({ currentFont, fontsAll, onOpenFont }) {
         </a>
       </section>
 
-      <h1 style="font-family:'${font._id}-font'">${sampleLetter}</h1>
+      <h1 style="font-family:'${font._id}-font'">${escapeHtml(sampleText)}</h1>
 
       <section class="grid_information">
         <h2>${font.name}</h2>
@@ -344,8 +347,8 @@ favBtn?.addEventListener(
 
     const numStyles = font.weights.length;
     const hasAllCaps = font.tags && font.tags.includes("All Caps");
-    const sampleText = "The quick brown fox jumps over the lazy dog.";
-    const displayText = hasAllCaps ? sampleText.toUpperCase() : sampleText;
+    const globalText = getGlobalSampleText() || "The quick brown fox jumps over the lazy dog.";
+    const displayText = hasAllCaps ? globalText.toUpperCase() : globalText;
 
     const controlsDiv = document.createElement("div");
     controlsDiv.className = "bar_individual_font";
@@ -400,6 +403,7 @@ favBtn?.addEventListener(
 
     const listDiv = document.createElement("div");
     listDiv.className = "list_individual";
+    listDiv.dataset.allCaps = hasAllCaps ? "1" : "0";
     const tagsHTML = renderFontTags(font);
     const designers = Array.isArray(font?.design) ? font.design : [];
     const designersText = designers.length ? designers.map(escapeHtml).join(", ") : "";
@@ -426,10 +430,11 @@ favBtn?.addEventListener(
         </section>
       </div>
 
-      <h1 contenteditable="true"
-          style="font-family:'${font._id}-font'; line-height: 4.5vw; word-wrap: break-word; overflow-wrap: break-word; white-space: normal; outline: none;">
-        ${displayText}
-      </h1>
+      <h1 class="sampleText" contenteditable="true"
+    style="font-family:'${font._id}-font'; line-height: 4.5vw; word-wrap: break-word; overflow-wrap: break-word; white-space: normal; outline: none;">
+  ${displayText}
+</h1>
+
 
       ${tagsHTML}
     `;
