@@ -44,3 +44,13 @@ export function ensureFontFace(font) {
   `;
   document.head.appendChild(style);
 }
+
+export const FAV_ICON = "../assets/imgs/fav.svg";
+export const FAV_SELECTED_ICON = "../assets/imgs/fav_selected.svg";
+
+export function toggleFavIcon(imgEl) {
+  if (!imgEl) return;
+
+  const isSelected = imgEl.src.endsWith("fav_selected.svg");
+  imgEl.src = isSelected ? FAV_ICON : FAV_SELECTED_ICON;
+}

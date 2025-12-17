@@ -1,4 +1,4 @@
-import { ensureFontFace } from "../utils.js";
+import { ensureFontFace, toggleFavIcon } from "../utils.js";
 
 export function generateGridArticles({ gridEl, fonts, onOpenFont }) {
   if (!gridEl) return [];
@@ -52,13 +52,13 @@ export function generateGridArticles({ gridEl, fonts, onOpenFont }) {
     gridEl.appendChild(article);
     articles.push(article);
 
-    const favImg = article.querySelector(".fav-btn img");
-    favImg?.addEventListener("click", (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      const selected = favImg.src.includes("../assets/imgs/fav_selected.svg");
-      favImg.src = selected ? "../assets/imgs/fav.svg" : "../assets/imgs/fav_selected.svg";
-    });
+   const favImg = article.querySelector(".fav-btn img");
+favImg?.addEventListener("click", (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  toggleFavIcon(favImg);
+});
+
 
     const saveMenu = article.querySelector(".save");
     const saveBtn = article.querySelector(".save-btn");

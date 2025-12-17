@@ -1,4 +1,4 @@
-import { escapeHtml, ensureFontFace, pickRandom, sameTags } from "../utils.js";
+import { escapeHtml, ensureFontFace, pickRandom, sameTags, toggleFavIcon } from "../utils.js";
 
 function renderFontTags(font) {
   const tags = Array.isArray(font?.tags) ? font.tags : [];
@@ -78,12 +78,12 @@ function buildSimilarSection({ currentFont, fontsAll, onOpenFont }) {
 
     // Fav
     const favImg = article.querySelector(".fav-btn img");
-    favImg?.addEventListener("click", (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      const selected = favImg.src.includes("../assets/imgs/fav_selected.svg");
-      favImg.src = selected ? "../assets/imgs/fav.svg" : "../assets/imgs/fav_selected.svg";
-    });
+favImg?.addEventListener("click", (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  toggleFavIcon(favImg);
+});
+
 
     // Save menu
     const saveMenu = article.querySelector(".save");
@@ -173,16 +173,15 @@ export function createSingleFontView({ gridEl, filtersPanelEl, filtersBtnEl, get
 
     // FAVOURITE
     const favBtn = displayContainer.querySelector(".fav-btn img");
-    favBtn?.addEventListener(
-      "click",
-      (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        const selected = favBtn.src.includes("../assets/imgs/fav_selected.svg");
-        favBtn.src = selected ? "../assets/imgs/fav.svg" : "../assets/imgs/fav_selected.svg";
-      },
-      { signal }
-    );
+favBtn?.addEventListener(
+  "click",
+  (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    toggleFavIcon(favBtn);
+  },
+  { signal }
+);
 
     // SAVE MENU
     const saveMenu = displayContainer.querySelector(".save_list");

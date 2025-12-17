@@ -1,4 +1,4 @@
-import { ensureFontFace } from "../utils.js";
+import { ensureFontFace, toggleFavIcon } from "../utils.js";
 
 let isCapsLockOn = false;
 let capsLockListenersAttached = false;
@@ -73,12 +73,12 @@ export function generateListItems({ gridEl, fonts, onOpenFont, getGlobalSampleTe
 function setupListItemEvents({ listItem, getGlobalSampleText, setGlobalSampleText }) {
   // FAVOURITE
   const favBtn = listItem.querySelector(".fav-btn img");
-  favBtn?.addEventListener("click", (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    const selected = favBtn.src.includes("../assets/imgs/fav_selected.svg");
-    favBtn.src = selected ? "../assets/imgs/fav.svg" : "../assets/imgs/fav_selected.svg";
-  });
+favBtn?.addEventListener("click", (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  toggleFavIcon(favBtn);
+});
+
 
   // SAVE MENU
   const saveMenu = listItem.querySelector(".save_list");
