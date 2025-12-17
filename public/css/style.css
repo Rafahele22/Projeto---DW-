@@ -758,7 +758,7 @@ color: var(--light_grey);
     margin-top: 10vh;
 }
 
-.similar-wrapper h2 {
+.similar-wrapper > h2 {
     margin-bottom: 2vh;
 }
 
