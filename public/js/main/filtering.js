@@ -18,21 +18,18 @@ export function checkFontAgainstFilters(
     }
   }
 
-  // TAGS
   if (selectedTags.length > 0 && font?.tags) {
     if (!selectedTags.some((tag) => font.tags.includes(tag))) {
       show = false;
     }
   }
 
-  // FOUNDRY
   if (selectedFoundries.length > 0) {
     if (!selectedFoundries.includes(font?.foundry)) {
       show = false;
     }
   }
 
-  // FAMILY SIZE
   if (selectedFamilySizes.length > 0 && Array.isArray(font?.weights)) {
     const n = font.weights.length;
     let size = "";
@@ -48,7 +45,6 @@ export function checkFontAgainstFilters(
     }
   }
 
-  // VARIABLE
   if (selectedVariables.length > 0) {
     const type = font?.variable ? "Variable" : "Static";
     if (!selectedVariables.includes(type)) {

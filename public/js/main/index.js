@@ -30,7 +30,7 @@ async function main() {
   });
 
   // =========================
-  // FILTERS PANEL OPEN/CLOSE (keep existing UX)
+  // FILTERS PANEL OPEN/CLOSE 
   // =========================
   if (filtersPanel) {
     filtersPanel.style.display = "none";
@@ -71,7 +71,6 @@ async function main() {
     const fonts = await fetchFonts();
     setAllFonts(fonts);
 
-    // precompute tags + foundries (same logic as before)
     const allTags = [];
     const foundriesMap = {};
 
@@ -94,7 +93,6 @@ async function main() {
 
     allTags.sort();
 
-    // Build list + grid
     if (gridEl) {
       generateListItems({
         gridEl,
@@ -110,12 +108,10 @@ async function main() {
         onOpenFont: singleFont.showSingleFont,
       });
 
-      // View mode buttons
       const gridViewBtn = document.querySelector("#view_mode_selected");
       const listViewBtn = document.querySelector("#second_bar section a:last-of-type");
       const mainGrid = document.querySelector(".grid.grid_view");
 
-      // Filtering function (needs isGridView)
       let getIsGridView = () => true;
 
       function filterFonts({
@@ -169,7 +165,6 @@ async function main() {
       });
       getIsGridView = viewMode.getIsGridView;
 
-      // React search + filters
       const mount = window.mountFiltersAndSearch;
       if (typeof mount !== "function") {
         throw new Error("React JSX mount function not found (window.mountFiltersAndSearch)");
@@ -202,7 +197,6 @@ async function main() {
         reactApi.clearAll();
       });
 
-      // Initial state: list items hidden, articles shown
       document.querySelectorAll(".list").forEach((listItem) => {
         listItem.style.display = "none";
       });
@@ -211,7 +205,6 @@ async function main() {
         article.style.display = "block";
       });
 
-      // Set initial card heights (keep same behavior)
       function setInitialCardHeights() {
         if (!articles.length) return;
 
@@ -246,5 +239,4 @@ async function main() {
     console.error("Error loading JSON:", err);
   }
 }
-
 main();

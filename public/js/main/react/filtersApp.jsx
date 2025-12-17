@@ -177,7 +177,7 @@ function mountFiltersAndSearchImpl({ searchMountEl, filtersMountEl, allTags, fou
     throw new Error("React/ReactDOM not found. Ensure scripts are loaded.");
   }
 
-  // Single hidden root; render into existing DOM via portals
+  
   const host = document.createElement("div");
   host.id = "react_root";
   host.style.display = "none";
