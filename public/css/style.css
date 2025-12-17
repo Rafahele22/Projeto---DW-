@@ -310,6 +310,10 @@ main {
     width: 100%;
 }
 
+#search_bar:hover {
+    background-color: var(--grey);
+}
+
 #search_bar input[type="text"] {
     border: none;
     background: transparent;
