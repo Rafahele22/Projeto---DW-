@@ -529,6 +529,7 @@ main {
     border-radius: 5vh;
     padding: 1.5vw;
     width: auto;
+    cursor: pointer;
 }
 
 .list_individual {
@@ -556,6 +557,7 @@ main {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    cursor: text;
 }
 
 .list_individual h1 {
@@ -957,9 +959,4 @@ button[type="submit"] img {
 .list {
     padding: 2.2vw;
 }
-
-
-
-
-
 }
