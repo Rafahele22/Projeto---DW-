@@ -3,6 +3,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Fontscope</title>
     <link rel="icon" href="../assets/imgs/favicon.png" type="image/png" />
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script type="text/babel" src="js/main/react/filtersApp.jsx"></script>
     <script src="js/auth.js"></script>
     <script type="module" src="js/main/index.js"></script>
     <script src="js/interactions.js" defer></script>
@@ -68,10 +72,7 @@
         </a>
         
 
-        <a href="#" class="button" id="search_bar">
-          <h4>Search...</h4>
-          <img src="../assets/imgs/search.svg" alt="icon search"/>
-        </a>
+        <div class="button" id="search_bar"></div>
 <section>
           <a href="#" id="view_mode_selected">
             <img src="../assets/imgs/grid_selected.svg" alt="icon display content grid"/>
@@ -91,48 +92,7 @@
   </a>
 
   <div id="filters-content">
-    <section id="tags">
-    </section>
-
-    <section class="filters_section">
-      <h2>Foundry</h2>
-    </section>
-
-    <section class="filters_section">
-      <h2>Family Size</h2>
-      <a href="#" class="option" data-family-size="single">
-        <div class="option_selected"></div>  
-        <h5>Single (1 style)</h5>
-      </a>
-      <a href="#" class="option" data-family-size="small">
-        <div class="option_selected"></div>  
-        <h5>Small (2-6 styles)</h5>
-      </a>
-      <a href="#" class="option" data-family-size="medium">
-        <div class="option_selected"></div>  
-        <h5>Medium (7-10 styles)</h5>
-      </a>
-      <a href="#" class="option" data-family-size="large">
-        <div class="option_selected"></div>  
-        <h5>Large (11-20 styles)</h5>
-      </a>
-      <a href="#" class="option" data-family-size="xlarge">
-        <div class="option_selected"></div>  
-        <h5>Extra Large (21+ styles)</h5>
-      </a>
-    </section>
-
-    <section class="filters_section">
-      <h2>Variable</h2>
-      <a href="#" class="option">
-        <div class="option_selected"></div>  
-        <h5>Variable</h5>
-      </a>
-      <a href="#" class="option">
-        <div class="option_selected"></div>  
-        <h5>Static</h5>
-      </a>
-    </section>
+    <div id="filters_react_root"></div>
   </div>
 
   <a href="#" class="button" id="remove_all_filters">

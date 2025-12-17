@@ -1,6 +1,5 @@
 import { fetchFonts } from "./fontsApi.js";
 import { filterArticles, filterListItems } from "./filtering.js";
-import { initFiltersUI } from "./filtersUi.js";
 import { setAllFonts, getAllFonts, getGlobalSampleText, setGlobalSampleText } from "./state.js";
 import { setupViewModeToggle } from "./viewMode.js";
 import { generateGridArticles } from "./views/gridView.js";
@@ -20,7 +19,8 @@ async function main() {
   const filtersPanel = document.querySelector("#filters");
   const closeFiltersBtn = document.querySelector("#close_filters");
   const removeAllFiltersBtn = document.querySelector("#remove_all_filters");
-  const tagsContainer = document.querySelector("#tags");
+  const searchMountEl = document.querySelector("#search_bar");
+  const filtersMountEl = document.querySelector("#filters_react_root");
 
   const singleFont = createSingleFontView({
     gridEl,
@@ -29,12 +29,39 @@ async function main() {
     getAllFonts,
   });
 
-  const filtersUI = initFiltersUI({
-    gridEl,
-    filtersBtn,
-    filtersPanel,
-    closeFiltersBtn,
-    removeAllFiltersBtn,
+  // =========================
+  // FILTERS PANEL OPEN/CLOSE (keep existing UX)
+  // =========================
+  if (filtersPanel) {
+    filtersPanel.style.display = "none";
+  }
+
+  filtersBtn?.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const isCurrentlyOpen = filtersPanel?.style?.display === "flex";
+    const newStateOpen = !isCurrentlyOpen;
+
+    if (filtersPanel) filtersPanel.style.display = newStateOpen ? "flex" : "none";
+    gridEl?.classList.toggle("shifted", newStateOpen);
+    filtersBtn.classList.toggle("selected", newStateOpen);
+  });
+
+  closeFiltersBtn?.addEventListener("click", (e) => {
+    e.preventDefault();
+    if (filtersPanel) filtersPanel.style.display = "none";
+    gridEl?.classList.remove("shifted");
+    filtersBtn?.classList.remove("selected");
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!filtersPanel || !filtersBtn) return;
+    if (filtersPanel.contains(e.target) || filtersBtn.contains(e.target)) return;
+
+    filtersPanel.style.display = "none";
+    gridEl?.classList.remove("shifted");
+    filtersBtn.classList.remove("selected");
   });
 
   // =========================
@@ -91,9 +118,13 @@ async function main() {
       // Filtering function (needs isGridView)
       let getIsGridView = () => true;
 
-      function filterFonts() {
-        const { selectedTags, selectedFoundries, selectedFamilySizes, selectedVariables } = filtersUI.getSelections();
-
+      function filterFonts({
+        searchQuery = "",
+        selectedTags = [],
+        selectedFoundries = [],
+        selectedFamilySizes = [],
+        selectedVariables = [],
+      } = {}) {
         let visibleCount = 0;
         if (getIsGridView()) {
           visibleCount = filterArticles({
@@ -101,6 +132,7 @@ async function main() {
             selectedFoundries,
             selectedFamilySizes,
             selectedVariables,
+            searchQuery,
             fonts,
           });
 
@@ -113,6 +145,7 @@ async function main() {
             selectedFoundries,
             selectedFamilySizes,
             selectedVariables,
+            searchQuery,
             fonts,
           });
 
@@ -136,17 +169,38 @@ async function main() {
       });
       getIsGridView = viewMode.getIsGridView;
 
-      // Wire filters UI
-      filtersUI.populateTags({ tagsContainer, allTags, onChange: filterFonts });
-      filtersUI.populateFoundries({ foundries: foundriesList, onChange: filterFonts });
-      filtersUI.wireSingleSelectSections({ onChange: filterFonts });
+      // React search + filters
+      const mount = window.mountFiltersAndSearch;
+      if (typeof mount !== "function") {
+        throw new Error("React JSX mount function not found (window.mountFiltersAndSearch)");
+      }
 
-      filtersUI.setupPanelOpenClose({
-        onClose: () => {},
-        onOpen: () => {},
+      const reactApi = mount({
+        searchMountEl,
+        filtersMountEl,
+        allTags,
+        foundries: foundriesList,
+        onChange: ({
+          searchQuery,
+          selectedTags,
+          selectedFoundries,
+          selectedFamilySizes,
+          selectedVariables,
+        }) => {
+          filterFonts({
+            searchQuery,
+            selectedTags,
+            selectedFoundries,
+            selectedFamilySizes,
+            selectedVariables,
+          });
+        },
       });
 
-      filtersUI.wireRemoveAll({ onRemoveAll: filterFonts });
+      removeAllFiltersBtn?.addEventListener("click", (e) => {
+        e.preventDefault();
+        reactApi.clearAll();
+      });
 
       // Initial state: list items hidden, articles shown
       document.querySelectorAll(".list").forEach((listItem) => {
@@ -174,7 +228,6 @@ async function main() {
 
       setTimeout(() => {
         setInitialCardHeights();
-        filtersUI.updateCounter();
       }, 100);
 
       window.addEventListener("resize", () => {

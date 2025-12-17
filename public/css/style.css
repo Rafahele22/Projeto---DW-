@@ -310,6 +310,13 @@ main {
     width: 100%;
 }
 
+#search_bar input[type="text"] {
+    border: none;
+    background: transparent;
+    width: 100%;
+    outline: none;
+}
+
 #second_bar section {
     justify-self: right;
 }

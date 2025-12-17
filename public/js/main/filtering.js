@@ -3,9 +3,20 @@ export function checkFontAgainstFilters(
   selectedTags,
   selectedFoundries,
   selectedFamilySizes,
-  selectedVariables
+  selectedVariables,
+  searchQuery = ""
 ) {
   let show = true;
+
+  // SEARCH
+  const q = String(searchQuery ?? "").trim().toLowerCase();
+  if (q) {
+    const name = String(font?.name ?? "").toLowerCase();
+    const foundry = String(font?.foundry ?? "").toLowerCase();
+    if (!name.includes(q) && !foundry.includes(q)) {
+      show = false;
+    }
+  }
 
   // TAGS
   if (selectedTags.length > 0 && font?.tags) {
@@ -48,7 +59,7 @@ export function checkFontAgainstFilters(
   return show;
 }
 
-export function filterArticles({ selectedTags, selectedFoundries, selectedFamilySizes, selectedVariables, fonts }) {
+export function filterArticles({ selectedTags, selectedFoundries, selectedFamilySizes, selectedVariables, searchQuery, fonts }) {
   const articles = document.querySelectorAll("article");
   let visibleCount = 0;
 
@@ -64,7 +75,8 @@ export function filterArticles({ selectedTags, selectedFoundries, selectedFamily
       selectedTags,
       selectedFoundries,
       selectedFamilySizes,
-      selectedVariables
+      selectedVariables,
+      searchQuery
     );
 
     article.style.display = show ? "block" : "none";
@@ -74,7 +86,7 @@ export function filterArticles({ selectedTags, selectedFoundries, selectedFamily
   return visibleCount;
 }
 
-export function filterListItems({ selectedTags, selectedFoundries, selectedFamilySizes, selectedVariables, fonts }) {
+export function filterListItems({ selectedTags, selectedFoundries, selectedFamilySizes, selectedVariables, searchQuery, fonts }) {
   const listItems = document.querySelectorAll(".list");
   let visibleCount = 0;
 
@@ -90,7 +102,8 @@ export function filterListItems({ selectedTags, selectedFoundries, selectedFamil
       selectedTags,
       selectedFoundries,
       selectedFamilySizes,
-      selectedVariables
+      selectedVariables,
+      searchQuery
     );
 
     listItem.style.display = show ? "block" : "none";
