@@ -25,17 +25,20 @@ export function pickRandom(arr, n) {
 
 export function ensureFontFace(font) {
   const defaultWeight = font?.weights?.find((w) => w.default) || font?.weights?.[0];
-  if (!defaultWeight?.file || !font?._id) return;
+  if (!defaultWeight?.file) return;
+
+  const id = font?._id;
+  if (id === null || id === undefined) return;
 
   const fontPath = `../assets/fonts/${defaultWeight.file}`;
-  const styleId = `font-face-${font._id}`;
+  const styleId = `font-face-${id}`;
   if (document.getElementById(styleId)) return;
 
   const style = document.createElement("style");
   style.id = styleId;
   style.textContent = `
     @font-face {
-      font-family:'${font._id}-font';
+      font-family:'${id}-font';
       src:url('${fontPath}');
     }
   `;
