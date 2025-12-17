@@ -24,23 +24,6 @@ const server = http.createServer(async (req, res) => {
         return;
     }
 
-    let filePath = path.join(__dirname, '..', 'public', req.url === '/' ? 'main.html' : req.url);
-    
-    const extname = path.extname(filePath);
-    const contentType = {
-        '.html': 'text/html',
-        '.js': 'text/javascript',
-        '.css': 'text/css',
-        '.json': 'application/json',
-        '.png': 'image/png',
-        '.jpg': 'image/jpg',
-        '.gif': 'image/gif',
-        '.svg': 'image/svg+xml',
-        '.ico': 'image/x-icon',
-        '.ttf': 'font/ttf',
-        '.otf': 'font/otf'
-    }[extname] || 'application/octet-stream';
-
     fs.readFile(filePath, (err, content) => {
         if (err) {
             if (err.code === 'ENOENT') {
