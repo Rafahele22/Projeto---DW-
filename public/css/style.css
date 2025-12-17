@@ -685,6 +685,18 @@ body.single-font-open #filters {
     color: var(--black);
 }
 
+#choose_style_btn.selected:hover {
+    background-color: var(--dark-grey);
+}
+
+#choose_style_btn img {
+    transition: transform 200ms ease;
+}
+
+#choose_style_btn.selected img {
+    transform: rotate(-180deg);
+}
+
 .list_individual.shifted{
   margin-right: 24.2vw;
 }

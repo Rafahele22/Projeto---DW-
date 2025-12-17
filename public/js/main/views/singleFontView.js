@@ -285,21 +285,20 @@ favBtn?.addEventListener(
         menu.appendChild(optionLink);
 
         optionLink.addEventListener(
-          "click",
-          (e) => {
-            e.preventDefault();
-            e.stopPropagation();
+  "click",
+  (e) => {
+    e.preventDefault();
+    e.stopPropagation();
 
-            menu.querySelectorAll(".option_selected").forEach((sel) => sel.classList.remove("selected"));
-            optionSelected.classList.add("selected");
+    menu.querySelectorAll(".option_selected").forEach((sel) => sel.classList.remove("selected"));
+    optionSelected.classList.add("selected");
 
-            applyWeight(w);
+    applyWeight(w);
 
-            menu.style.display = "none";
-            chooseBtn?.classList.remove("selected");
-          },
-          { signal }
-        );
+  },
+  { signal }
+);
+
       });
 
       applyWeight(defaultWeight);
