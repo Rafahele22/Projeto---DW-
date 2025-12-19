@@ -1,45 +1,41 @@
-const profileButton = document.querySelector('#profile');
-const loginContentor = document.querySelector('.loginContentor');
+document.addEventListener("DOMContentLoaded", () => {
+  const profileBtn = document.getElementById("profile");
+  const loginContainer = document.querySelector(".loginContentor");
+  
+  const loginForm = document.getElementById("login");
+  const registerForm = document.getElementById("register");
 
-const loginForm = document.getElementById('login');
-const registerForm = document.getElementById('register');
-const goRegister = document.getElementById('goRegister');
-const goLogin = document.getElementById('goLogin');
+  if (profileBtn && loginContainer) {
+    profileBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation(); 
 
-function showLogin() {
-  if (!loginForm || !registerForm) return;
-  loginForm.style.display = 'block';
-  registerForm.style.display = 'none';
-}
+      const isVisible = loginContainer.style.display === "block";
 
-function showRegister() {
-  if (!loginForm || !registerForm) return;
-  loginForm.style.display = 'none';
-  registerForm.style.display = 'block';
-}
+      if (isVisible) {
+        loginContainer.style.display = "none";
+      } else {
+        loginContainer.style.display = "block";
+        
+        if (!document.body.classList.contains("is-logged-in")) {
+             if(loginForm) loginForm.style.display = "block";
+             if(registerForm) registerForm.style.display = "none";
+        }
+      }
+    });
+  }
 
-if (profileButton && loginContentor) {
-  profileButton.addEventListener('click', (e) => {
-    e.preventDefault();
-    loginContentor.style.display = 'block';
-    showLogin();
+  document.addEventListener("click", (e) => {
+    if (loginContainer && loginContainer.style.display === "block") {
+      if (!loginContainer.contains(e.target) && !profileBtn.contains(e.target)) {
+        loginContainer.style.display = "none";
+      }
+    }
   });
 
-  loginContentor.addEventListener('mouseleave', () => {
-    loginContentor.style.display = 'none';
-  });
-}
-
-if (goRegister) {
-  goRegister.addEventListener('click', (e) => {
-    e.preventDefault();
-    showRegister();
-  });
-}
-
-if (goLogin) {
-  goLogin.addEventListener('click', (e) => {
-    e.preventDefault();
-    showLogin();
-  });
-}
+  if (loginContainer) {
+    loginContainer.addEventListener("click", (e) => {
+      e.stopPropagation();
+    });
+  }
+});

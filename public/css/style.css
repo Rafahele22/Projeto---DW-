@@ -913,7 +913,7 @@ color: var(--light_grey);
     flex-direction: column;
     z-index: 101;
     height: auto;
-    width: 20vw;
+    width: 21vw;
     background-color: var(--grey);
     right: 2vw;
     top: 8.5vh;
@@ -921,9 +921,6 @@ color: var(--light_grey);
     padding: 2vh;
 }
 
-/* --- LÓGICA DE ESTADO DE LOGIN --- */
-
-/* Por defeito (NÃO logado): Login visível, Logout escondido */
 #login { display: block; }
 #logout { display: none; }
 #register { display: none; } 
@@ -944,8 +941,6 @@ body.is-logged-in #abaCollections {
     display: flex !important;
 }
 
-
-
 .loginContentor form h4 {
     text-align: center;
     padding-top: 1vh;
@@ -956,6 +951,9 @@ body.is-logged-in #abaCollections {
     display: none;
 }
 
+#logout button {
+    margin-top: 2vh;
+}
 form button img {
     content: url("../../assets/imgs/login.svg");
 }
