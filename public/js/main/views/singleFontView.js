@@ -221,7 +221,6 @@ export function createSingleFontView({ gridEl, filtersPanelEl, filtersBtnEl, get
 
     singleFontView.style.display = "block";
 
-    // ESCONDER FILTROS E MOSTRAR BACK NO HEADER
     if (filtersPanelEl) filtersPanelEl.style.display = "none";
     if (filtersBtnEl) filtersBtnEl.style.display = "none";
     if (headerBackBtn) headerBackBtn.style.display = "flex";
@@ -243,7 +242,6 @@ export function createSingleFontView({ gridEl, filtersPanelEl, filtersBtnEl, get
     gridEl?.classList.remove("is-hidden");
     document.body.classList.remove("single-font-open");
 
-    // MOSTRAR FILTROS E ESCONDER BACK NO HEADER
     if (filtersPanelEl) filtersPanelEl.style.display = "block";
     if (filtersBtnEl) filtersBtnEl.style.display = "flex";
     if (headerBackBtn) headerBackBtn.style.display = "none";
@@ -559,7 +557,6 @@ export function createSingleFontView({ gridEl, filtersPanelEl, filtersBtnEl, get
 
     setupSingleViewEvents(controlsDiv, listDiv, font);
 
-    // EVENTO DO BOTÃO BACK DO HEADER (ÚNICO)
     if (headerBackBtn && teardownController?.signal) {
       headerBackBtn.addEventListener(
         "click",
