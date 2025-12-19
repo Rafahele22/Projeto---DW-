@@ -17,6 +17,22 @@ function parseBody(req) {
     });
 }
 
+async function getNextUserId(db) {
+    const result = await db.collection('user')
+        .aggregate([
+            { $match: { _id: { $type: 'string', $regex: /^[0-9]+$/ } } },
+            { $addFields: { n: { $toInt: '$_id' } } },
+            { $sort: { n: -1 } },
+            { $limit: 1 },
+            { $project: { _id: 0, n: 1 } },
+        ])
+        .toArray();
+
+    const last = result[0]?.n;
+    const next = Number.isFinite(last) ? last + 1 : 1;
+    return String(next);
+}
+
 async function handleApiRequest(req, res) {
     const url = new URL(req.url, `http://${req.headers.host}`);
     const db = getDb();
@@ -131,7 +147,10 @@ async function handleApiRequest(req, res) {
                 return;
             }
 
+            const nextUserId = await getNextUserId(db);
+
             const newUser = {
+                _id: nextUserId,
                 username,
                 mail,
                 password,
@@ -139,13 +158,26 @@ async function handleApiRequest(req, res) {
                 createdAt: new Date()
             };
 
-            const result = await db.collection('user').insertOne(newUser);
+            await db.collection('user').insertOne(newUser);
+
+            try {
+                await db.collection('collections').insertOne({
+                    userId: newUser._id,
+                    name: 'Favourites',
+                    type: 'fonts',
+                    items: [],
+                    createdAt: new Date(),
+                });
+            } catch (e) {
+                await db.collection('user').deleteOne({ _id: newUser._id });
+                throw e;
+            }
 
             res.writeHead(201, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({ 
                 success: true, 
                 user: { 
-                    _id: result.insertedId, 
+                    _id: newUser._id,
                     username: newUser.username, 
                     mail: newUser.mail 
                 } 
