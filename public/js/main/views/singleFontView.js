@@ -211,10 +211,20 @@ export function createSingleFontView({ gridEl, filtersPanelEl, filtersBtnEl, get
   let lastScrollY = 0;
   let teardownController = null;
 
+  const uiStash = {
+    filtersPanelDisplay: null,
+    filtersBtnDisplay: null,
+    headerBackDisplay: null,
+  };
+
   const headerBackBtn = document.getElementById("backToCollection");
 
   function openSingleFontView() {
     lastScrollY = window.scrollY || 0;
+
+    uiStash.filtersPanelDisplay = filtersPanelEl ? filtersPanelEl.style.display : null;
+    uiStash.filtersBtnDisplay = filtersBtnEl ? filtersBtnEl.style.display : null;
+    uiStash.headerBackDisplay = headerBackBtn ? headerBackBtn.style.display : null;
 
     document.body.classList.add("single-font-open");
     gridEl?.classList.add("is-hidden");
@@ -242,9 +252,9 @@ export function createSingleFontView({ gridEl, filtersPanelEl, filtersBtnEl, get
     gridEl?.classList.remove("is-hidden");
     document.body.classList.remove("single-font-open");
 
-    if (filtersPanelEl) filtersPanelEl.style.display = "block";
-    if (filtersBtnEl) filtersBtnEl.style.display = "flex";
-    if (headerBackBtn) headerBackBtn.style.display = "none";
+    if (filtersPanelEl) filtersPanelEl.style.display = uiStash.filtersPanelDisplay ?? "";
+    if (filtersBtnEl) filtersBtnEl.style.display = uiStash.filtersBtnDisplay ?? "";
+    if (headerBackBtn) headerBackBtn.style.display = uiStash.headerBackDisplay ?? "none";
 
     window.scrollTo(0, lastScrollY);
   }
