@@ -1099,20 +1099,18 @@ button[type="submit"] img {
     width: calc(100% - 32.4vw);
 }
 
-.list_individual.shifted {
-    margin-right: 32.4vw;
-}
+
 
 #filters {
     width: 30vw;
 }
 
-.styles_menu {
-  width: 97.2%;
+.list_individual.shifted {
+    margin-right: 24vw;
 }
 
 #choose_style_btn { 
-    width: 28vw;
+    width: 19vw;
 }
 
 .list {
