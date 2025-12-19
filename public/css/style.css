@@ -921,6 +921,31 @@ color: var(--light_grey);
     padding: 2vh;
 }
 
+/* --- LÓGICA DE ESTADO DE LOGIN --- */
+
+/* Por defeito (NÃO logado): Login visível, Logout escondido */
+#login { display: block; }
+#logout { display: none; }
+#register { display: none; } 
+
+body.is-logged-in #login {
+    display: none !important;
+}
+
+body.is-logged-in #register {
+    display: none !important;
+}
+
+body.is-logged-in #logout {
+    display: block !important;
+}
+
+body.is-logged-in #abaCollections {
+    display: flex !important;
+}
+
+
+
 .loginContentor form h4 {
     text-align: center;
     padding-top: 1vh;
