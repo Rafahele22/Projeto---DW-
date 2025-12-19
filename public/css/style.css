@@ -267,7 +267,7 @@ input[type="range"]::-ms-thumb{
 
 header {
     position: fixed;
-    padding: 3vh 2% 0% 2%;
+    padding: 3vh 2% 0 2%;
     z-index: 500;
     background-color: var(--light_grey);
     width: 100%;
@@ -1042,6 +1042,60 @@ padding: 3vh 1vw;
 .album > section > div > img {
     padding-right: 0.5vw;
 }
+
+/* ===== APP BAR ===== */
+#titlebar {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  align-items: center;
+  z-index: 500;
+  background-color: var(--light_grey);
+  box-sizing: border-box;
+  padding: 2vh 2% 0% 2%;
+  position: fixed; 
+  top: 0;
+  left: 0;
+  width: 100%; 
+  height: auto;
+}
+
+body.is-electron #titlebar {
+  position: absolute;
+  -webkit-app-region: drag;
+  user-select: none;
+  width: 96%;
+  height: env(titlebar-area-height, 48px);
+  padding-top: 2vh; 
+  padding-bottom: 0;
+}
+
+body.is-electron #titlebar > * {
+  -webkit-app-region: no-drag;
+}
+
+body.is-electron.is-mac #titlebar {
+  left: 0;
+  top: 0;
+  width: 96%;
+  height: 60px; 
+  padding-left: calc(env(titlebar-area-x, 0px + 2%));
+  padding-right: 2%;
+  box-sizing: border-box;
+}
+
+
+body.is-electron.is-windows #titlebar {
+  left: 0;
+  top: 0;
+  width: 96%;
+  height: 60px; 
+  padding-left: 2%; 
+  padding-right: 150px; 
+  box-sizing: border-box;
+}
+
+
+
 
 @media (max-width: 950px) {
     :root{
