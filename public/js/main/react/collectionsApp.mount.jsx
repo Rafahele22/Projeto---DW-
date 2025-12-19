@@ -37,6 +37,7 @@ function mountCollectionsImpl({
       fonts: [],
       activeTab: "albums",
       openedCollectionId: null,
+      collectionViewMode: "list",
       ...(pendingUpdate || {}),
     }));
 
@@ -88,6 +89,10 @@ function mountCollectionsImpl({
 
     const content = (() => {
       if (state.view === "collection") {
+        if (state.collectionViewMode === "grid") {
+          return <CollectionGrid collection={openedCollection} fontsById={fontsById} onOpenFont={onOpenFont} />;
+        }
+
         return (
           <CollectionList
             collection={openedCollection}

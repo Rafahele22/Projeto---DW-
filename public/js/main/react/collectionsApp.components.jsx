@@ -260,6 +260,112 @@ function ListItem({
   );
 }
 
+function GridItem({ font, onOpenFont }) {
+  const [favSelected, setFavSelected] = React.useState(false);
+  const [saveOpen, setSaveOpen] = React.useState(false);
+  const [webSelected, setWebSelected] = React.useState(false);
+  const [printSelected, setPrintSelected] = React.useState(false);
+
+  React.useEffect(() => {
+    ensureFontFaceInline(font);
+  }, [font?._id]);
+
+  const numStyles = Array.isArray(font?.weights) ? font.weights.length : 0;
+  const sampleLetter = Array.isArray(font?.tags) && font.tags.includes("All Caps") ? "AA" : "Aa";
+
+  return (
+    <article
+      data-font-id={String(font?._id)}
+      onClick={(e) => {
+        if (e.target.closest("a") || e.target.closest("button") || e.target.closest(".save")) {
+          return;
+        }
+        onOpenFont?.(font);
+      }}
+      onMouseLeave={() => {
+        setSaveOpen(false);
+      }}
+    >
+      <section className="grid_information">
+        <a
+          href="#"
+          className={"button save-btn" + (saveOpen ? " selected" : "")}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setSaveOpen((v) => !v);
+          }}
+        >
+          <h4>Save</h4>
+        </a>
+        <a
+          href="#"
+          className="fav-btn"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setFavSelected((v) => !v);
+          }}
+        >
+          <img
+            src={favSelected ? "../assets/imgs/fav_selected.svg" : "../assets/imgs/fav.svg"}
+            alt="favourite"
+          />
+        </a>
+      </section>
+
+      <section className="save" style={{ display: saveOpen ? "block" : "none" }}>
+        <h4>Save font on...</h4>
+        <a
+          href="#"
+          className={"save-option" + (webSelected ? " selected-option" : "")}
+          data-type="web"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setWebSelected((v) => !v);
+          }}
+        >
+          <div>
+            <h4>Aa</h4>
+            <h4>Web</h4>
+          </div>
+          <h5 className="add-text">add</h5>
+          <img src="../assets/imgs/check.svg" className="check-icon" alt="check icon" />
+        </a>
+        <a
+          href="#"
+          className={"save-option" + (printSelected ? " selected-option" : "")}
+          data-type="print"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setPrintSelected((v) => !v);
+          }}
+        >
+          <div>
+            <h4>Aa</h4>
+            <h4>Print</h4>
+          </div>
+          <h5 className="add-text">add</h5>
+          <img src="../assets/imgs/check.svg" className="check-icon" alt="check icon" />
+        </a>
+      </section>
+
+      <h1 className="title_gridview" style={{ fontFamily: `'${font?._id}-font'` }}>
+        {sampleLetter}
+      </h1>
+
+      <section className="grid_information">
+        <h2>{font?.name}</h2>
+        <h3>
+          {numStyles} {numStyles === 1 ? "style" : "styles"}
+        </h3>
+      </section>
+    </article>
+  );
+}
+
 function CollectionList({ collection, fontsById, globalText, setGlobalText, onOpenFont }) {
   const items = Array.isArray(collection?.items) ? collection.items : [];
   const seen = new Set();
@@ -295,6 +401,36 @@ function CollectionList({ collection, fontsById, globalText, setGlobalText, onOp
           openSaveId={openSaveId}
           setOpenSaveId={setOpenSaveId}
         />
+      ))}
+    </>
+  );
+}
+
+function CollectionGrid({ collection, fontsById, onOpenFont }) {
+  const items = Array.isArray(collection?.items) ? collection.items : [];
+  const seen = new Set();
+  const fonts = [];
+
+  for (const item of items) {
+    const idStr = String(item?.fontId);
+    if (seen.has(idStr)) continue;
+    seen.add(idStr);
+    const font = fontsById.get(idStr);
+    if (font) fonts.push(font);
+  }
+
+  if (fonts.length === 0) {
+    return (
+      <p style={{ fontFamily: "roboto regular", color: "var(--darker-grey)" }}>
+        No fonts in this collection yet.
+      </p>
+    );
+  }
+
+  return (
+    <>
+      {fonts.map((font) => (
+        <GridItem key={String(font._id)} font={font} onOpenFont={onOpenFont} />
       ))}
     </>
   );
