@@ -127,7 +127,6 @@ async function handleApiRequest(req, res) {
         return;
     }
 
-    // REGISTER
     if (url.pathname === '/api/register' && req.method === 'POST') {
         try {
             const body = await parseBody(req);
@@ -161,14 +160,25 @@ async function handleApiRequest(req, res) {
             await db.collection('user').insertOne(newUser);
 
             try {
-                await db.collection('collections').insertOne({
-                    userId: newUser._id,
-                    name: 'Favourites',
-                    type: 'fonts',
-                    items: [],
-                    createdAt: new Date(),
-                });
+                const now = new Date();
+                await db.collection('collections').insertMany([
+                    {
+                        userId: newUser._id,
+                        name: 'Favourites',
+                        type: 'fonts',
+                        items: [],
+                        createdAt: now,
+                    },
+                    {
+                        userId: newUser._id,
+                        name: 'pairs',
+                        type: 'pairs',
+                        items: [],
+                        createdAt: now,
+                    },
+                ]);
             } catch (e) {
+                await db.collection('collections').deleteMany({ userId: newUser._id });
                 await db.collection('user').deleteOne({ _id: newUser._id });
                 throw e;
             }
