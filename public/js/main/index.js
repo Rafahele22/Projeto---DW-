@@ -16,6 +16,16 @@ import {
   setAllFontsReference,
 } from "./collections.js";
 
+if (navigator.userAgent.toLowerCase().includes('electron')) {
+  document.body.classList.add('is-electron');
+  
+  if (navigator.userAgent.toLowerCase().includes('mac')) {
+    document.body.classList.add('is-mac');
+  } else {
+    document.body.classList.add('is-windows');
+  }
+}
+
 async function main() {
   const abaCollections = document.getElementById("abaCollections");
   const userLoggedIn = localStorage.getItem("user") !== null;
