@@ -10,9 +10,34 @@ import { setupCollectionsNav } from "./collections.js";
 async function main() {
   const abaCollections = document.getElementById("abaCollections");
   const userLoggedIn = localStorage.getItem("user") !== null;
+  let user = null;
+  try {
+    const raw = localStorage.getItem("user");
+    user = raw ? JSON.parse(raw) : null;
+  } catch (_) {
+    user = null;
+  }
 
   if (abaCollections) {
     abaCollections.style.display = userLoggedIn ? "" : "none";
+  }
+
+  setupCollectionsNav();
+
+  try {
+    const userId = user?._id ?? user?.userId ?? user?.id;
+    const url = userId
+      ? `http://localhost:4000/api/collections?userId=${encodeURIComponent(userId)}`
+      : "http://localhost:4000/api/collections";
+    const response = await fetch(url);
+    const data = await response.json().catch(() => []);
+    if (!response.ok) {
+      console.error("Failed to load collections:", response.status, response.statusText, data);
+    } else {
+      console.log("Collections:", data);
+    }
+  } catch (e) {
+    console.error("Error loading collections:", e);
   }
 
   const gridEl = document.querySelector(".grid.grid_view");
