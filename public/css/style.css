@@ -322,6 +322,25 @@ main {
     background-color: var(--light_grey);
 }
 
+/* Keep second bar items in consistent columns (Discover + Collections).
+   Column 1: filters OR collections tabs/back
+   Column 2: search
+   Column 3: view mode */
+#second_bar > #my_collections_second_bar,
+#second_bar > #backToCollection,
+#second_bar > #filters_btn {
+    grid-column: 1;
+    justify-self: left;
+}
+
+#second_bar > #search_bar {
+    grid-column: 2;
+}
+
+#second_bar > section {
+    grid-column: 3;
+}
+
 #second_bar section a img {
     height: 3.4vh;
 }
