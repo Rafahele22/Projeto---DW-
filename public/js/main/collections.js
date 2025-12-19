@@ -1,8 +1,6 @@
 export function setupCollectionsNav() {
   const nav = document.querySelector("header nav");
   const collectionsBtn = document.getElementById("abaCollections");
-
-  // "Discover" = o primeiro botão dentro do <nav> que não é o abaCollections
   const discoverBtn = nav?.querySelector('a.button:not(#abaCollections)');
 
   const mainEl = document.querySelector("main");
@@ -14,7 +12,6 @@ export function setupCollectionsNav() {
   const searchBar = document.getElementById("search_bar");
   const backToCollection = document.getElementById("backToCollection");
 
-  // Secção dos ícones grid/list (é o outro <section> dentro do #second_bar)
   const viewModeSection = secondBar?.querySelector("section");
 
   const filtersPanel = document.getElementById("filters");
@@ -23,9 +20,6 @@ export function setupCollectionsNav() {
 
   if (!nav || !collectionsBtn || !discoverBtn || !mainEl || !myCollectionsBar || !gridEl) return;
 
-  // =========================
-  // ICONS (NAV)
-  // =========================
   const ICONS = {
     discover: {
       normal: "../assets/imgs/search.svg",
@@ -60,9 +54,43 @@ export function setupCollectionsNav() {
     }
   }
 
-  // =========================
-  // SNAPSHOTS (para voltar a Discover)
-  // =========================
+  const collectionsTabs = Array.from(myCollectionsBar.querySelectorAll("a.button"));
+  const albumsTab = collectionsTabs[0] || null;
+  const pairsTab = collectionsTabs[1] || null;
+
+  const COLLECTIONS_TAB_ICONS = {
+    normal: "../assets/imgs/collections.svg",
+    selected: "../assets/imgs/collections_selected.svg",
+  };
+
+  function setCollectionsTabSelected(activeTab) {
+    if (!albumsTab || !pairsTab) return;
+
+    [albumsTab, pairsTab].forEach((btn) => btn.classList.remove("selected"));
+    activeTab.classList.add("selected");
+
+    const albumsImg = albumsTab.querySelector("img");
+    const pairsImg = pairsTab.querySelector("img");
+
+    if (albumsImg) {
+      albumsImg.setAttribute(
+        "src",
+        albumsTab.classList.contains("selected")
+          ? COLLECTIONS_TAB_ICONS.selected
+          : COLLECTIONS_TAB_ICONS.normal
+      );
+    }
+
+    if (pairsImg) {
+      pairsImg.setAttribute(
+        "src",
+        pairsTab.classList.contains("selected")
+          ? COLLECTIONS_TAB_ICONS.selected
+          : COLLECTIONS_TAB_ICONS.normal
+      );
+    }
+  }
+
   const secondBarDefaults = new Map();
   [myCollectionsBar, filtersBtn, searchBar, backToCollection, viewModeSection].forEach((el) => {
     if (el) secondBarDefaults.set(el, el.style.display);
@@ -74,9 +102,6 @@ export function setupCollectionsNav() {
   let discoverGridHTML = null;
   let discoverNoResultsDisplay = null;
 
-  // =========================
-  // HELPERS
-  // =========================
   function setSelected(activeBtn) {
     nav.querySelectorAll("a.button").forEach((a) => a.classList.remove("selected"));
     activeBtn.classList.add("selected");
@@ -120,7 +145,6 @@ export function setupCollectionsNav() {
       viewModeSection.style.display = secondBarDefaults.get(viewModeSection) ?? "";
   }
 
-  // Vai buscar font-families que já existem no Discover (para o preview)
   function getDiscoverFontFamilies(max = 3) {
     const candidates = Array.from(
       document.querySelectorAll(".grid.grid_view article h1.title_gridview")
@@ -134,13 +158,11 @@ export function setupCollectionsNav() {
       if (unique.length >= max) break;
     }
 
-    // fallback se ainda não houver fonts carregadas
     while (unique.length < max) unique.push("inherit");
     return unique;
   }
 
-  function renderCollectionsMain() {
-    // Garantir snapshot do Discover só na primeira vez (quando já houver conteúdo carregado)
+  function renderAlbumsMain() {
     if (discoverGridHTML === null) discoverGridHTML = gridEl.innerHTML;
     if (noResultsEl && discoverNoResultsDisplay === null) {
       discoverNoResultsDisplay = noResultsEl.style.display;
@@ -151,13 +173,12 @@ export function setupCollectionsNav() {
 
     hideMainCompletely();
 
-    // Mostrar só a grid e preencher com as coleções
     gridEl.style.display = "grid";
     if (noResultsEl) noResultsEl.style.display = "none";
 
     gridEl.innerHTML = `
       <div class="album">
-          <article class="exemples_album">
+        <article class="exemples_album">
           <h1 style="font-family:${ff1}">${sampleLetter}</h1>
           <section>
             <h1 style="font-family:${ff2}">${sampleLetter}</h1>
@@ -167,15 +188,15 @@ export function setupCollectionsNav() {
 
         <section>
           <div>
-            <img src="../assets/imgs/fav_selected.svg" class="check-icon" alt="check icon">
-            <h2>Favourite</h2>
+            <img src="../assets/imgs/fav_selected.svg" class="check-icon" alt="favourite icon">
+            <h2>Favourites</h2>
           </div>
           <h3>10 fonts</h3>
         </section>
       </div>
 
       <div class="album">
-          <article class="exemples_album">
+        <article class="exemples_album">
           <h1 style="font-family:${ff1}">${sampleLetter}</h1>
           <section>
             <h1 style="font-family:${ff2}">${sampleLetter}</h1>
@@ -191,9 +212,15 @@ export function setupCollectionsNav() {
     `;
   }
 
-  // =========================
-  // ROUTES
-  // =========================
+  function renderPairsMain() {
+    hideMainCompletely();
+
+    gridEl.style.display = "grid";
+    if (noResultsEl) noResultsEl.style.display = "none";
+
+    gridEl.innerHTML = "";
+  }
+
   function enterCollections() {
     setSelected(collectionsBtn);
 
@@ -204,7 +231,9 @@ export function setupCollectionsNav() {
     document.body.classList.remove("single-font-open");
 
     showOnlyCollectionsSecondBar();
-    renderCollectionsMain();
+
+    setCollectionsTabSelected(albumsTab || myCollectionsBar);
+    renderAlbumsMain();
 
     window.scrollTo(0, 0);
   }
@@ -215,9 +244,6 @@ export function setupCollectionsNav() {
     restoreDiscoverSecondBar();
   }
 
-  // =========================
-  // EVENTS
-  // =========================
   collectionsBtn.addEventListener("click", (e) => {
     e.preventDefault();
     enterCollections();
@@ -228,6 +254,20 @@ export function setupCollectionsNav() {
     enterDiscover();
   });
 
+  albumsTab?.addEventListener("click", (e) => {
+    e.preventDefault();
+    setCollectionsTabSelected(albumsTab);
+    renderAlbumsMain();
+  });
+
+  pairsTab?.addEventListener("click", (e) => {
+    e.preventDefault();
+    setCollectionsTabSelected(pairsTab);
+    renderPairsMain();
+  });
+
   updateNavIcons();
+  setCollectionsTabSelected(albumsTab || myCollectionsBar);
+
   return true;
 }
