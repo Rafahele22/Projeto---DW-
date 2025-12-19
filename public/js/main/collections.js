@@ -1,7 +1,6 @@
 export function setupCollectionsNav() {
   const nav = document.querySelector("header nav");
   const collectionsBtn = document.getElementById("abaCollections");
-
   const discoverBtn = nav?.querySelector('a.button:not(#abaCollections)');
 
   const mainEl = document.querySelector("main");
@@ -51,6 +50,43 @@ export function setupCollectionsNav() {
         collectionsBtn.classList.contains("selected")
           ? ICONS.collections.selected
           : ICONS.collections.normal
+      );
+    }
+  }
+
+  const collectionsTabs = Array.from(myCollectionsBar.querySelectorAll("a.button"));
+  const albumsTab = collectionsTabs[0] || null;
+  const pairsTab = collectionsTabs[1] || null;
+
+  const COLLECTIONS_TAB_ICONS = {
+    normal: "../assets/imgs/collections.svg",
+    selected: "../assets/imgs/collections_selected.svg",
+  };
+
+  function setCollectionsTabSelected(activeTab) {
+    if (!albumsTab || !pairsTab) return;
+
+    [albumsTab, pairsTab].forEach((btn) => btn.classList.remove("selected"));
+    activeTab.classList.add("selected");
+
+    const albumsImg = albumsTab.querySelector("img");
+    const pairsImg = pairsTab.querySelector("img");
+
+    if (albumsImg) {
+      albumsImg.setAttribute(
+        "src",
+        albumsTab.classList.contains("selected")
+          ? COLLECTIONS_TAB_ICONS.selected
+          : COLLECTIONS_TAB_ICONS.normal
+      );
+    }
+
+    if (pairsImg) {
+      pairsImg.setAttribute(
+        "src",
+        pairsTab.classList.contains("selected")
+          ? COLLECTIONS_TAB_ICONS.selected
+          : COLLECTIONS_TAB_ICONS.normal
       );
     }
   }
@@ -126,7 +162,7 @@ export function setupCollectionsNav() {
     return unique;
   }
 
-  function renderCollectionsMain() {
+  function renderAlbumsMain() {
     if (discoverGridHTML === null) discoverGridHTML = gridEl.innerHTML;
     if (noResultsEl && discoverNoResultsDisplay === null) {
       discoverNoResultsDisplay = noResultsEl.style.display;
@@ -142,7 +178,7 @@ export function setupCollectionsNav() {
 
     gridEl.innerHTML = `
       <div class="album">
-          <article class="exemples_album">
+        <article class="exemples_album">
           <h1 style="font-family:${ff1}">${sampleLetter}</h1>
           <section>
             <h1 style="font-family:${ff2}">${sampleLetter}</h1>
@@ -160,7 +196,7 @@ export function setupCollectionsNav() {
       </div>
 
       <div class="album">
-          <article class="exemples_album">
+        <article class="exemples_album">
           <h1 style="font-family:${ff1}">${sampleLetter}</h1>
           <section>
             <h1 style="font-family:${ff2}">${sampleLetter}</h1>
@@ -176,6 +212,15 @@ export function setupCollectionsNav() {
     `;
   }
 
+  function renderPairsMain() {
+    hideMainCompletely();
+
+    gridEl.style.display = "grid";
+    if (noResultsEl) noResultsEl.style.display = "none";
+
+    gridEl.innerHTML = "";
+  }
+
   function enterCollections() {
     setSelected(collectionsBtn);
 
@@ -186,7 +231,9 @@ export function setupCollectionsNav() {
     document.body.classList.remove("single-font-open");
 
     showOnlyCollectionsSecondBar();
-    renderCollectionsMain();
+
+    setCollectionsTabSelected(albumsTab || myCollectionsBar);
+    renderAlbumsMain();
 
     window.scrollTo(0, 0);
   }
@@ -196,7 +243,7 @@ export function setupCollectionsNav() {
     restoreMain();
     restoreDiscoverSecondBar();
   }
-  
+
   collectionsBtn.addEventListener("click", (e) => {
     e.preventDefault();
     enterCollections();
@@ -207,6 +254,20 @@ export function setupCollectionsNav() {
     enterDiscover();
   });
 
+  albumsTab?.addEventListener("click", (e) => {
+    e.preventDefault();
+    setCollectionsTabSelected(albumsTab);
+    renderAlbumsMain();
+  });
+
+  pairsTab?.addEventListener("click", (e) => {
+    e.preventDefault();
+    setCollectionsTabSelected(pairsTab);
+    renderPairsMain();
+  });
+
   updateNavIcons();
+  setCollectionsTabSelected(albumsTab || myCollectionsBar);
+
   return true;
 }
