@@ -20,6 +20,9 @@ export function setupCollectionsNav() {
 
   if (!nav || !collectionsBtn || !discoverBtn || !mainEl || !myCollectionsBar || !gridEl) return;
 
+  // =========================
+  // NAV ICONS 
+  // =========================
   const ICONS = {
     discover: {
       normal: "../assets/imgs/search.svg",
@@ -54,6 +57,15 @@ export function setupCollectionsNav() {
     }
   }
 
+  function setSelected(activeBtn) {
+    nav.querySelectorAll("a.button").forEach((a) => a.classList.remove("selected"));
+    activeBtn.classList.add("selected");
+    updateNavIcons();
+  }
+
+  // =========================
+  // SECOND BAR
+  // =========================
   const collectionsTabs = Array.from(myCollectionsBar.querySelectorAll("a.button"));
   const albumsTab = collectionsTabs[0] || null;
   const pairsTab = collectionsTabs[1] || null;
@@ -99,30 +111,16 @@ export function setupCollectionsNav() {
   const mainChildren = Array.from(mainEl.children);
   const mainDefaults = new Map(mainChildren.map((el) => [el, el.style.display]));
 
-  let discoverGridHTML = null;
-  let discoverNoResultsDisplay = null;
-
-  function setSelected(activeBtn) {
-    nav.querySelectorAll("a.button").forEach((a) => a.classList.remove("selected"));
-    activeBtn.classList.add("selected");
-    updateNavIcons();
-  }
-
   function hideMainCompletely() {
     Array.from(mainEl.children).forEach((child) => {
       child.style.display = "none";
     });
   }
 
-  function restoreMain() {
+  function restoreMainBaseVisibility() {
     Array.from(mainEl.children).forEach((child) => {
       child.style.display = mainDefaults.get(child) ?? "";
     });
-
-    if (discoverGridHTML !== null) gridEl.innerHTML = discoverGridHTML;
-    if (noResultsEl && discoverNoResultsDisplay !== null) {
-      noResultsEl.style.display = discoverNoResultsDisplay;
-    }
   }
 
   function showOnlyCollectionsSecondBar() {
@@ -145,6 +143,24 @@ export function setupCollectionsNav() {
       viewModeSection.style.display = secondBarDefaults.get(viewModeSection) ?? "";
   }
 
+  const discoverStashEl = document.createElement("div");
+
+function stashDiscoverGridNodes() {
+  if (!gridEl || gridEl.childNodes.length === 0) return;
+
+  discoverStashEl.replaceChildren(...gridEl.childNodes);
+}
+
+function restoreDiscoverGridNodes() {
+  if (!discoverStashEl || discoverStashEl.childNodes.length === 0) return;
+
+  gridEl.replaceChildren(...discoverStashEl.childNodes);
+}
+
+
+  // =========================
+  // RENDERS
+  // =========================
   function getDiscoverFontFamilies(max = 3) {
     const candidates = Array.from(
       document.querySelectorAll(".grid.grid_view article h1.title_gridview")
@@ -163,16 +179,10 @@ export function setupCollectionsNav() {
   }
 
   function renderAlbumsMain() {
-    if (discoverGridHTML === null) discoverGridHTML = gridEl.innerHTML;
-    if (noResultsEl && discoverNoResultsDisplay === null) {
-      discoverNoResultsDisplay = noResultsEl.style.display;
-    }
-
     const [ff1, ff2, ff3] = getDiscoverFontFamilies(3);
     const sampleLetter = "Aa";
 
     hideMainCompletely();
-
     gridEl.style.display = "grid";
     if (noResultsEl) noResultsEl.style.display = "none";
 
@@ -214,21 +224,24 @@ export function setupCollectionsNav() {
 
   function renderPairsMain() {
     hideMainCompletely();
-
     gridEl.style.display = "grid";
     if (noResultsEl) noResultsEl.style.display = "none";
-
     gridEl.innerHTML = "";
   }
 
+  // =========================
+  // ROUTES
+  // =========================
   function enterCollections() {
     setSelected(collectionsBtn);
 
     if (filtersPanel) filtersPanel.style.display = "none";
-    gridEl?.classList.remove("shifted");
+    gridEl.classList.remove("shifted");
     filtersBtn?.classList.remove("selected");
 
     document.body.classList.remove("single-font-open");
+
+    stashDiscoverGridNodes();
 
     showOnlyCollectionsSecondBar();
 
@@ -240,8 +253,12 @@ export function setupCollectionsNav() {
 
   function enterDiscover() {
     setSelected(discoverBtn);
-    restoreMain();
+
+    restoreMainBaseVisibility();
+    restoreDiscoverGridNodes();
     restoreDiscoverSecondBar();
+
+    window.scrollTo(0, 0);
   }
 
   collectionsBtn.addEventListener("click", (e) => {
@@ -270,18 +287,8 @@ export function setupCollectionsNav() {
   setCollectionsTabSelected(albumsTab || myCollectionsBar);
 
   return {
-    setDiscoverSnapshot: ({ gridHTML, noResultsDisplay } = {}) => {
-      if (typeof gridHTML === "string") discoverGridHTML = gridHTML;
-      if (typeof noResultsDisplay === "string") discoverNoResultsDisplay = noResultsDisplay;
-    },
-
     resetToHome: () => {
-      setSelected(discoverBtn);
-      restoreMain();
-      restoreDiscoverSecondBar();
-
-      if (albumsTab) setCollectionsTabSelected(albumsTab);
-      window.scrollTo(0, 0);
+      enterDiscover();
     },
   };
 }

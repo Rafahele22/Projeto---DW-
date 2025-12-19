@@ -135,14 +135,6 @@ async function main() {
         onOpenFont: singleFont.showSingleFont,
       });
 
-      const noResults = document.getElementById("no_results");
-
-collectionsNav?.setDiscoverSnapshot?.({
-  gridHTML: gridEl.innerHTML,
-  noResultsDisplay: noResults ? noResults.style.display : "",
-});
-
-
       const gridViewBtn = document.querySelector("#view_mode_selected");
       const listViewBtn = document.querySelector("#second_bar section a:last-of-type");
       const mainGrid = document.querySelector(".grid.grid_view");
@@ -209,9 +201,9 @@ logoLink?.addEventListener("click", (e) => {
   e.preventDefault();
   e.stopPropagation();
 
-  collectionsNav?.resetToHome?.();
-
   singleFont.closeSingleFontView();
+
+  collectionsNav?.resetToHome?.();
 
   if (filtersPanel) filtersPanel.style.display = "none";
   gridEl?.classList.remove("shifted");
@@ -224,6 +216,7 @@ logoLink?.addEventListener("click", (e) => {
 
   window.scrollTo(0, 0);
 });
+
 
 
       const mount = window.mountFiltersAndSearch;
