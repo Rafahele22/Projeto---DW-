@@ -186,6 +186,8 @@ async function main() {
         },
       });
 
+      collectionsNav?.setOnEnterDiscover?.(() => viewMode.syncFromDom());
+
       document.querySelectorAll(".list").forEach((li) => (li.style.display = "none"));
       document.querySelectorAll("article").forEach((a) => (a.style.display = "block"));
 

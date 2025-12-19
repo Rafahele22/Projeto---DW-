@@ -18,15 +18,13 @@ function renderFontTags(font) {
   `;
 }
 
-function buildSimilarSection({ currentFont, fontsAll, onOpenFont }) {
+async function buildSimilarSection({ currentFont, fontsAll, onOpenFont }) {
   const root = document.createElement("div");
   root.className = "similar-wrapper";
 
   const allFonts = Array.isArray(fontsAll) ? fontsAll : [];
+  const fontsById = new Map(allFonts.map((f) => [String(f._id), f]));
 
-  // =========================
-  // PAIRS
-  // =========================
   const pairsWrapper = document.createElement("div");
   pairsWrapper.className = "suggestions";
   root.appendChild(pairsWrapper);
@@ -39,40 +37,61 @@ function buildSimilarSection({ currentFont, fontsAll, onOpenFont }) {
   pairsGrid.className = "grid grid_view";
   pairsWrapper.appendChild(pairsGrid);
 
-  const bodyCandidates = allFonts.filter(
-    (f) => f && f._id !== currentFont._id && Array.isArray(f.tags) && f.tags.includes("Body Text")
-  );
+  let pairsToShow = [];
+  
+  try {
+    const res = await fetch("http://localhost:4000/api/top-pairs?limit=4");
+    if (res.ok) {
+      const topPairs = await res.json();
+      pairsToShow = topPairs
+        .map((p) => ({
+          heading: fontsById.get(p.headingFontId),
+          body: fontsById.get(p.bodyFontId),
+        }))
+        .filter((p) => p.heading && p.body);
+    }
+  } catch (e) {
+    console.warn("Failed to fetch top pairs:", e);
+  }
 
-  const bodyChosen = pickRandom(bodyCandidates, 4);
-
-  const headingBase = "Sample Heading";
-  const isAllCaps = Array.isArray(currentFont?.tags) && currentFont.tags.includes("All Caps");
-  const headingText = isAllCaps ? headingBase.toUpperCase() : headingBase;
+  if (pairsToShow.length === 0) {
+    const bodyCandidates = allFonts.filter(
+      (f) => f && f._id !== currentFont._id && Array.isArray(f.tags) && f.tags.includes("Body Text")
+    );
+    const bodyChosen = pickRandom(bodyCandidates, 4);
+    pairsToShow = bodyChosen.map((bodyFont) => ({
+      heading: currentFont,
+      body: bodyFont,
+    }));
+  }
 
   const bodyText =
     "This is sample text used to demonstrate how typefaces work together. It allows designers to focus on form, spacing, hierarchy, and contrast. By removing meaning from the content, attention shifts to structure, rhythm, and the relationship between headline and body text.";
 
-  bodyChosen.forEach((bodyFont) => {
-    ensureFontFace(currentFont);
-    ensureFontFace(bodyFont);
+  pairsToShow.forEach(({ heading, body }) => {
+    ensureFontFace(heading);
+    ensureFontFace(body);
 
-    const numStyles = bodyFont.weights.length;
+    const headingBase = "Sample Heading";
+    const isAllCaps = Array.isArray(heading?.tags) && heading.tags.includes("All Caps");
+    const headingText = isAllCaps ? headingBase.toUpperCase() : headingBase;
+    const numStyles = Array.isArray(body.weights) ? body.weights.length : 0;
 
     const article = document.createElement("article");
-    article.dataset.fontId = bodyFont._id;
+    article.dataset.fontId = body._id;
 
     article.innerHTML = `
       <section class="grid_information_pairs">
         <a href="#" class="fav-btn"><img src="../assets/imgs/fav.svg" alt="favourite"/></a>
       </section>
 
-      <h1 class="pairs_title" style="font-family:'${currentFont._id}-font'">${headingText}</h1>
+      <h1 class="pairs_title" style="font-family:'${heading._id}-font'">${headingText}</h1>
 
-      <p style="font-family:'${bodyFont._id}-font'">${bodyText}</p>
+      <p style="font-family:'${body._id}-font'">${bodyText}</p>
 
       <section class="grid_information">
-        <h2>${bodyFont.name}</h2>
-        <h3>${numStyles} styles</h3>
+        <h2>${body.name}</h2>
+        <h3>${numStyles} ${numStyles === 1 ? "style" : "styles"}</h3>
       </section>
     `;
 
@@ -85,7 +104,7 @@ function buildSimilarSection({ currentFont, fontsAll, onOpenFont }) {
 
     article.addEventListener("click", (e) => {
       if (e.target.closest("a") || e.target.closest("button")) return;
-      onOpenFont(bodyFont);
+      onOpenFont(body);
     });
 
     pairsGrid.appendChild(article);
@@ -476,7 +495,7 @@ export function createSingleFontView({ gridEl, filtersPanelEl, filtersBtnEl, get
     );
   }
 
-  function showSingleFont(font) {
+  async function showSingleFont(font) {
     openSingleFontView();
 
     const numStyles = font.weights.length;
@@ -569,7 +588,7 @@ export function createSingleFontView({ gridEl, filtersPanelEl, filtersBtnEl, get
       ${tagsHTML}
     `;
 
-    const similarSection = buildSimilarSection({
+    const similarSection = await buildSimilarSection({
       currentFont: font,
       fontsAll: getAllFonts(),
       onOpenFont: showSingleFont,

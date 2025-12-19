@@ -3,45 +3,35 @@ export function setupViewModeToggle({ gridViewBtn, listViewBtn, mainGrid, filter
 
   let isGridView = true;
 
-  function toggleViewMode() {
-    const filtersOpen = filtersPanel?.style?.display === "flex";
-
+  function syncIcons() {
     if (isGridView) {
+      gridViewBtn.id = "view_mode_selected";
+      listViewBtn.id = "";
+      const gridImg = gridViewBtn.querySelector("img");
+      const listImg = listViewBtn.querySelector("img");
+      if (gridImg) gridImg.src = "../assets/imgs/grid_selected.svg";
+      if (listImg) listImg.src = "../assets/imgs/list.svg";
+    } else {
       gridViewBtn.id = "";
       listViewBtn.id = "view_mode_selected";
-
       const gridImg = gridViewBtn.querySelector("img");
       const listImg = listViewBtn.querySelector("img");
-      if (gridImg && listImg) {
-        gridImg.src = "../assets/imgs/grid.svg";
-        listImg.src = "../assets/imgs/list_selected.svg";
-      }
+      if (gridImg) gridImg.src = "../assets/imgs/grid.svg";
+      if (listImg) listImg.src = "../assets/imgs/list_selected.svg";
+    }
+  }
 
-      mainGrid.classList.remove("grid_view");
-      mainGrid.classList.add("list_view");
-      isGridView = false;
+  function toggleViewMode() {
+    const filtersOpen = filtersPanel?.style?.display === "flex";
+    isGridView = !isGridView;
 
-      if (filtersOpen) {
-        mainGrid.classList.add("shifted");
-      }
-    } else {
-      listViewBtn.id = "";
-      gridViewBtn.id = "view_mode_selected";
+    syncIcons();
 
-      const gridImg = gridViewBtn.querySelector("img");
-      const listImg = listViewBtn.querySelector("img");
-      if (gridImg && listImg) {
-        gridImg.src = "../assets/imgs/grid_selected.svg";
-        listImg.src = "../assets/imgs/list.svg";
-      }
+    mainGrid.classList.toggle("grid_view", isGridView);
+    mainGrid.classList.toggle("list_view", !isGridView);
 
-      mainGrid.classList.remove("list_view");
-      mainGrid.classList.add("grid_view");
-      isGridView = true;
-
-      if (filtersOpen) {
-        mainGrid.classList.add("shifted");
-      }
+    if (filtersOpen) {
+      mainGrid.classList.add("shifted");
     }
 
     onToggle?.(isGridView);
@@ -58,14 +48,18 @@ export function setupViewModeToggle({ gridViewBtn, listViewBtn, mainGrid, filter
   });
 
   return {
-  getIsGridView() {
-    return isGridView;
-  },
-  setGridView() {
-    if (!isGridView) toggleViewMode();
-  },
-  setListView() {
-    if (isGridView) toggleViewMode();
-  },
-};
+    getIsGridView() {
+      return isGridView;
+    },
+    setGridView() {
+      if (!isGridView) toggleViewMode();
+    },
+    setListView() {
+      if (isGridView) toggleViewMode();
+    },
+    syncFromDom() {
+      isGridView = mainGrid.classList.contains("grid_view") && !mainGrid.classList.contains("list_view");
+      syncIcons();
+    },
+  };
 }

@@ -68,6 +68,45 @@ async function handleApiRequest(req, res) {
         return;
     }
 
+    if (url.pathname === '/api/top-pairs' && req.method === 'GET') {
+        try {
+            const limit = parseInt(url.searchParams.get('limit') || '4', 10);
+            
+            const pairsCollections = await db.collection('collections').find({ type: 'pairs' }).toArray();
+            
+            const pairCounts = new Map();
+            
+            for (const col of pairsCollections) {
+                const items = Array.isArray(col.items) ? col.items : [];
+                for (let i = 0; i < items.length; i++) {
+                    const headingId = String(items[i]?.fontId || '');
+                    const bodyId = String(items[(i + 1) % items.length]?.fontId || '');
+                    if (!headingId || !bodyId || headingId === bodyId) continue;
+                    
+                    const key = `${headingId}|${bodyId}`;
+                    pairCounts.set(key, (pairCounts.get(key) || 0) + 1);
+                }
+            }
+            
+            const sorted = [...pairCounts.entries()]
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, limit);
+            
+            const topPairs = sorted.map(([key, count]) => {
+                const [headingFontId, bodyFontId] = key.split('|');
+                return { headingFontId, bodyFontId, count };
+            });
+
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify(topPairs));
+        } catch (error) {
+            console.error('Error fetching top pairs:', error);
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Failed to fetch top pairs' }));
+        }
+        return;
+    }
+
     if (url.pathname.startsWith('/api/fonts/') && req.method === 'GET') {
         const fontId = url.pathname.split('/')[3];
         

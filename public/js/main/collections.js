@@ -26,6 +26,7 @@ function updateIcon(imgEl, iconKey, isSelected) {
 
 export function setupCollectionsNav(options = {}) {
   const onOpenFont = typeof options.onOpenFont === "function" ? options.onOpenFont : null;
+  let onEnterDiscover = typeof options.onEnterDiscover === "function" ? options.onEnterDiscover : null;
 
   const nav = document.querySelector("header nav");
   const collectionsBtn = document.getElementById("abaCollections");
@@ -234,6 +235,7 @@ export function setupCollectionsNav(options = {}) {
     restoreDiscoverGridNodes();
     restoreDiscoverSecondBar();
     isInCollectionsDetail = false;
+    onEnterDiscover?.();
     window.scrollTo(0, 0);
   }
 
@@ -264,5 +266,10 @@ export function setupCollectionsNav(options = {}) {
   updateNavIcons();
   setCollectionsTabSelected(albumsTab || myCollectionsBar);
 
-  return { resetToHome: enterDiscover };
+  return { 
+    resetToHome: enterDiscover,
+    setOnEnterDiscover(fn) {
+      onEnterDiscover = typeof fn === "function" ? fn : null;
+    },
+  };
 }
