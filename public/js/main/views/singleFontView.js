@@ -1,25 +1,22 @@
 import { escapeHtml, ensureFontFace, pickRandom, sameTags, toggleFavIcon } from "../utils.js";
 import { getGlobalSampleText } from "../state.js";
 
-
 function renderFontTags(font) {
-const tags = Array.isArray(font?.tags) ? font.tags : [];
-if (!tags.length) return "";
+  const tags = Array.isArray(font?.tags) ? font.tags : [];
+  if (!tags.length) return "";
 
-
-return `
-<section class="list_information font-tags">
-${tags
-.map(
-(tag) => `
-<a href="#" class="button tag-btn"><h4>${escapeHtml(tag)}</h4></a>
-`
-)
-.join("")}
-</section>
-`;
+  return `
+    <section class="list_information font-tags">
+      ${tags
+        .map(
+          (tag) => `
+            <a href="#" class="button tag-btn"><h4>${escapeHtml(tag)}</h4></a>
+          `
+        )
+        .join("")}
+    </section>
+  `;
 }
-
 
 function buildSimilarSection({ currentFont, fontsAll, onOpenFont }) {
   const root = document.createElement("div");
@@ -49,8 +46,8 @@ function buildSimilarSection({ currentFont, fontsAll, onOpenFont }) {
   const bodyChosen = pickRandom(bodyCandidates, 4);
 
   const headingBase = "Sample Heading";
-const isAllCaps = Array.isArray(currentFont?.tags) && currentFont.tags.includes("All Caps"); // [web:427]
-const headingText = isAllCaps ? headingBase.toUpperCase() : headingBase;
+  const isAllCaps = Array.isArray(currentFont?.tags) && currentFont.tags.includes("All Caps");
+  const headingText = isAllCaps ? headingBase.toUpperCase() : headingBase;
 
   const bodyText =
     "This is sample text used to demonstrate how typefaces work together. It allows designers to focus on form, spacing, hierarchy, and contrast. By removing meaning from the content, attention shifts to structure, rhythm, and the relationship between headline and body text.";
@@ -200,444 +197,380 @@ const headingText = isAllCaps ? headingBase.toUpperCase() : headingBase;
   return root;
 }
 
-
 export function createSingleFontView({ gridEl, filtersPanelEl, filtersBtnEl, getAllFonts }) {
-let singleFontView = document.getElementById("singleFontView");
-if (!singleFontView) {
-singleFontView = document.createElement("div");
-singleFontView.id = "singleFontView";
-singleFontView.style.display = "none";
+  let singleFontView = document.getElementById("singleFontView");
+  if (!singleFontView) {
+    singleFontView = document.createElement("div");
+    singleFontView.id = "singleFontView";
+    singleFontView.style.display = "none";
 
+    const mainEl = document.querySelector("main");
+    mainEl.appendChild(singleFontView);
+  }
 
-const mainEl = document.querySelector("main");
-mainEl.appendChild(singleFontView);
-}
+  let lastScrollY = 0;
+  let teardownController = null;
 
+  const headerBackBtn = document.getElementById("backToCollection");
 
-let lastScrollY = 0;
-let teardownController = null;
+  function openSingleFontView() {
+    lastScrollY = window.scrollY || 0;
 
+    document.body.classList.add("single-font-open");
+    gridEl?.classList.add("is-hidden");
 
-function openSingleFontView() {
-lastScrollY = window.scrollY || 0;
+    singleFontView.style.display = "block";
 
+    // ESCONDER FILTROS E MOSTRAR BACK NO HEADER
+    if (filtersPanelEl) filtersPanelEl.style.display = "none";
+    if (filtersBtnEl) filtersBtnEl.style.display = "none";
+    if (headerBackBtn) headerBackBtn.style.display = "flex";
 
-document.body.classList.add("single-font-open");
-gridEl?.classList.add("is-hidden");
+    gridEl?.classList.remove("shifted");
+    filtersBtnEl?.classList.remove("selected");
 
+    teardownController?.abort();
+    teardownController = new AbortController();
+  }
 
-singleFontView.style.display = "block";
+  function closeSingleFontView() {
+    teardownController?.abort();
+    teardownController = null;
 
+    singleFontView.innerHTML = "";
+    singleFontView.style.display = "none";
 
-if (filtersPanelEl) filtersPanelEl.style.display = "none";
-gridEl?.classList.remove("shifted");
-filtersBtnEl?.classList.remove("selected");
+    gridEl?.classList.remove("is-hidden");
+    document.body.classList.remove("single-font-open");
 
+    // MOSTRAR FILTROS E ESCONDER BACK NO HEADER
+    if (filtersPanelEl) filtersPanelEl.style.display = "block";
+    if (filtersBtnEl) filtersBtnEl.style.display = "flex";
+    if (headerBackBtn) headerBackBtn.style.display = "none";
 
-teardownController?.abort();
-teardownController = new AbortController();
-}
+    window.scrollTo(0, lastScrollY);
+  }
 
+  function setupSingleViewEvents(controlsContainer, displayContainer, font) {
+    const signal = teardownController?.signal;
 
-function closeSingleFontView() {
-teardownController?.abort();
-teardownController = null;
+    // FAVOURITE
+    const favBtn = displayContainer.querySelector(".fav-btn img");
+    favBtn?.addEventListener(
+      "click",
+      (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        toggleFavIcon(favBtn);
+      },
+      { signal }
+    );
 
+    // SAVE MENU
+    const saveMenu = displayContainer.querySelector(".save_list");
+    const saveBtn = displayContainer.querySelector(".save-btn");
+    if (saveMenu) saveMenu.style.display = "none";
 
-singleFontView.innerHTML = "";
-singleFontView.style.display = "none";
+    saveBtn?.addEventListener(
+      "click",
+      (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (!saveMenu) return;
 
+        const isOpening = saveMenu.style.display === "none";
+        saveMenu.style.display = isOpening ? "block" : "none";
+        saveBtn.classList.toggle("selected", isOpening);
+      },
+      { signal }
+    );
 
-gridEl?.classList.remove("is-hidden");
-document.body.classList.remove("single-font-open");
+    // SLIDERS
+    const h1 = displayContainer.querySelector("h1");
+    const fontSize = controlsContainer.querySelector("#fontSize");
+    const letterSpacing = controlsContainer.querySelector("#letterSpacing");
+    const lineHeight = controlsContainer.querySelector("#lineHeight");
 
+    const fontSizeValue = controlsContainer.querySelector("#fontSizeValue");
+    const letterSpacingValue = controlsContainer.querySelector("#letterSpacingValue");
+    const lineHeightValue = controlsContainer.querySelector("#lineHeightValue");
+    if (lineHeightValue && lineHeight) lineHeightValue.textContent = lineHeight.value + "%";
+    if (h1 && lineHeight) h1.style.lineHeight = lineHeight.value + "%";
 
-window.scrollTo(0, lastScrollY);
-}
+    fontSize?.addEventListener(
+      "input",
+      function () {
+        if (fontSizeValue) fontSizeValue.textContent = this.value + "pt";
+        if (h1) h1.style.fontSize = this.value + "pt";
+      },
+      { signal }
+    );
 
+    letterSpacing?.addEventListener(
+      "input",
+      function () {
+        if (letterSpacingValue) letterSpacingValue.textContent = this.value + "pt";
+        if (h1) h1.style.letterSpacing = this.value + "pt";
+      },
+      { signal }
+    );
 
-function setupSingleViewEvents(controlsContainer, displayContainer, font) {
-const signal = teardownController?.signal;
+    lineHeight?.addEventListener(
+      "input",
+      function () {
+        if (lineHeightValue) lineHeightValue.textContent = this.value + "%";
+        if (h1) h1.style.lineHeight = this.value + "%";
+      },
+      { signal }
+    );
 
+    const tagLinks = displayContainer.querySelectorAll(".font-tags a.tag-btn");
 
-// FAVOURITE
-const favBtn = displayContainer.querySelector(".fav-btn img");
-favBtn?.addEventListener(
-"click",
-(e) => {
-e.preventDefault();
-e.stopPropagation();
-toggleFavIcon(favBtn);
-},
-{ signal }
-);
+    tagLinks.forEach((link) => {
+      link.addEventListener(
+        "click",
+        (e) => {
+          e.preventDefault();
+          e.stopPropagation();
 
+          const tag = link.textContent.trim();
 
-// SAVE MENU
-const saveMenu = displayContainer.querySelector(".save_list");
-const saveBtn = displayContainer.querySelector(".save-btn");
-if (saveMenu) saveMenu.style.display = "none";
+          closeSingleFontView();
 
+          if (filtersPanelEl) filtersPanelEl.style.display = "block";
+          gridEl?.classList.add("shifted");
+          filtersBtnEl?.classList.add("selected");
 
-saveBtn?.addEventListener(
-"click",
-(e) => {
-e.preventDefault();
-e.stopPropagation();
-if (!saveMenu) return;
+          requestAnimationFrame(() => {
+            const filterTagButtons = Array.from(document.querySelectorAll(".tag-btn"));
 
+            const targetBtn = filterTagButtons.find((btn) => btn.textContent.trim() === tag);
+            if (!targetBtn) return;
 
-const isOpening = saveMenu.style.display === "none";
-saveMenu.style.display = isOpening ? "block" : "none";
-saveBtn.classList.toggle("selected", isOpening);
-},
-{ signal }
-);
+            targetBtn.scrollIntoView({ block: "center" });
+            targetBtn.click();
+          });
+        },
+        { signal }
+      );
+    });
 
+    // CHOOSE STYLE
+    const chooseBtn = controlsContainer.querySelector("#choose_style_btn");
+    const menu = controlsContainer.querySelector("#styles_menu");
+    const menuScroll = menu?.querySelector(".styles_menu_scroll");
 
-// SLIDERS
-const h1 = displayContainer.querySelector("h1");
-const fontSize = controlsContainer.querySelector("#fontSize");
-const letterSpacing = controlsContainer.querySelector("#letterSpacing");
-const lineHeight = controlsContainer.querySelector("#lineHeight");
+    const singleFamily = `${font._id}-font-single`;
 
+    let singleFace = document.getElementById("single-font-face");
+    if (!singleFace) {
+      singleFace = document.createElement("style");
+      singleFace.id = "single-font-face";
+      document.head.appendChild(singleFace);
+    }
 
-const fontSizeValue = controlsContainer.querySelector("#fontSizeValue");
-const letterSpacingValue = controlsContainer.querySelector("#letterSpacingValue");
-const lineHeightValue = controlsContainer.querySelector("#lineHeightValue");
-if (lineHeightValue && lineHeight) lineHeightValue.textContent = lineHeight.value + "%";
-if (h1 && lineHeight) h1.style.lineHeight = lineHeight.value + "%";
+    function applyWeight(weight) {
+      singleFace.textContent = `
+        @font-face {
+          font-family: '${singleFamily}';
+          src: url('../assets/fonts/${weight.file}');
+        }
+      `;
+      if (h1) h1.style.fontFamily = `'${singleFamily}'`;
+    }
 
+    function buildStylesMenu() {
+      if (!menuScroll) return;
+      menuScroll.innerHTML = "";
 
-fontSize?.addEventListener(
-"input",
-function () {
-if (fontSizeValue) fontSizeValue.textContent = this.value + "pt";
-if (h1) h1.style.fontSize = this.value + "pt";
-},
-{ signal }
-);
+      const defaultWeight = font.weights.find((w) => w.default) || font.weights[0];
 
+      font.weights.forEach((w) => {
+        const optionLink = document.createElement("a");
+        optionLink.href = "#";
+        optionLink.className = "option style-option";
 
-letterSpacing?.addEventListener(
-"input",
-function () {
-if (letterSpacingValue) letterSpacingValue.textContent = this.value + "pt";
-if (h1) h1.style.letterSpacing = this.value + "pt";
-},
-{ signal }
-);
+        const optionSelected = document.createElement("div");
+        optionSelected.className = "option_selected";
+        if (w === defaultWeight) optionSelected.classList.add("selected");
 
+        const optionText = document.createElement("h5");
+        optionText.textContent = w.style;
 
-lineHeight?.addEventListener(
-  "input",
-  function () {
-    if (lineHeightValue) lineHeightValue.textContent = this.value + "%";
-    if (h1) h1.style.lineHeight = this.value + "%";
-  },
-  { signal }
-);
+        optionLink.appendChild(optionSelected);
+        optionLink.appendChild(optionText);
+        menuScroll.appendChild(optionLink);
 
-const tagLinks = displayContainer.querySelectorAll(".font-tags a.tag-btn");
+        optionLink.addEventListener(
+          "click",
+          (e) => {
+            e.preventDefault();
+            e.stopPropagation();
 
-tagLinks.forEach((link) => {
-  link.addEventListener(
-    "click",
-    (e) => {
-      e.preventDefault();
-      e.stopPropagation();
+            menuScroll?.querySelectorAll(".option_selected").forEach((sel) => sel.classList.remove("selected"));
 
-      const tag = link.textContent.trim();
-
-      closeSingleFontView();
-
-      if (filtersPanelEl) filtersPanelEl.style.display = "block";
-      gridEl?.classList.add("shifted");
-      filtersBtnEl?.classList.add("selected");
-
-      requestAnimationFrame(() => {
-        const filterTagButtons = Array.from(document.querySelectorAll(".tag-btn"));
-
-        const targetBtn = filterTagButtons.find((btn) => btn.textContent.trim() === tag);
-        if (!targetBtn) return;
-
-        targetBtn.scrollIntoView({ block: "center" }); 
-        targetBtn.click(); 
+            applyWeight(w);
+          },
+          { signal }
+        );
       });
-    },
-    { signal }
-  );
-});
 
-
-
-
-// CHOOSE STYLE
-const chooseBtn = controlsContainer.querySelector("#choose_style_btn");
-const menu = controlsContainer.querySelector("#styles_menu");
-const menuScroll = menu?.querySelector(".styles_menu_scroll");
-
-
-
-const singleFamily = `${font._id}-font-single`;
-
-
-let singleFace = document.getElementById("single-font-face");
-if (!singleFace) {
-singleFace = document.createElement("style");
-singleFace.id = "single-font-face";
-document.head.appendChild(singleFace);
-}
-
-
-function applyWeight(weight) {
-singleFace.textContent = `
-@font-face {
-font-family: '${singleFamily}';
-src: url('../assets/fonts/${weight.file}');
-}
-`;
-if (h1) h1.style.fontFamily = `'${singleFamily}'`;
-}
-
-
-function buildStylesMenu() {
-if (!menuScroll) return;
-menuScroll.innerHTML = "";
-
-
-
-const defaultWeight = font.weights.find((w) => w.default) || font.weights[0];
-
-
-font.weights.forEach((w) => {
-const optionLink = document.createElement("a");
-optionLink.href = "#";
-optionLink.className = "option style-option";
-
-
-const optionSelected = document.createElement("div");
-optionSelected.className = "option_selected";
-if (w === defaultWeight) optionSelected.classList.add("selected");
-
-
-const optionText = document.createElement("h5");
-optionText.textContent = w.style;
-
-
-optionLink.appendChild(optionSelected);
-optionLink.appendChild(optionText);
-menuScroll.appendChild(optionLink);
-
-
-
-optionLink.addEventListener(
-"click",
-(e) => {
-e.preventDefault();
-e.stopPropagation();
-
-
-menuScroll?.querySelectorAll(".option_selected").forEach((sel) => sel.classList.remove("selected"));
-
-
-applyWeight(w);
-
-
-},
-{ signal }
-);
-
-
-});
-
-
-applyWeight(defaultWeight);
-}
-
-
-buildStylesMenu();
-
-
-chooseBtn?.addEventListener(
-"click",
-(e) => {
-e.preventDefault();
-e.stopPropagation();
-if (!menu) return;
-
-
-const isOpening = menu.style.display === "none";
-menu.style.display = isOpening ? "block" : "none";
-chooseBtn.classList.toggle("selected", isOpening);
-
-
-displayContainer.classList.toggle("shifted", isOpening);
-},
-{ signal }
-);
-
-
-document.addEventListener(
-"click",
-(e) => {
-if (menu && chooseBtn && !menu.contains(e.target) && !chooseBtn.contains(e.target)) {
-menu.style.display = "none";
-chooseBtn.classList.remove("selected");
-displayContainer.classList.remove("shifted");
-}
-if (saveMenu && saveBtn && !saveMenu.contains(e.target) && !saveBtn.contains(e.target)) {
-saveMenu.style.display = "none";
-saveBtn.classList.remove("selected");
-}
-},
-{ signal }
-);
-}
-
-
-function showSingleFont(font) {
-openSingleFontView();
-
-
-const numStyles = font.weights.length;
-const hasAllCaps = font.tags && font.tags.includes("All Caps");
-const globalText = getGlobalSampleText() || "The quick brown fox jumps over the lazy dog.";
-const displayText = hasAllCaps ? globalText.toUpperCase() : globalText;
-
-
-const controlsDiv = document.createElement("div");
-controlsDiv.className = "bar_individual_font";
-controlsDiv.classList.add("force-visible-controls");
-
-
-controlsDiv.innerHTML = `
-<a href="#" class="button" id="backToCollection">
-<img src="../assets/imgs/back_arrow.svg" alt="icon arrow left"/>
-<h4>Back</h4>
-</a>
-
-
-<div class="sliders">
-<div class="divLabel">
-<label class="rangeLabel" for="fontSize">
-<span>font size</span>
-<span class="range-value" id="fontSizeValue">48pt</span>
-</label>
-<div class="range-container">
-<input type="range" id="fontSize" min="12" max="150" value="48">
-</div>
-</div>
-
-
-<div class="divLabel">
-<label class="rangeLabel" for="letterSpacing">
-<span>tracking</span>
-<span class="range-value" id="letterSpacingValue">0pt</span>
-</label>
-<div class="range-container">
-<input type="range" id="letterSpacing" min="-5" max="50" value="0" step="0.5">
-</div>
-</div>
-
-
-<div class="divLabel">
-  <label class="rangeLabel" for="lineHeight">
-    <span>leading</span>
-    <span class="range-value" id="lineHeightValue">100%</span>
-  </label>
-  <div class="range-container">
-    <input type="range" id="lineHeight" min="80" max="300" value="100" step="1">
-  </div>
-</div>
-</div>
-
-
-<div class="choose-style-wrapper">
-<a href="#" class="button" id="choose_style_btn">
-<h4>Choose style</h4>
-<img src="../assets/imgs/arrow.svg" alt="icon arrow down"/>
-</a>
-<div id="styles_menu" class="styles_menu" style="display:none;">
-<div class="styles_menu_scroll"></div>
-</div>
-
-
-</div>
-`;
-
-
-const listDiv = document.createElement("div");
-listDiv.className = "list_individual";
-listDiv.dataset.allCaps = hasAllCaps ? "1" : "0";
-const tagsHTML = renderFontTags(font);
-const designers = Array.isArray(font?.design) ? font.design : [];
-const designersText = designers.length ? designers.map(escapeHtml).join(", ") : "";
-
-
-listDiv.innerHTML = `
-<div class="list_information_bar">
-<section class="list_information">
-<h3>${font.name}</h3>
-${font.foundry !== "Unknown" ? `<h3>${font.foundry}</h3>` : ""}
-${designersText ? `<h3>${designersText}</h3>` : ""}
-<h3>${numStyles} ${numStyles === 1 ? "style" : "styles"}</h3>
-${font.variable ? "<h3>Variable</h3>" : ""}
-</section>
-
-
-<section class="list_information">
-<a href="#" class="fav-btn"><img src="../assets/imgs/fav.svg" alt="favourite"/></a>
-<a href="#" class="button save-btn"><h4>Save</h4></a>
-</section>
-
-
-<section class="save_list">
-<h4>Save font on...</h4>
-<a href="#"><div><h4>Aa</h4><h4>Web</h4></div><h5 class="add-text">add</h5><img src="../assets/imgs/check.svg" class="check-icon" alt="check icon"></a>
-<a href="#"><div><h4>Aa</h4><h4>Print</h4></div><h5 class="add-text">add</h5><img src="../assets/imgs/check.svg" class="check-icon" alt="check icon"></a>
-</section>
-</div>
-
-
-<h1 class="sampleText" contenteditable="true"
-style="font-family:'${font._id}-font'; line-height: 4.5vw; word-wrap: break-word; overflow-wrap: break-word; white-space: normal; outline: none;">
-${displayText}
-</h1>
-
-
-
-${tagsHTML}
-`;
-
-
-const similarSection = buildSimilarSection({
-currentFont: font,
-fontsAll: getAllFonts(),
-onOpenFont: showSingleFont,
-});
-
-
-singleFontView.innerHTML = "";
-singleFontView.appendChild(controlsDiv);
-singleFontView.appendChild(listDiv);
-singleFontView.appendChild(similarSection);
-
-
-setupSingleViewEvents(controlsDiv, listDiv, font);
-
-
-const backBtn = controlsDiv.querySelector("#backToCollection");
-backBtn?.addEventListener(
-"click",
-(e) => {
-e.preventDefault();
-closeSingleFontView();
-},
-{ signal: teardownController?.signal }
-);
-}
-
-
-return { showSingleFont, closeSingleFontView };
+      applyWeight(defaultWeight);
+    }
+
+    buildStylesMenu();
+
+    chooseBtn?.addEventListener(
+      "click",
+      (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (!menu) return;
+
+        const isOpening = menu.style.display === "none";
+        menu.style.display = isOpening ? "block" : "none";
+        chooseBtn.classList.toggle("selected", isOpening);
+
+        displayContainer.classList.toggle("shifted", isOpening);
+      },
+      { signal }
+    );
+
+    document.addEventListener(
+      "click",
+      (e) => {
+        if (menu && chooseBtn && !menu.contains(e.target) && !chooseBtn.contains(e.target)) {
+          menu.style.display = "none";
+          chooseBtn.classList.remove("selected");
+          displayContainer.classList.remove("shifted");
+        }
+        if (saveMenu && saveBtn && !saveMenu.contains(e.target) && !saveBtn.contains(e.target)) {
+          saveMenu.style.display = "none";
+          saveBtn.classList.remove("selected");
+        }
+      },
+      { signal }
+    );
+  }
+
+  function showSingleFont(font) {
+    openSingleFontView();
+
+    const numStyles = font.weights.length;
+    const hasAllCaps = font.tags && font.tags.includes("All Caps");
+    const globalText = getGlobalSampleText() || "The quick brown fox jumps over the lazy dog.";
+    const displayText = hasAllCaps ? globalText.toUpperCase() : globalText;
+
+    const controlsDiv = document.createElement("div");
+    controlsDiv.className = "bar_individual_font";
+    controlsDiv.classList.add("force-visible-controls");
+
+    controlsDiv.innerHTML = `
+      <div class="sliders">
+        <div class="divLabel">
+          <label class="rangeLabel" for="fontSize">
+            <span>font size</span>
+            <span class="range-value" id="fontSizeValue">48pt</span>
+          </label>
+          <div class="range-container">
+            <input type="range" id="fontSize" min="12" max="150" value="48">
+          </div>
+        </div>
+
+        <div class="divLabel">
+          <label class="rangeLabel" for="letterSpacing">
+            <span>tracking</span>
+            <span class="range-value" id="letterSpacingValue">0pt</span>
+          </label>
+          <div class="range-container">
+            <input type="range" id="letterSpacing" min="-5" max="50" value="0" step="0.5">
+          </div>
+        </div>
+
+        <div class="divLabel">
+          <label class="rangeLabel" for="lineHeight">
+            <span>leading</span>
+            <span class="range-value" id="lineHeightValue">100%</span>
+          </label>
+          <div class="range-container">
+            <input type="range" id="lineHeight" min="80" max="300" value="100" step="1">
+          </div>
+        </div>
+      </div>
+
+      <div class="choose-style-wrapper">
+        <a href="#" class="button" id="choose_style_btn">
+          <h4>Choose style</h4>
+          <img src="../assets/imgs/arrow.svg" alt="icon arrow down"/>
+        </a>
+        <div id="styles_menu" class="styles_menu" style="display:none;">
+          <div class="styles_menu_scroll"></div>
+        </div>
+      </div>
+    `;
+
+    const listDiv = document.createElement("div");
+    listDiv.className = "list_individual";
+    listDiv.dataset.allCaps = hasAllCaps ? "1" : "0";
+    const tagsHTML = renderFontTags(font);
+    const designers = Array.isArray(font?.design) ? font.design : [];
+    const designersText = designers.length ? designers.map(escapeHtml).join(", ") : "";
+
+    listDiv.innerHTML = `
+      <div class="list_information_bar">
+        <section class="list_information">
+          <h3>${font.name}</h3>
+          ${font.foundry !== "Unknown" ? `<h3>${font.foundry}</h3>` : ""}
+          ${designersText ? `<h3>${designersText}</h3>` : ""}
+          <h3>${numStyles} ${numStyles === 1 ? "style" : "styles"}</h3>
+          ${font.variable ? "<h3>Variable</h3>" : ""}
+        </section>
+
+        <section class="list_information">
+          <a href="#" class="fav-btn"><img src="../assets/imgs/fav.svg" alt="favourite"/></a>
+          <a href="#" class="button save-btn"><h4>Save</h4></a>
+        </section>
+
+        <section class="save_list">
+          <h4>Save font on...</h4>
+          <a href="#"><div><h4>Aa</h4><h4>Web</h4></div><h5 class="add-text">add</h5><img src="../assets/imgs/check.svg" class="check-icon" alt="check icon"></a>
+          <a href="#"><div><h4>Aa</h4><h4>Print</h4></div><h5 class="add-text">add</h5><img src="../assets/imgs/check.svg" class="check-icon" alt="check icon"></a>
+        </section>
+      </div>
+
+      <h1 class="sampleText" contenteditable="true"
+        style="font-family:'${font._id}-font'; line-height: 4.5vw; word-wrap: break-word; overflow-wrap: break-word; white-space: normal; outline: none;">
+        ${displayText}
+      </h1>
+
+      ${tagsHTML}
+    `;
+
+    const similarSection = buildSimilarSection({
+      currentFont: font,
+      fontsAll: getAllFonts(),
+      onOpenFont: showSingleFont,
+    });
+
+    singleFontView.innerHTML = "";
+    singleFontView.appendChild(controlsDiv);
+    singleFontView.appendChild(listDiv);
+    singleFontView.appendChild(similarSection);
+
+    setupSingleViewEvents(controlsDiv, listDiv, font);
+
+    // EVENTO DO BOTÃO BACK DO HEADER (ÚNICO)
+    if (headerBackBtn && teardownController?.signal) {
+      headerBackBtn.addEventListener(
+        "click",
+        (e) => {
+          e.preventDefault();
+          closeSingleFontView();
+        },
+        { signal: teardownController.signal }
+      );
+    }
+  }
+
+  return { showSingleFont, closeSingleFontView };
 }

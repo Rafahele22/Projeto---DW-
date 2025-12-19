@@ -9,6 +9,7 @@
     <script type="text/babel" src="js/main/react/filtersApp.jsx"></script>
     <script src="js/auth.js"></script>
     <script type="module" src="js/main/index.js"></script>
+    <script src="js/main/collections.js" defer></script>
     <script src="js/interactions.js" defer></script>
     <link rel="stylesheet" href="css/style.css" />
     <meta name="description" content="" />
@@ -73,6 +74,20 @@
       </div>
 
       <div id="second_bar">
+        <div id="my_collections_second_bar" style="display: none;">
+          <a href="#" class="button selected">
+          <img src="../assets/imgs/collections_selected.svg" alt="icon arrow left"/>
+          <h4>Albuns</h4>
+        </a>
+        <a href="#" class="button">
+          <img src="../assets/imgs/collections.svg" alt="icon arrow left"/>
+          <h4>Favourite Pairs</h4>
+        </a>
+      </div>
+        <a href="#" class="button" id="backToCollection" style="display: none;">
+          <img src="../assets/imgs/back_arrow.svg" alt="icon arrow left"/>
+          <h4>Back</h4>
+        </a>
         <a href="#" class="button" id="filters_btn">
           <img src="../assets/imgs/filters.svg" alt="icon filters"/>
           <h4>Filters</h4>

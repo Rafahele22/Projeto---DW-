@@ -648,17 +648,24 @@ main {
     box-sizing: border-box;
 }
 
-#backToCollection {
-    position: fixed;
-    top: 14vh;
-    margin:0;
-    z-index: 1000;
-}
-
-body.single-font-open #second_bar,
 body.single-font-open #filters {
   display: none !important;
 }
+
+#backToCollection {
+    z-index: 1000;
+}
+
+#my_collections_second_bar{
+    display: flex;
+    justify-self: left;
+}
+
+body.single-font-open #search_bar,
+body.single-font-open #second_bar section {
+    visibility: hidden; 
+}
+
 
 .grid.is-hidden {
   display: none !important;
