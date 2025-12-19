@@ -22,7 +22,8 @@ async function main() {
     abaCollections.style.display = userLoggedIn ? "" : "none";
   }
 
-  setupCollectionsNav();
+  const collectionsNav = setupCollectionsNav();
+
 
   try {
     const userId = user?._id ?? user?.userId ?? user?.id;
@@ -134,6 +135,14 @@ async function main() {
         onOpenFont: singleFont.showSingleFont,
       });
 
+      const noResults = document.getElementById("no_results");
+
+collectionsNav?.setDiscoverSnapshot?.({
+  gridHTML: gridEl.innerHTML,
+  noResultsDisplay: noResults ? noResults.style.display : "",
+});
+
+
       const gridViewBtn = document.querySelector("#view_mode_selected");
       const listViewBtn = document.querySelector("#second_bar section a:last-of-type");
       const mainGrid = document.querySelector(".grid.grid_view");
@@ -199,6 +208,8 @@ const logoLink = document.getElementById("logo")?.closest("a");
 logoLink?.addEventListener("click", (e) => {
   e.preventDefault();
   e.stopPropagation();
+
+  collectionsNav?.resetToHome?.();
 
   singleFont.closeSingleFontView();
 

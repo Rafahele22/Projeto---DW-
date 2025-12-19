@@ -269,5 +269,19 @@ export function setupCollectionsNav() {
   updateNavIcons();
   setCollectionsTabSelected(albumsTab || myCollectionsBar);
 
-  return true;
+  return {
+    setDiscoverSnapshot: ({ gridHTML, noResultsDisplay } = {}) => {
+      if (typeof gridHTML === "string") discoverGridHTML = gridHTML;
+      if (typeof noResultsDisplay === "string") discoverNoResultsDisplay = noResultsDisplay;
+    },
+
+    resetToHome: () => {
+      setSelected(discoverBtn);
+      restoreMain();
+      restoreDiscoverSecondBar();
+
+      if (albumsTab) setCollectionsTabSelected(albumsTab);
+      window.scrollTo(0, 0);
+    },
+  };
 }
