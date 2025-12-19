@@ -985,6 +985,44 @@ form button:hover img {
     color: var(--light_grey);
 }
 
+.album {
+    display: flex;
+  align-items: stretch;
+  overflow: hidden;  
+  min-height: 24vh; 
+}
+
+
+
+.album > section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.album h1 {
+    flex: 1;
+  margin: 0;
+  box-sizing: border-box;
+  font-size: 5vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.album > h1 {
+  padding: 0;
+  border-right: 1px solid var(--black);
+}
+
+.album > section > h1 {
+padding: 3vh 1vw;
+}
+
+.album > section > h1:first-child {
+  border-bottom: 1px solid var(--black);
+}
 
 @media (max-width: 950px) {
    
