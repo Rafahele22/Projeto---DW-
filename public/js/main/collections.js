@@ -1,3 +1,14 @@
+let userCollections = [];
+let allFontsRef = [];
+
+export function setUserCollections(collections) {
+  userCollections = Array.isArray(collections) ? collections : [];
+}
+
+export function setAllFontsReference(fonts) {
+  allFontsRef = Array.isArray(fonts) ? fonts : [];
+}
+
 export function setupCollectionsNav() {
   const nav = document.querySelector("header nav");
   const collectionsBtn = document.getElementById("abaCollections");
@@ -158,75 +169,115 @@ function restoreDiscoverGridNodes() {
 }
 
 
-  // =========================
-  // RENDERS
-  // =========================
-  function getDiscoverFontFamilies(max = 3) {
-    const candidates = Array.from(
-      document.querySelectorAll(".grid.grid_view article h1.title_gridview")
-    )
-      .map((h1) => (h1.style && h1.style.fontFamily ? h1.style.fontFamily : ""))
-      .filter(Boolean);
+  function getFontFamilyById(fontId) {
+    const font = allFontsRef.find((f) => f._id === fontId || f.id === fontId);
+    return font?.family || font?.name || null;
+  }
 
-    const unique = [];
-    for (const ff of candidates) {
-      if (!unique.includes(ff)) unique.push(ff);
-      if (unique.length >= max) break;
+  function getFontFamiliesForCollection(collection, max = 3) {
+    const items = Array.isArray(collection.items) ? collection.items : [];
+    const families = [];
+
+    for (const item of items) {
+      if (families.length >= max) break;
+      const ff = getFontFamilyById(item.fontId);
+      if (ff) families.push(ff);
     }
 
-    while (unique.length < max) unique.push("inherit");
-    return unique;
+    return families;
+  }
+
+  function buildAlbumHTML(collection) {
+    const families = getFontFamiliesForCollection(collection, 3);
+    const count = families.length;
+    const itemsCount = Array.isArray(collection.items) ? collection.items.length : 0;
+    const sampleLetter = "Aa";
+
+    const isFavourites = collection.name === "Favourites";
+    const iconHTML = isFavourites
+      ? `<img src="../assets/imgs/fav_selected.svg" class="check-icon" alt="favourite icon">`
+      : "";
+
+    let articleContent = "";
+
+    if (count === 0) {
+      articleContent = `
+        <h1 style="font-family:inherit">${sampleLetter}</h1>
+        <section>
+          <h1 style="font-family:inherit">${sampleLetter}</h1>
+          <h1 style="font-family:inherit">${sampleLetter}</h1>
+        </section>
+      `;
+    } else if (count === 1) {
+      articleContent = `
+        <h1 style="font-family:${families[0]}">${sampleLetter}</h1>
+        <section>
+          <h1 style="font-family:${families[0]}">${sampleLetter}</h1>
+          <h1 style="font-family:${families[0]}">${sampleLetter}</h1>
+        </section>
+      `;
+    } else if (count === 2) {
+      articleContent = `
+        <h1 style="font-family:${families[0]}">${sampleLetter}</h1>
+        <section>
+          <h1 style="font-family:${families[1]}">${sampleLetter}</h1>
+          <h1 style="font-family:${families[0]}">${sampleLetter}</h1>
+        </section>
+      `;
+    } else {
+      articleContent = `
+        <h1 style="font-family:${families[0]}">${sampleLetter}</h1>
+        <section>
+          <h1 style="font-family:${families[1]}">${sampleLetter}</h1>
+          <h1 style="font-family:${families[2]}">${sampleLetter}</h1>
+        </section>
+      `;
+    }
+
+    return `
+      <div class="album">
+        <article class="exemples_album">
+          ${articleContent}
+        </article>
+        <section>
+          <div>
+            ${iconHTML}
+            <h2>${collection.name}</h2>
+          </div>
+          <h3>${itemsCount} font${itemsCount !== 1 ? "s" : ""}</h3>
+        </section>
+      </div>
+    `;
   }
 
   function renderAlbumsMain() {
-    const [ff1, ff2, ff3] = getDiscoverFontFamilies(3);
-    const sampleLetter = "Aa";
-
     hideMainCompletely();
     gridEl.style.display = "grid";
     if (noResultsEl) noResultsEl.style.display = "none";
 
-    gridEl.innerHTML = `
-      <div class="album">
-        <article class="exemples_album">
-          <h1 style="font-family:${ff1}">${sampleLetter}</h1>
-          <section>
-            <h1 style="font-family:${ff2}">${sampleLetter}</h1>
-            <h1 style="font-family:${ff3}">${sampleLetter}</h1>
-          </section>
-        </article>
+    const fontsCollections = userCollections.filter((c) => c.type === "fonts");
 
-        <section>
-          <div>
-            <img src="../assets/imgs/fav_selected.svg" class="check-icon" alt="favourite icon">
-            <h2>Favourites</h2>
-          </div>
-          <h3>10 fonts</h3>
-        </section>
-      </div>
+    if (fontsCollections.length === 0) {
+      gridEl.innerHTML = `<p style="font-family: 'roboto regular'; color: var(--darker-grey);">No collections yet.</p>`;
+      return;
+    }
 
-      <div class="album">
-        <article class="exemples_album">
-          <h1 style="font-family:${ff1}">${sampleLetter}</h1>
-          <section>
-            <h1 style="font-family:${ff2}">${sampleLetter}</h1>
-            <h1 style="font-family:${ff3}">${sampleLetter}</h1>
-          </section>
-        </article>
-
-        <section>
-          <h2>For web :)</h2>
-          <h3>56 fonts</h3>
-        </section>
-      </div>
-    `;
+    gridEl.innerHTML = fontsCollections.map(buildAlbumHTML).join("");
   }
 
   function renderPairsMain() {
     hideMainCompletely();
     gridEl.style.display = "grid";
     if (noResultsEl) noResultsEl.style.display = "none";
-    gridEl.innerHTML = "";
+
+    const pairsCollections = userCollections.filter((c) => c.type === "pairs");
+
+    if (pairsCollections.length === 0) {
+      gridEl.innerHTML = `<p style="font-family: 'roboto regular'; color: var(--darker-grey);">No pairs yet.</p>`;
+      return;
+    }
+
+    gridEl.innerHTML = pairsCollections.map(buildAlbumHTML).join("");
   }
 
   // =========================

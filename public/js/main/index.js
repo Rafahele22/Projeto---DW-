@@ -5,7 +5,7 @@ import { setupViewModeToggle } from "./viewMode.js";
 import { generateGridArticles } from "./views/gridView.js";
 import { generateListItems } from "./views/listView.js";
 import { createSingleFontView } from "./views/singleFontView.js";
-import { setupCollectionsNav } from "./collections.js";
+import { setupCollectionsNav, setUserCollections, setAllFontsReference } from "./collections.js";
 
 async function main() {
   const abaCollections = document.getElementById("abaCollections");
@@ -20,25 +20,6 @@ async function main() {
 
   if (abaCollections) {
     abaCollections.style.display = userLoggedIn ? "" : "none";
-  }
-
-  const collectionsNav = setupCollectionsNav();
-
-
-  try {
-    const userId = user?._id ?? user?.userId ?? user?.id;
-    const url = userId
-      ? `http://localhost:4000/api/collections?userId=${encodeURIComponent(userId)}`
-      : "http://localhost:4000/api/collections";
-    const response = await fetch(url);
-    const data = await response.json().catch(() => []);
-    if (!response.ok) {
-      console.error("Failed to load collections:", response.status, response.statusText, data);
-    } else {
-      console.log("Collections:", data);
-    }
-  } catch (e) {
-    console.error("Error loading collections:", e);
   }
 
   const gridEl = document.querySelector(".grid.grid_view");
@@ -56,9 +37,6 @@ async function main() {
     getAllFonts,
   });
 
-  // =========================
-  // FILTERS PANEL OPEN/CLOSE 
-  // =========================
   if (filtersPanel) {
     filtersPanel.style.display = "none";
   }
@@ -91,12 +69,26 @@ async function main() {
     filtersBtn.classList.remove("selected");
   });
 
-  // =========================
-  // LOAD JSON AND BUILD UI
-  // =========================
+  let collectionsNav = null;
+
   try {
     const fonts = await fetchFonts();
     setAllFonts(fonts);
+    setAllFontsReference(fonts);
+
+    try {
+      const userId = user?._id ?? user?.userId ?? user?.id;
+      const collectionsUrl = userId
+        ? `http://localhost:4000/api/collections?userId=${encodeURIComponent(userId)}`
+        : "http://localhost:4000/api/collections";
+      const collectionsRes = await fetch(collectionsUrl);
+      const collectionsData = await collectionsRes.json().catch(() => []);
+      if (collectionsRes.ok) {
+        setUserCollections(collectionsData);
+      }
+    } catch (_) {}
+
+    collectionsNav = setupCollectionsNav();
 
     const allTags = [];
     const foundriesMap = {};
