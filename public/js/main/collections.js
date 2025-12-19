@@ -28,6 +28,9 @@ export function setupCollectionsNav(options = {}) {
   const backToCollection = document.getElementById("backToCollection");
 
   const viewModeSection = secondBar?.querySelector("section");
+  const viewModeBtns = viewModeSection ? Array.from(viewModeSection.querySelectorAll("a")) : [];
+  const gridModeBtn = viewModeBtns[0] || null;
+  const listModeBtn = viewModeBtns[1] || null;
 
   const filtersPanel = document.getElementById("filters");
   const gridEl = document.querySelector(".grid.grid_view");
@@ -155,6 +158,7 @@ export function setupCollectionsNav(options = {}) {
   let activeCollectionsTab = "albums";
   let openedCollectionId = null;
   let collectionsReact = null;
+  let isInCollectionsDetail = false;
 
   function ensureCollectionsReactMounted() {
     if (collectionsReact) return collectionsReact;
@@ -169,11 +173,14 @@ export function setupCollectionsNav(options = {}) {
       setGlobalSampleText,
       onSelectCollection: (id) => {
         openedCollectionId = String(id);
+        isInCollectionsDetail = true;
         showCollectionsListBar();
-        setGridAsListLayout();
+        attachCollectionsViewModeInterceptors();
+        setCollectionsViewMode("list");
         collectionsReact?.update?.({
           view: "collection",
           openedCollectionId,
+          collectionViewMode: "list",
         });
         window.scrollTo(0, 0);
       },
@@ -221,12 +228,56 @@ export function setupCollectionsNav(options = {}) {
     gridEl.style.display = "";
   }
 
+  function setCollectionsViewMode(mode) {
+    const isGrid = mode === "grid";
+
+    if (isGrid) {
+      setGridAsAlbumsLayout();
+      if (gridModeBtn) gridModeBtn.id = "view_mode_selected";
+      if (listModeBtn) listModeBtn.id = "";
+      const gridImg = gridModeBtn?.querySelector("img");
+      const listImg = listModeBtn?.querySelector("img");
+      if (gridImg) gridImg.src = "../assets/imgs/grid_selected.svg";
+      if (listImg) listImg.src = "../assets/imgs/list.svg";
+    } else {
+      setGridAsListLayout();
+      if (gridModeBtn) gridModeBtn.id = "";
+      if (listModeBtn) listModeBtn.id = "view_mode_selected";
+      const gridImg = gridModeBtn?.querySelector("img");
+      const listImg = listModeBtn?.querySelector("img");
+      if (gridImg) gridImg.src = "../assets/imgs/grid.svg";
+      if (listImg) listImg.src = "../assets/imgs/list_selected.svg";
+    }
+
+    collectionsReact?.update?.({
+      collectionViewMode: isGrid ? "grid" : "list",
+    });
+  }
+
+  function attachCollectionsViewModeInterceptors() {
+    if (!gridModeBtn || !listModeBtn) return;
+    if (gridModeBtn.__collectionsBound || listModeBtn.__collectionsBound) return;
+
+    const handler = (mode) => (e) => {
+      if (!isInCollectionsDetail) return;
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      setCollectionsViewMode(mode);
+    };
+
+    gridModeBtn.addEventListener("click", handler("grid"), true);
+    listModeBtn.addEventListener("click", handler("list"), true);
+
+    gridModeBtn.__collectionsBound = true;
+    listModeBtn.__collectionsBound = true;
+  }
+
   function showCollectionsListBar() {
     if (myCollectionsBar) myCollectionsBar.style.display = "none";
     if (backToCollection) backToCollection.style.display = "";
     if (filtersBtn) filtersBtn.style.display = "none";
     if (searchBar) searchBar.style.display = "none";
-    if (viewModeSection) viewModeSection.style.display = "none";
+    if (viewModeSection) viewModeSection.style.display = "";
   }
 
   function showCollectionsTabsBar() {
@@ -246,10 +297,12 @@ export function setupCollectionsNav(options = {}) {
     if (noResultsEl) noResultsEl.style.display = "none";
 
     openedCollectionId = null;
+    isInCollectionsDetail = false;
     ensureCollectionsReactMounted().update({
       view: safeTab,
       activeTab: safeTab,
       openedCollectionId: null,
+      collectionViewMode: "list",
       collections: userCollections,
       fonts: allFontsRef,
     });
@@ -269,9 +322,13 @@ export function setupCollectionsNav(options = {}) {
 
     stashDiscoverGridNodes();
 
+    attachCollectionsViewModeInterceptors();
+
     const tab = activeCollectionsTab === "pairs" ? "pairs" : "albums";
     setCollectionsTabSelected(tab === "pairs" ? pairsTab || myCollectionsBar : albumsTab || myCollectionsBar);
     renderCollectionsHome(tab);
+
+    isInCollectionsDetail = false;
 
     window.scrollTo(0, 0);
   }
@@ -285,6 +342,8 @@ export function setupCollectionsNav(options = {}) {
     restoreMainBaseVisibility();
     restoreDiscoverGridNodes();
     restoreDiscoverSecondBar();
+
+    isInCollectionsDetail = false;
 
     window.scrollTo(0, 0);
   }
@@ -303,6 +362,7 @@ export function setupCollectionsNav(options = {}) {
     e.preventDefault();
     activeCollectionsTab = "albums";
     openedCollectionId = null;
+    isInCollectionsDetail = false;
     setCollectionsTabSelected(albumsTab);
     renderCollectionsHome("albums");
   });
@@ -311,6 +371,7 @@ export function setupCollectionsNav(options = {}) {
     e.preventDefault();
     activeCollectionsTab = "pairs";
     openedCollectionId = null;
+    isInCollectionsDetail = false;
     setCollectionsTabSelected(pairsTab);
     renderCollectionsHome("pairs");
   });
@@ -318,6 +379,7 @@ export function setupCollectionsNav(options = {}) {
   backToCollection?.addEventListener("click", (e) => {
     e.preventDefault();
     openedCollectionId = null;
+    isInCollectionsDetail = false;
 
     const tab = activeCollectionsTab === "pairs" ? "pairs" : "albums";
     setCollectionsTabSelected(tab === "pairs" ? pairsTab || myCollectionsBar : albumsTab || myCollectionsBar);
