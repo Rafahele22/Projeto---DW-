@@ -215,9 +215,15 @@ export function createSingleFontView({ gridEl, filtersPanelEl, filtersBtnEl, get
     filtersPanelDisplay: null,
     filtersBtnDisplay: null,
     headerBackDisplay: null,
+    myCollectionsBarDisplay: null,
+    searchBarDisplay: null,
+    viewModeSectionDisplay: null,
   };
 
   const headerBackBtn = document.getElementById("backToCollection");
+  const myCollectionsBarEl = document.getElementById("my_collections_second_bar");
+  const searchBarEl = document.getElementById("search_bar");
+  const viewModeSectionEl = document.querySelector("#second_bar section");
 
   function openSingleFontView() {
     lastScrollY = window.scrollY || 0;
@@ -225,6 +231,9 @@ export function createSingleFontView({ gridEl, filtersPanelEl, filtersBtnEl, get
     uiStash.filtersPanelDisplay = filtersPanelEl ? filtersPanelEl.style.display : null;
     uiStash.filtersBtnDisplay = filtersBtnEl ? filtersBtnEl.style.display : null;
     uiStash.headerBackDisplay = headerBackBtn ? headerBackBtn.style.display : null;
+    uiStash.myCollectionsBarDisplay = myCollectionsBarEl ? myCollectionsBarEl.style.display : null;
+    uiStash.searchBarDisplay = searchBarEl ? searchBarEl.style.display : null;
+    uiStash.viewModeSectionDisplay = viewModeSectionEl ? viewModeSectionEl.style.display : null;
 
     document.body.classList.add("single-font-open");
     gridEl?.classList.add("is-hidden");
@@ -234,6 +243,9 @@ export function createSingleFontView({ gridEl, filtersPanelEl, filtersBtnEl, get
     if (filtersPanelEl) filtersPanelEl.style.display = "none";
     if (filtersBtnEl) filtersBtnEl.style.display = "none";
     if (headerBackBtn) headerBackBtn.style.display = "flex";
+    if (myCollectionsBarEl) myCollectionsBarEl.style.display = "none";
+    if (searchBarEl) searchBarEl.style.display = "none";
+    if (viewModeSectionEl) viewModeSectionEl.style.display = "none";
 
     gridEl?.classList.remove("shifted");
     filtersBtnEl?.classList.remove("selected");
@@ -255,6 +267,9 @@ export function createSingleFontView({ gridEl, filtersPanelEl, filtersBtnEl, get
     if (filtersPanelEl) filtersPanelEl.style.display = uiStash.filtersPanelDisplay ?? "";
     if (filtersBtnEl) filtersBtnEl.style.display = uiStash.filtersBtnDisplay ?? "";
     if (headerBackBtn) headerBackBtn.style.display = uiStash.headerBackDisplay ?? "none";
+    if (myCollectionsBarEl) myCollectionsBarEl.style.display = uiStash.myCollectionsBarDisplay ?? "";
+    if (searchBarEl) searchBarEl.style.display = uiStash.searchBarDisplay ?? "";
+    if (viewModeSectionEl) viewModeSectionEl.style.display = uiStash.viewModeSectionDisplay ?? "";
 
     window.scrollTo(0, lastScrollY);
   }
