@@ -99,6 +99,21 @@ h6 {
     z-index: 500;
 }
 
+p {
+  margin: 0;
+  padding: 0 2vh 10vh 2vh;
+  font-size: 1vw;
+  line-height: 1.3vw;
+  color: var(--black);
+}
+
+.pairs_title {
+    font-size: 2.3vw;
+    line-height: 2.3vw;
+    text-align: left;
+    padding: 0 2vh 2vh 2vh;
+}
+
 .save_list a h4, 
 .loginContentor form h4 {
     font-family: "roboto regular";
@@ -482,7 +497,7 @@ main {
     flex-shrink: 0;
 }
 
-.grid_view article h1 {
+.title_gridview {
     flex-grow: 1; 
     display: flex;
     align-items: center;           
@@ -491,6 +506,8 @@ main {
     padding-bottom: 12vh; 
 }
 
+
+
 .grid_view article:hover {
     background-color: var(--grey);
 }
@@ -498,6 +515,16 @@ main {
 .grid_information {
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    padding: 2.8vh;
+    width: 100%;
+    box-sizing: border-box;
+    min-width: 0;
+}
+
+.grid_information_pairs {
+    display: flex;
+    justify-content:end;
     align-items: center;
     padding: 2.8vh;
     width: 100%;
@@ -754,11 +781,11 @@ body.single-font-open #filters {
 color: var(--light_grey);
 }
 
-.similar-wrapper {
+.suggestions {
     margin-top: 10vh;
 }
 
-.similar-wrapper > h2 {
+.suggestions > h2 {
     margin-bottom: 2vh;
 }
 
@@ -876,6 +903,8 @@ color: var(--light_grey);
 .fav-btn img {
     height: 3.4vh;
 }
+
+
 
 /* ===== LOGIN / REGISTER FORMS ===== */
 .loginContentor {

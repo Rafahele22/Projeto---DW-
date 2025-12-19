@@ -22,132 +22,182 @@ ${tags
 
 
 function buildSimilarSection({ currentFont, fontsAll, onOpenFont }) {
-const wrapper = document.createElement("div");
-wrapper.className = "similar-wrapper";
+  const root = document.createElement("div");
+  root.className = "similar-wrapper";
 
+  const allFonts = Array.isArray(fontsAll) ? fontsAll : [];
 
-const title = document.createElement("h2");
-title.textContent = "Similar";
-wrapper.appendChild(title);
+  // =========================
+  // PAIRS
+  // =========================
+  const pairsWrapper = document.createElement("div");
+  pairsWrapper.className = "suggestions";
+  root.appendChild(pairsWrapper);
 
+  const pairsTitle = document.createElement("h2");
+  pairsTitle.textContent = "Pairs Suggestions";
+  pairsWrapper.appendChild(pairsTitle);
 
-const similarGrid = document.createElement("div");
-similarGrid.className = "grid grid_view";
-wrapper.appendChild(similarGrid);
+  const pairsGrid = document.createElement("div");
+  pairsGrid.className = "grid grid_view";
+  pairsWrapper.appendChild(pairsGrid);
 
+  const bodyCandidates = allFonts.filter(
+    (f) => f && f._id !== currentFont._id && Array.isArray(f.tags) && f.tags.includes("Body Text")
+  );
 
-const currentTags = Array.isArray(currentFont?.tags) ? currentFont.tags : [];
+  const bodyChosen = pickRandom(bodyCandidates, 4);
 
+  const headingBase = "Sample Heading";
+const isAllCaps = Array.isArray(currentFont?.tags) && currentFont.tags.includes("All Caps"); // [web:427]
+const headingText = isAllCaps ? headingBase.toUpperCase() : headingBase;
 
-const candidates = (Array.isArray(fontsAll) ? fontsAll : [])
-.filter((f) => f && f._id !== currentFont._id)
-.filter((f) => sameTags(f.tags, currentTags));
+  const bodyText =
+    "This is sample text used to demonstrate how typefaces work together. It allows designers to focus on form, spacing, hierarchy, and contrast. By removing meaning from the content, attention shifts to structure, rhythm, and the relationship between headline and body text.";
 
+  bodyChosen.forEach((bodyFont) => {
+    ensureFontFace(currentFont);
+    ensureFontFace(bodyFont);
 
-const chosen = pickRandom(candidates, 4);
+    const numStyles = bodyFont.weights.length;
 
+    const article = document.createElement("article");
+    article.dataset.fontId = bodyFont._id;
 
-chosen.forEach((font) => {
-ensureFontFace(font);
+    article.innerHTML = `
+      <section class="grid_information_pairs">
+        <a href="#" class="fav-btn"><img src="../assets/imgs/fav.svg" alt="favourite"/></a>
+      </section>
 
+      <h1 class="pairs_title" style="font-family:'${currentFont._id}-font'">${headingText}</h1>
 
-const numStyles = font.weights.length;
-const sampleLetter = font.tags?.includes("All Caps") ? "AA" : "Aa";
+      <p style="font-family:'${bodyFont._id}-font'">${bodyText}</p>
 
+      <section class="grid_information">
+        <h2>${bodyFont.name}</h2>
+        <h3>${numStyles} styles</h3>
+      </section>
+    `;
 
-const article = document.createElement("article");
-article.dataset.fontId = font._id;
+    const favImg = article.querySelector(".fav-btn img");
+    favImg?.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleFavIcon(favImg);
+    });
 
+    article.addEventListener("click", (e) => {
+      if (e.target.closest("a") || e.target.closest("button")) return;
+      onOpenFont(bodyFont);
+    });
 
-article.innerHTML = `
-<section class="grid_information">
-<a href="#" class="button save-btn">
-<h4>Save</h4>
-</a>
-<a href="#" class="fav-btn"><img src="../assets/imgs/fav.svg" alt="favourite"/></a>
-</section>
+    pairsGrid.appendChild(article);
+  });
 
+  // =========================
+  // SIMILAR
+  // =========================
+  const similarWrapper = document.createElement("div");
+  similarWrapper.className = "suggestions";
+  root.appendChild(similarWrapper);
 
-<section class="save">
-<h4>Save font on...</h4>
-<a href="#" class="save-option" data-type="web">
-<div><h4>Aa</h4><h4>Web</h4></div>
-<h5 class="add-text">add</h5>
-<img src="../assets/imgs/check.svg" class="check-icon" alt="check icon">
-</a>
-<a href="#" class="save-option" data-type="print">
-<div><h4>Aa</h4><h4>Print</h4></div>
-<h5 class="add-text">add</h5>
-<img src="../assets/imgs/check.svg" class="check-icon" alt="check icon">
-</a>
-</section>
+  const title = document.createElement("h2");
+  title.textContent = "Similar";
+  similarWrapper.appendChild(title);
 
+  const similarGrid = document.createElement("div");
+  similarGrid.className = "grid grid_view";
+  similarWrapper.appendChild(similarGrid);
 
-<h1 style="font-family:'${font._id}-font'">${sampleLetter}</h1>
+  const currentTags = Array.isArray(currentFont?.tags) ? currentFont.tags : [];
 
+  const candidates = allFonts
+    .filter((f) => f && f._id !== currentFont._id)
+    .filter((f) => sameTags(f.tags, currentTags));
 
-<section class="grid_information">
-<h2>${font.name}</h2>
-<h3>${numStyles} styles</h3>
-</section>
-`;
+  const chosen = pickRandom(candidates, 4);
 
+  chosen.forEach((font) => {
+    ensureFontFace(font);
 
-// FAVOURITE
-const favImg = article.querySelector(".fav-btn img");
-favImg?.addEventListener("click", (e) => {
-e.preventDefault();
-e.stopPropagation();
-toggleFavIcon(favImg);
-});
+    const numStyles = font.weights.length;
+    const sampleLetter = font.tags?.includes("All Caps") ? "AA" : "Aa";
 
+    const article = document.createElement("article");
+    article.dataset.fontId = font._id;
 
+    article.innerHTML = `
+      <section class="grid_information">
+        <a href="#" class="button save-btn"><h4>Save</h4></a>
+        <a href="#" class="fav-btn"><img src="../assets/imgs/fav.svg" alt="favourite"/></a>
+      </section>
 
-// SAVE MENU
-const saveMenu = article.querySelector(".save");
-const saveBtn = article.querySelector(".save-btn");
-if (saveMenu) saveMenu.style.display = "none";
+      <section class="save">
+        <h4>Save font on...</h4>
+        <a href="#" class="save-option" data-type="web">
+          <div><h4>Aa</h4><h4>Web</h4></div>
+          <h5 class="add-text">add</h5>
+          <img src="../assets/imgs/check.svg" class="check-icon" alt="check icon">
+        </a>
+        <a href="#" class="save-option" data-type="print">
+          <div><h4>Aa</h4><h4>Print</h4></div>
+          <h5 class="add-text">add</h5>
+          <img src="../assets/imgs/check.svg" class="check-icon" alt="check icon">
+        </a>
+      </section>
 
+      <h1 class="title_gridview" style="font-family:'${font._id}-font'">${sampleLetter}</h1>
 
-saveBtn?.addEventListener("click", (e) => {
-e.preventDefault();
-e.stopPropagation();
+      <section class="grid_information">
+        <h2>${font.name}</h2>
+        <h3>${numStyles} styles</h3>
+      </section>
+    `;
 
+    const favImg = article.querySelector(".fav-btn img");
+    favImg?.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleFavIcon(favImg);
+    });
 
-document.querySelectorAll(".save, .save_list").forEach((menu) => {
-if (menu !== saveMenu) {
-menu.style.display = "none";
-menu.parentElement.querySelector(".save-btn")?.classList.remove("selected");
-}
-});
+    const saveMenu = article.querySelector(".save");
+    const saveBtn = article.querySelector(".save-btn");
+    if (saveMenu) saveMenu.style.display = "none";
 
+    saveBtn?.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
 
-const isOpening = saveMenu && saveMenu.style.display === "none";
-if (saveMenu) saveMenu.style.display = isOpening ? "block" : "none";
-saveBtn?.classList.toggle("selected", isOpening);
-});
+      document.querySelectorAll(".save, .save_list").forEach((menu) => {
+        if (menu !== saveMenu) {
+          menu.style.display = "none";
+          menu.parentElement.querySelector(".save-btn")?.classList.remove("selected");
+        }
+      });
 
+      const isOpening = saveMenu && saveMenu.style.display === "none";
+      if (saveMenu) saveMenu.style.display = isOpening ? "block" : "none";
+      saveBtn?.classList.toggle("selected", isOpening);
+    });
 
-article.querySelectorAll(".save-option").forEach((option) => {
-option.addEventListener("click", (e) => {
-e.preventDefault();
-e.stopPropagation();
-option.classList.toggle("selected-option");
-});
-});
+    article.querySelectorAll(".save-option").forEach((option) => {
+      option.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        option.classList.toggle("selected-option");
+      });
+    });
 
+    article.addEventListener("click", (e) => {
+      if (e.target.closest("a") || e.target.closest("button") || e.target.closest(".save")) return;
+      onOpenFont(font);
+    });
 
-article.addEventListener("click", (e) => {
-if (e.target.closest("a") || e.target.closest("button") || e.target.closest(".save")) return;
-onOpenFont(font);
-});
+    similarGrid.appendChild(article);
+  });
 
-
-similarGrid.appendChild(article);
-});
-
-
-return wrapper;
+  return root;
 }
 
 

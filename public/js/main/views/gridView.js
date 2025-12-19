@@ -34,7 +34,7 @@ export function generateGridArticles({ gridEl, fonts, onOpenFont }) {
         </a>
       </section>
 
-      <h1 style="font-family:'${font._id}-font'">${sampleLetter}</h1>
+      <h1 class="title_gridview" style="font-family:'${font._id}-font'">${sampleLetter}</h1>
 
       <section class="grid_information">
         <h2>${font.name}</h2>
