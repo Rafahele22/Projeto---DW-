@@ -104,7 +104,9 @@ async function main() {
       }
     } catch (_) {}
 
-    collectionsNav = setupCollectionsNav();
+    collectionsNav = setupCollectionsNav({
+      onOpenFont: singleFont.showSingleFont,
+    });
 
     // =========================
     // BUILD TAGS / FOUNDRIES LIST

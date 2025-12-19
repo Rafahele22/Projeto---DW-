@@ -47,6 +47,6 @@ connectToDb((err) => {
     }
     
     server.listen(PORT, () => {
-        console.log(`Server running on c`);
+        console.log(`Server running`);
     });
 });
