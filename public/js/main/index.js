@@ -1,5 +1,5 @@
 import { fetchFonts } from "./fontsApi.js";
-import { filterArticles, filterListItems } from "./filtering.js";
+import { filterFonts } from "./filtering.js";
 import {
   setAllFonts,
   getAllFonts,
@@ -15,6 +15,8 @@ import {
   setUserCollections,
   setAllFontsReference,
 } from "./collections.js";
+import { equalizeGridCardHeights } from "./shared/gridUtils.js";
+import { hide, show, showFlex } from "./shared/displayUtils.js";
 
 if (navigator.userAgent.toLowerCase().includes('electron')) {
   document.body.classList.add('is-electron');
@@ -57,44 +59,39 @@ async function main() {
     getAllFonts,
   });
 
-  // =========================
-  // FILTERS PANEL OPEN/CLOSE
-  // =========================
-  if (filtersPanel) {
-    filtersPanel.style.display = "none";
-  }
+  hide(filtersPanel);
+
+  const closeFiltersPanel = () => {
+    hide(filtersPanel);
+    gridEl?.classList.remove("shifted");
+    filtersBtn?.classList.remove("selected");
+  };
 
   filtersBtn?.addEventListener("click", (e) => {
     e.preventDefault();
     e.stopPropagation();
 
-    const isCurrentlyOpen = filtersPanel?.style?.display === "flex";
-    const newStateOpen = !isCurrentlyOpen;
-
-    if (filtersPanel) filtersPanel.style.display = newStateOpen ? "flex" : "none";
-    gridEl?.classList.toggle("shifted", newStateOpen);
-    filtersBtn.classList.toggle("selected", newStateOpen);
+    const isOpen = filtersPanel?.style?.display === "flex";
+    if (isOpen) {
+      closeFiltersPanel();
+    } else {
+      showFlex(filtersPanel);
+      gridEl?.classList.add("shifted");
+      filtersBtn.classList.add("selected");
+    }
   });
 
   closeFiltersBtn?.addEventListener("click", (e) => {
     e.preventDefault();
-    if (filtersPanel) filtersPanel.style.display = "none";
-    gridEl?.classList.remove("shifted");
-    filtersBtn?.classList.remove("selected");
+    closeFiltersPanel();
   });
 
   document.addEventListener("click", (e) => {
     if (!filtersPanel || !filtersBtn) return;
     if (filtersPanel.contains(e.target) || filtersBtn.contains(e.target)) return;
-
-    filtersPanel.style.display = "none";
-    gridEl?.classList.remove("shifted");
-    filtersBtn.classList.remove("selected");
+    closeFiltersPanel();
   });
 
-  // =========================
-  // LOAD DATA
-  // =========================
   let collectionsNav = null;
 
   try {
@@ -145,7 +142,6 @@ async function main() {
 
     // =========================
     // BUILD UI
-    // =========================
     if (gridEl) {
       generateListItems({
         gridEl,
@@ -165,70 +161,19 @@ async function main() {
       const listViewBtn = document.querySelector("#second_bar section a:last-of-type");
       const mainGrid = document.querySelector(".grid");
 
-      let getIsGridView = () => true;
+      let currentFilterParams = {};
 
-      function equalizeGridCardHeights() {
-        if (!getIsGridView()) return;
+      const doEqualizeHeights = () => equalizeGridCardHeights(gridEl, viewMode.getIsGridView());
 
-        const cards = Array.from(gridEl.querySelectorAll("article"));
-        if (!cards.length) return;
-
-        if (!cards.some((c) => c.offsetHeight > 0)) return;
-
-        cards.forEach((c) => (c.style.height = "auto"));
-
-        requestAnimationFrame(() => {
-          let max = 0;
-          for (const c of cards) {
-            const h = c.offsetHeight;
-            if (h > max) max = h;
-          }
-          if (max > 0) cards.forEach((c) => (c.style.height = max + "px"));
+      const doFilterFonts = (params = {}) => {
+        currentFilterParams = { ...currentFilterParams, ...params };
+        filterFonts({
+          gridEl,
+          fonts,
+          isGridView: viewMode.getIsGridView(),
+          filterParams: currentFilterParams,
         });
-      }
-
-      function filterFonts({
-        searchQuery = "",
-        selectedTags = [],
-        selectedFoundries = [],
-        selectedFamilySizes = [],
-        selectedVariables = [],
-      } = {}) {
-        let visibleCount = 0;
-
-        if (getIsGridView()) {
-          visibleCount = filterArticles({
-            selectedTags,
-            selectedFoundries,
-            selectedFamilySizes,
-            selectedVariables,
-            searchQuery,
-            fonts,
-          });
-
-          document.querySelectorAll(".list").forEach((listItem) => {
-            listItem.style.display = "none";
-          });
-        } else {
-          visibleCount = filterListItems({
-            selectedTags,
-            selectedFoundries,
-            selectedFamilySizes,
-            selectedVariables,
-            searchQuery,
-            fonts,
-          });
-
-          document.querySelectorAll("article").forEach((article) => {
-            article.style.display = "none";
-          });
-        }
-
-        const noResults = document.getElementById("no_results");
-        if (noResults) {
-          noResults.style.display = visibleCount === 0 ? "block" : "none";
-        }
-      }
+      };
 
       const viewMode = setupViewModeToggle({
         gridViewBtn,
@@ -236,27 +181,17 @@ async function main() {
         mainGrid,
         filtersPanel,
         onToggle: () => {
-          filterFonts();
-          equalizeGridCardHeights();
+          doFilterFonts();
+          doEqualizeHeights();
         },
       });
-      getIsGridView = viewMode.getIsGridView;
 
-      document.querySelectorAll(".list").forEach((listItem) => {
-        listItem.style.display = "none";
-      });
-      document.querySelectorAll("article").forEach((article) => {
-        article.style.display = "block";
-      });
+      document.querySelectorAll(".list").forEach((li) => (li.style.display = "none"));
+      document.querySelectorAll("article").forEach((a) => (a.style.display = "block"));
 
-      equalizeGridCardHeights();
-      window.addEventListener("resize", () => {
-        equalizeGridCardHeights();
-      });
+      doEqualizeHeights();
+      window.addEventListener("resize", doEqualizeHeights);
 
-      // =========================
-      // LOGO
-      // =========================
       const logoLink = document.getElementById("logo")?.closest("a");
       logoLink?.addEventListener("click", (e) => {
         e.preventDefault();
@@ -264,23 +199,16 @@ async function main() {
 
         singleFont.closeSingleFontView();
         collectionsNav?.resetToHome?.();
-
-        if (filtersPanel) filtersPanel.style.display = "none";
-        gridEl?.classList.remove("shifted");
-        filtersBtn?.classList.remove("selected");
-
+        closeFiltersPanel();
         viewMode.setGridView();
 
         document.querySelectorAll(".list").forEach((li) => (li.style.display = "none"));
         document.querySelectorAll("article").forEach((a) => (a.style.display = "block"));
 
-        equalizeGridCardHeights();
+        doEqualizeHeights();
         window.scrollTo(0, 0);
       });
 
-      // =========================
-      // FILTERS + SEARCH
-      // =========================
       const mount = window.mountFiltersAndSearch;
       if (typeof mount !== "function") {
         throw new Error("React JSX mount function not found (window.mountFiltersAndSearch)");
@@ -291,28 +219,16 @@ async function main() {
         filtersMountEl,
         allTags,
         foundries: foundriesList,
-        onChange: ({
-          searchQuery,
-          selectedTags,
-          selectedFoundries,
-          selectedFamilySizes,
-          selectedVariables,
-        }) => {
-          filterFonts({
-            searchQuery,
-            selectedTags,
-            selectedFoundries,
-            selectedFamilySizes,
-            selectedVariables,
-          });
-          equalizeGridCardHeights();
+        onChange: (params) => {
+          doFilterFonts(params);
+          doEqualizeHeights();
         },
       });
 
       removeAllFiltersBtn?.addEventListener("click", (e) => {
         e.preventDefault();
         reactApi.clearAll();
-        equalizeGridCardHeights();
+        doEqualizeHeights();
       });
     }
   } catch (err) {

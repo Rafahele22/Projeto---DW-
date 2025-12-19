@@ -1,4 +1,11 @@
-import { ensureFontFace, toggleFavIcon } from "../utils.js";
+import {
+  ensureFontFace,
+  setupFavButton,
+  setupSaveMenuToggle,
+  setupSaveOptions,
+  closeSaveMenusExcept,
+} from "../shared/fontUtils.js";
+import { hide } from "../shared/displayUtils.js";
 
 export function generateGridArticles({ gridEl, fonts, onOpenFont }) {
   if (!gridEl) return [];
@@ -52,55 +59,35 @@ export function generateGridArticles({ gridEl, fonts, onOpenFont }) {
     gridEl.appendChild(article);
     articles.push(article);
 
-   const favImg = article.querySelector(".fav-btn img");
-favImg?.addEventListener("click", (e) => {
-  e.preventDefault();
-  e.stopPropagation();
-  toggleFavIcon(favImg);
-});
-
-
     const saveMenu = article.querySelector(".save");
     const saveBtn = article.querySelector(".save-btn");
-    if (saveMenu) saveMenu.style.display = "none";
+
+    setupFavButton(article.querySelector(".fav-btn img"));
+    setupSaveOptions(article);
+
+    hide(saveMenu);
 
     saveBtn?.addEventListener("click", (e) => {
       e.preventDefault();
       e.stopPropagation();
-
-      document.querySelectorAll(".save, .save_list").forEach((menu) => {
-        if (menu !== saveMenu) {
-          menu.style.display = "none";
-          menu.parentElement.querySelector(".save-btn")?.classList.remove("selected");
-        }
-      });
-
-      if (!saveMenu) return;
-      const isOpening = saveMenu.style.display === "none";
-      saveMenu.style.display = isOpening ? "block" : "none";
+      closeSaveMenusExcept(saveMenu);
+      const isOpening = saveMenu?.style.display === "none";
+      if (saveMenu) saveMenu.style.display = isOpening ? "block" : "none";
       saveBtn.classList.toggle("selected", isOpening);
     });
 
-    article.querySelectorAll(".save-option").forEach((option) => {
-      option.addEventListener("click", (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        option.classList.toggle("selected-option");
-      });
-    });
-
     article.addEventListener("mouseleave", () => {
-      if (saveMenu) saveMenu.style.display = "none";
+      hide(saveMenu);
       saveBtn?.classList.remove("selected");
     });
   });
 
   document.addEventListener("click", (e) => {
     document.querySelectorAll(".save").forEach((menu) => {
-      const saveBtn = menu.parentElement.querySelector(".save-btn");
-      if (!menu.contains(e.target) && (!saveBtn || !saveBtn.contains(e.target))) {
-        menu.style.display = "none";
-        saveBtn?.classList.remove("selected");
+      const btn = menu.parentElement?.querySelector(".save-btn");
+      if (!menu.contains(e.target) && (!btn || !btn.contains(e.target))) {
+        hide(menu);
+        btn?.classList.remove("selected");
       }
     });
   });

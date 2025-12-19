@@ -6,27 +6,24 @@ export function checkFontAgainstFilters(
   selectedVariables,
   searchQuery = ""
 ) {
-  let show = true;
-
-  // SEARCH
   const q = String(searchQuery ?? "").trim().toLowerCase();
   if (q) {
     const name = String(font?.name ?? "").toLowerCase();
     const foundry = String(font?.foundry ?? "").toLowerCase();
     if (!name.includes(q) && !foundry.includes(q)) {
-      show = false;
+      return false;
     }
   }
 
   if (selectedTags.length > 0 && font?.tags) {
     if (!selectedTags.some((tag) => font.tags.includes(tag))) {
-      show = false;
+      return false;
     }
   }
 
   if (selectedFoundries.length > 0) {
     if (!selectedFoundries.includes(font?.foundry)) {
-      show = false;
+      return false;
     }
   }
 
@@ -41,70 +38,70 @@ export function checkFontAgainstFilters(
     else size = "xlarge";
 
     if (!selectedFamilySizes.includes(size)) {
-      show = false;
+      return false;
     }
   }
 
   if (selectedVariables.length > 0) {
     const type = font?.variable ? "Variable" : "Static";
     if (!selectedVariables.includes(type)) {
-      show = false;
+      return false;
     }
   }
 
-  return show;
+  return true;
 }
 
-export function filterArticles({ selectedTags, selectedFoundries, selectedFamilySizes, selectedVariables, searchQuery, fonts }) {
-  const articles = document.querySelectorAll("article");
+function filterElements(selector, fonts, filterParams) {
+  const elements = document.querySelectorAll(selector);
   let visibleCount = 0;
 
-  articles.forEach((article, index) => {
+  elements.forEach((el, index) => {
     const font = fonts[index];
     if (!font) {
-      article.style.display = "none";
+      el.style.display = "none";
       return;
     }
 
     const show = checkFontAgainstFilters(
       font,
-      selectedTags,
-      selectedFoundries,
-      selectedFamilySizes,
-      selectedVariables,
-      searchQuery
+      filterParams.selectedTags,
+      filterParams.selectedFoundries,
+      filterParams.selectedFamilySizes,
+      filterParams.selectedVariables,
+      filterParams.searchQuery
     );
 
-    article.style.display = show ? "block" : "none";
+    el.style.display = show ? "block" : "none";
     if (show) visibleCount++;
   });
 
   return visibleCount;
 }
 
-export function filterListItems({ selectedTags, selectedFoundries, selectedFamilySizes, selectedVariables, searchQuery, fonts }) {
-  const listItems = document.querySelectorAll(".list");
+export function filterArticles(params) {
+  return filterElements("article", params.fonts, params);
+}
+
+export function filterListItems(params) {
+  return filterElements(".list", params.fonts, params);
+}
+
+export function filterFonts({ gridEl, fonts, isGridView, filterParams }) {
   let visibleCount = 0;
 
-  listItems.forEach((listItem, index) => {
-    const font = fonts[index];
-    if (!font) {
-      listItem.style.display = "none";
-      return;
-    }
+  if (isGridView) {
+    visibleCount = filterArticles({ ...filterParams, fonts });
+    document.querySelectorAll(".list").forEach((li) => (li.style.display = "none"));
+  } else {
+    visibleCount = filterListItems({ ...filterParams, fonts });
+    document.querySelectorAll("article").forEach((a) => (a.style.display = "none"));
+  }
 
-    const show = checkFontAgainstFilters(
-      font,
-      selectedTags,
-      selectedFoundries,
-      selectedFamilySizes,
-      selectedVariables,
-      searchQuery
-    );
-
-    listItem.style.display = show ? "block" : "none";
-    if (show) visibleCount++;
-  });
+  const noResults = document.getElementById("no_results");
+  if (noResults) {
+    noResults.style.display = visibleCount === 0 ? "block" : "none";
+  }
 
   return visibleCount;
 }

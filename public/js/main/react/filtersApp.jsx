@@ -1,3 +1,16 @@
+const FAMILY_SIZES = [
+  { key: "single", label: "Single (1 style)" },
+  { key: "small", label: "Small (2-6 styles)" },
+  { key: "medium", label: "Medium (7-10 styles)" },
+  { key: "large", label: "Large (11-20 styles)" },
+  { key: "xlarge", label: "Extra Large (21+ styles)" },
+];
+
+const VARIABLE_OPTIONS = [
+  { key: "Variable", label: "Variable" },
+  { key: "Static", label: "Static" },
+];
+
 function ToggleOption({ label, selected, onClick, className = "option", dataAttrs = {} }) {
   return (
     <a
@@ -48,6 +61,13 @@ function SearchBar({ value, onChange }) {
 function FiltersContent({ allTags, foundries, selections, onSelectionsChange }) {
   const { selectedTags, selectedFoundry, selectedFamilySize, selectedVariable } = selections;
 
+  const toggleSelection = (key, currentValue, newValue) => {
+    onSelectionsChange({
+      ...selections,
+      [key]: currentValue === newValue ? null : newValue,
+    });
+  };
+
   return (
     <>
       <section id="tags">
@@ -75,97 +95,34 @@ function FiltersContent({ allTags, foundries, selections, onSelectionsChange }) 
             selected={selectedFoundry === f}
             className="option foundry-option"
             dataAttrs={{ "data-foundry": f }}
-            onClick={() => {
-              onSelectionsChange({
-                ...selections,
-                selectedFoundry: selectedFoundry === f ? null : f,
-              });
-            }}
+            onClick={() => toggleSelection("selectedFoundry", selectedFoundry, f)}
           />
         ))}
       </section>
 
       <section className="filters_section">
         <h2>Family Size</h2>
-        <ToggleOption
-          label="Single (1 style)"
-          selected={selectedFamilySize === "single"}
-          dataAttrs={{ "data-family-size": "single" }}
-          onClick={() =>
-            onSelectionsChange({
-              ...selections,
-              selectedFamilySize: selectedFamilySize === "single" ? null : "single",
-            })
-          }
-        />
-        <ToggleOption
-          label="Small (2-6 styles)"
-          selected={selectedFamilySize === "small"}
-          dataAttrs={{ "data-family-size": "small" }}
-          onClick={() =>
-            onSelectionsChange({
-              ...selections,
-              selectedFamilySize: selectedFamilySize === "small" ? null : "small",
-            })
-          }
-        />
-        <ToggleOption
-          label="Medium (7-10 styles)"
-          selected={selectedFamilySize === "medium"}
-          dataAttrs={{ "data-family-size": "medium" }}
-          onClick={() =>
-            onSelectionsChange({
-              ...selections,
-              selectedFamilySize: selectedFamilySize === "medium" ? null : "medium",
-            })
-          }
-        />
-        <ToggleOption
-          label="Large (11-20 styles)"
-          selected={selectedFamilySize === "large"}
-          dataAttrs={{ "data-family-size": "large" }}
-          onClick={() =>
-            onSelectionsChange({
-              ...selections,
-              selectedFamilySize: selectedFamilySize === "large" ? null : "large",
-            })
-          }
-        />
-        <ToggleOption
-          label="Extra Large (21+ styles)"
-          selected={selectedFamilySize === "xlarge"}
-          dataAttrs={{ "data-family-size": "xlarge" }}
-          onClick={() =>
-            onSelectionsChange({
-              ...selections,
-              selectedFamilySize: selectedFamilySize === "xlarge" ? null : "xlarge",
-            })
-          }
-        />
+        {FAMILY_SIZES.map(({ key, label }) => (
+          <ToggleOption
+            key={key}
+            label={label}
+            selected={selectedFamilySize === key}
+            dataAttrs={{ "data-family-size": key }}
+            onClick={() => toggleSelection("selectedFamilySize", selectedFamilySize, key)}
+          />
+        ))}
       </section>
 
       <section className="filters_section">
         <h2>Variable</h2>
-        <ToggleOption
-          label="Variable"
-          selected={selectedVariable === "Variable"}
-          onClick={() =>
-            onSelectionsChange({
-              ...selections,
-              selectedVariable: selectedVariable === "Variable" ? null : "Variable",
-            })
-          }
-        />
-        <ToggleOption
-          label="Static"
-          selected={selectedVariable === "Static"}
-          onClick={() =>
-            onSelectionsChange({
-              ...selections,
-              selectedVariable: selectedVariable === "Static" ? null : "Static",
-            })
-          }
-        />
+        {VARIABLE_OPTIONS.map(({ key, label }) => (
+          <ToggleOption
+            key={key}
+            label={label}
+            selected={selectedVariable === key}
+            onClick={() => toggleSelection("selectedVariable", selectedVariable, key)}
+          />
+        ))}
       </section>
     </>
   );

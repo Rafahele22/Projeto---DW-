@@ -1,7 +1,8 @@
+import { getGlobalSampleText, setGlobalSampleText } from "./state.js";
+import { hide, show, showFlex } from "./shared/displayUtils.js";
+
 let userCollections = [];
 let allFontsRef = [];
-
-import { getGlobalSampleText, setGlobalSampleText } from "./state.js";
 
 export function setUserCollections(collections) {
   userCollections = Array.isArray(collections) ? collections : [];
@@ -11,68 +12,42 @@ export function setAllFontsReference(fonts) {
   allFontsRef = Array.isArray(fonts) ? fonts : [];
 }
 
+const ICONS = {
+  discover: { normal: "../assets/imgs/search.svg", selected: "../assets/imgs/search_selected.svg" },
+  collections: { normal: "../assets/imgs/collections.svg", selected: "../assets/imgs/collections_selected.svg" },
+  grid: { normal: "../assets/imgs/grid.svg", selected: "../assets/imgs/grid_selected.svg" },
+  list: { normal: "../assets/imgs/list.svg", selected: "../assets/imgs/list_selected.svg" },
+};
+
+function updateIcon(imgEl, iconKey, isSelected) {
+  if (!imgEl) return;
+  imgEl.src = isSelected ? ICONS[iconKey].selected : ICONS[iconKey].normal;
+}
+
 export function setupCollectionsNav(options = {}) {
   const onOpenFont = typeof options.onOpenFont === "function" ? options.onOpenFont : null;
 
   const nav = document.querySelector("header nav");
   const collectionsBtn = document.getElementById("abaCollections");
   const discoverBtn = nav?.querySelector('a.button:not(#abaCollections)');
-
   const mainEl = document.querySelector("main");
-
   const secondBar = document.getElementById("second_bar");
   const myCollectionsBar = document.getElementById("my_collections_second_bar");
-
   const filtersBtn = document.getElementById("filters_btn");
   const searchBar = document.getElementById("search_bar");
   const backToCollection = document.getElementById("backToCollection");
-
   const viewModeSection = secondBar?.querySelector("section");
   const viewModeBtns = viewModeSection ? Array.from(viewModeSection.querySelectorAll("a")) : [];
-  const gridModeBtn = viewModeBtns[0] || null;
-  const listModeBtn = viewModeBtns[1] || null;
-
+  const [gridModeBtn, listModeBtn] = viewModeBtns;
   const filtersPanel = document.getElementById("filters");
   const gridEl = document.querySelector(".grid.grid_view");
   const noResultsEl = document.getElementById("no_results");
 
   if (!nav || !collectionsBtn || !discoverBtn || !mainEl || !myCollectionsBar || !gridEl) return;
 
-  // =========================
-  // NAV ICONS 
-  // =========================
-  const ICONS = {
-    discover: {
-      normal: "../assets/imgs/search.svg",
-      selected: "../assets/imgs/search_selected.svg",
-    },
-    collections: {
-      normal: "../assets/imgs/collections.svg",
-      selected: "../assets/imgs/collections_selected.svg",
-    },
-  };
-
   function updateNavIcons() {
-    const discoverImg = discoverBtn?.querySelector("img");
-    const collectionsImg = collectionsBtn?.querySelector("img");
-
-    if (discoverImg) {
-      discoverImg.setAttribute(
-        "src",
-        discoverBtn.classList.contains("selected")
-          ? ICONS.discover.selected
-          : ICONS.discover.normal
-      );
-    }
-
-    if (collectionsImg) {
-      collectionsImg.setAttribute(
-        "src",
-        collectionsBtn.classList.contains("selected")
-          ? ICONS.collections.selected
-          : ICONS.collections.normal
-      );
-    }
+    updateIcon(discoverBtn?.querySelector("img"), "discover", discoverBtn.classList.contains("selected"));
+    updateIcon(collectionsBtn?.querySelector("img"), "collections", collectionsBtn.classList.contains("selected"));
   }
 
   function setSelected(activeBtn) {
@@ -81,44 +56,15 @@ export function setupCollectionsNav(options = {}) {
     updateNavIcons();
   }
 
-  // =========================
-  // SECOND BAR
-  // =========================
   const collectionsTabs = Array.from(myCollectionsBar.querySelectorAll("a.button"));
-  const albumsTab = collectionsTabs[0] || null;
-  const pairsTab = collectionsTabs[1] || null;
-
-  const COLLECTIONS_TAB_ICONS = {
-    normal: "../assets/imgs/collections.svg",
-    selected: "../assets/imgs/collections_selected.svg",
-  };
+  const [albumsTab, pairsTab] = collectionsTabs;
 
   function setCollectionsTabSelected(activeTab) {
     if (!albumsTab || !pairsTab) return;
-
     [albumsTab, pairsTab].forEach((btn) => btn.classList.remove("selected"));
     activeTab.classList.add("selected");
-
-    const albumsImg = albumsTab.querySelector("img");
-    const pairsImg = pairsTab.querySelector("img");
-
-    if (albumsImg) {
-      albumsImg.setAttribute(
-        "src",
-        albumsTab.classList.contains("selected")
-          ? COLLECTIONS_TAB_ICONS.selected
-          : COLLECTIONS_TAB_ICONS.normal
-      );
-    }
-
-    if (pairsImg) {
-      pairsImg.setAttribute(
-        "src",
-        pairsTab.classList.contains("selected")
-          ? COLLECTIONS_TAB_ICONS.selected
-          : COLLECTIONS_TAB_ICONS.normal
-      );
-    }
+    updateIcon(albumsTab.querySelector("img"), "collections", albumsTab.classList.contains("selected"));
+    updateIcon(pairsTab.querySelector("img"), "collections", pairsTab.classList.contains("selected"));
   }
 
   const secondBarDefaults = new Map();
@@ -126,13 +72,10 @@ export function setupCollectionsNav(options = {}) {
     if (el) secondBarDefaults.set(el, el.style.display);
   });
 
-  const mainChildren = Array.from(mainEl.children);
-  const mainDefaults = new Map(mainChildren.map((el) => [el, el.style.display]));
+  const mainDefaults = new Map(Array.from(mainEl.children).map((el) => [el, el.style.display]));
 
   function hideMainCompletely() {
-    Array.from(mainEl.children).forEach((child) => {
-      child.style.display = "none";
-    });
+    Array.from(mainEl.children).forEach((child) => hide(child));
   }
 
   function restoreMainBaseVisibility() {
@@ -143,17 +86,13 @@ export function setupCollectionsNav(options = {}) {
 
   function restoreDiscoverSecondBar() {
     myCollectionsBar.style.display = secondBarDefaults.get(myCollectionsBar) ?? "none";
-
     if (filtersBtn) filtersBtn.style.display = secondBarDefaults.get(filtersBtn) ?? "";
     if (searchBar) searchBar.style.display = secondBarDefaults.get(searchBar) ?? "";
-    if (backToCollection)
-      backToCollection.style.display = secondBarDefaults.get(backToCollection) ?? "none";
-    if (viewModeSection)
-      viewModeSection.style.display = secondBarDefaults.get(viewModeSection) ?? "";
+    if (backToCollection) backToCollection.style.display = secondBarDefaults.get(backToCollection) ?? "none";
+    if (viewModeSection) viewModeSection.style.display = secondBarDefaults.get(viewModeSection) ?? "";
   }
 
   const discoverStashEl = document.createElement("div");
-
   let discoverWasGridView = true;
   let activeCollectionsTab = "albums";
   let openedCollectionId = null;
@@ -192,71 +131,40 @@ export function setupCollectionsNav(options = {}) {
 
   function stashDiscoverGridNodes() {
     if (!gridEl || gridEl.childNodes.length === 0) return;
-
-    discoverWasGridView =
-      gridEl.classList.contains("grid_view") && !gridEl.classList.contains("list_view");
-
+    discoverWasGridView = gridEl.classList.contains("grid_view") && !gridEl.classList.contains("list_view");
     discoverStashEl.replaceChildren(...gridEl.childNodes);
   }
 
   function restoreDiscoverGridNodes() {
     if (!discoverStashEl || discoverStashEl.childNodes.length === 0) return;
-
     collectionsReact?.unmount?.();
     collectionsReact = null;
-
     gridEl.replaceChildren(...discoverStashEl.childNodes);
-
-    if (discoverWasGridView) {
-      gridEl.classList.add("grid_view");
-      gridEl.classList.remove("list_view");
-    } else {
-      gridEl.classList.add("list_view");
-      gridEl.classList.remove("grid_view");
-    }
+    gridEl.classList.toggle("grid_view", discoverWasGridView);
+    gridEl.classList.toggle("list_view", !discoverWasGridView);
   }
 
-  function setGridAsAlbumsLayout() {
-    gridEl.classList.add("grid_view");
-    gridEl.classList.remove("list_view");
-    gridEl.style.display = "grid";
-  }
-
-  function setGridAsListLayout() {
-    gridEl.classList.add("list_view");
-    gridEl.classList.remove("grid_view");
-    gridEl.style.display = "";
+  function setGridLayout(isGrid) {
+    gridEl.classList.toggle("grid_view", isGrid);
+    gridEl.classList.toggle("list_view", !isGrid);
+    gridEl.style.display = isGrid ? "grid" : "";
   }
 
   function setCollectionsViewMode(mode) {
     const isGrid = mode === "grid";
+    setGridLayout(isGrid);
 
-    if (isGrid) {
-      setGridAsAlbumsLayout();
-      if (gridModeBtn) gridModeBtn.id = "view_mode_selected";
-      if (listModeBtn) listModeBtn.id = "";
-      const gridImg = gridModeBtn?.querySelector("img");
-      const listImg = listModeBtn?.querySelector("img");
-      if (gridImg) gridImg.src = "../assets/imgs/grid_selected.svg";
-      if (listImg) listImg.src = "../assets/imgs/list.svg";
-    } else {
-      setGridAsListLayout();
-      if (gridModeBtn) gridModeBtn.id = "";
-      if (listModeBtn) listModeBtn.id = "view_mode_selected";
-      const gridImg = gridModeBtn?.querySelector("img");
-      const listImg = listModeBtn?.querySelector("img");
-      if (gridImg) gridImg.src = "../assets/imgs/grid.svg";
-      if (listImg) listImg.src = "../assets/imgs/list_selected.svg";
-    }
+    if (gridModeBtn) gridModeBtn.id = isGrid ? "view_mode_selected" : "";
+    if (listModeBtn) listModeBtn.id = isGrid ? "" : "view_mode_selected";
+    updateIcon(gridModeBtn?.querySelector("img"), "grid", isGrid);
+    updateIcon(listModeBtn?.querySelector("img"), "list", !isGrid);
 
-    collectionsReact?.update?.({
-      collectionViewMode: isGrid ? "grid" : "list",
-    });
+    collectionsReact?.update?.({ collectionViewMode: mode });
   }
 
   function attachCollectionsViewModeInterceptors() {
     if (!gridModeBtn || !listModeBtn) return;
-    if (gridModeBtn.__collectionsBound || listModeBtn.__collectionsBound) return;
+    if (gridModeBtn.__collectionsBound) return;
 
     const handler = (mode) => (e) => {
       if (!isInCollectionsDetail) return;
@@ -267,34 +175,26 @@ export function setupCollectionsNav(options = {}) {
 
     gridModeBtn.addEventListener("click", handler("grid"), true);
     listModeBtn.addEventListener("click", handler("list"), true);
-
     gridModeBtn.__collectionsBound = true;
     listModeBtn.__collectionsBound = true;
   }
 
   function showCollectionsListBar() {
-    if (myCollectionsBar) myCollectionsBar.style.display = "none";
-    if (backToCollection) backToCollection.style.display = "";
-    if (filtersBtn) filtersBtn.style.display = "none";
-    if (searchBar) searchBar.style.display = "none";
-    if (viewModeSection) viewModeSection.style.display = "";
+    hide(myCollectionsBar, filtersBtn, searchBar);
+    show(backToCollection, viewModeSection);
   }
 
   function showCollectionsTabsBar() {
-    if (myCollectionsBar) myCollectionsBar.style.display = "flex";
-    if (backToCollection) backToCollection.style.display = "none";
-    if (filtersBtn) filtersBtn.style.display = "none";
-    if (searchBar) searchBar.style.display = "none";
-    if (viewModeSection) viewModeSection.style.display = "none";
+    showFlex(myCollectionsBar);
+    hide(backToCollection, filtersBtn, searchBar, viewModeSection);
   }
 
   function renderCollectionsHome(tab) {
     const safeTab = tab === "pairs" ? "pairs" : "albums";
-
     hideMainCompletely();
     showCollectionsTabsBar();
-    setGridAsAlbumsLayout();
-    if (noResultsEl) noResultsEl.style.display = "none";
+    setGridLayout(true);
+    if (noResultsEl) hide(noResultsEl);
 
     openedCollectionId = null;
     isInCollectionsDetail = false;
@@ -308,90 +208,61 @@ export function setupCollectionsNav(options = {}) {
     });
   }
 
-  // =========================
-  // ROUTES
-  // =========================
+  function getActiveTab() {
+    return activeCollectionsTab === "pairs" ? pairsTab : albumsTab;
+  }
+
   function enterCollections() {
     setSelected(collectionsBtn);
-
-    if (filtersPanel) filtersPanel.style.display = "none";
+    hide(filtersPanel);
     gridEl.classList.remove("shifted");
     filtersBtn?.classList.remove("selected");
-
     document.body.classList.remove("single-font-open");
-
     stashDiscoverGridNodes();
-
     attachCollectionsViewModeInterceptors();
-
-    const tab = activeCollectionsTab === "pairs" ? "pairs" : "albums";
-    setCollectionsTabSelected(tab === "pairs" ? pairsTab || myCollectionsBar : albumsTab || myCollectionsBar);
-    renderCollectionsHome(tab);
-
+    setCollectionsTabSelected(getActiveTab() || myCollectionsBar);
+    renderCollectionsHome(activeCollectionsTab);
     isInCollectionsDetail = false;
-
     window.scrollTo(0, 0);
   }
 
   function enterDiscover() {
     setSelected(discoverBtn);
-
     collectionsReact?.unmount?.();
     collectionsReact = null;
-
     restoreMainBaseVisibility();
     restoreDiscoverGridNodes();
     restoreDiscoverSecondBar();
-
     isInCollectionsDetail = false;
-
     window.scrollTo(0, 0);
   }
 
-  collectionsBtn.addEventListener("click", (e) => {
-    e.preventDefault();
-    enterCollections();
-  });
+  function handleTabClick(tab) {
+    return (e) => {
+      e.preventDefault();
+      activeCollectionsTab = tab;
+      openedCollectionId = null;
+      isInCollectionsDetail = false;
+      setCollectionsTabSelected(tab === "pairs" ? pairsTab : albumsTab);
+      renderCollectionsHome(tab);
+    };
+  }
 
-  discoverBtn.addEventListener("click", (e) => {
-    e.preventDefault();
-    enterDiscover();
-  });
-
-  albumsTab?.addEventListener("click", (e) => {
-    e.preventDefault();
-    activeCollectionsTab = "albums";
-    openedCollectionId = null;
-    isInCollectionsDetail = false;
-    setCollectionsTabSelected(albumsTab);
-    renderCollectionsHome("albums");
-  });
-
-  pairsTab?.addEventListener("click", (e) => {
-    e.preventDefault();
-    activeCollectionsTab = "pairs";
-    openedCollectionId = null;
-    isInCollectionsDetail = false;
-    setCollectionsTabSelected(pairsTab);
-    renderCollectionsHome("pairs");
-  });
+  collectionsBtn.addEventListener("click", (e) => { e.preventDefault(); enterCollections(); });
+  discoverBtn.addEventListener("click", (e) => { e.preventDefault(); enterDiscover(); });
+  albumsTab?.addEventListener("click", handleTabClick("albums"));
+  pairsTab?.addEventListener("click", handleTabClick("pairs"));
 
   backToCollection?.addEventListener("click", (e) => {
     e.preventDefault();
     openedCollectionId = null;
     isInCollectionsDetail = false;
-
-    const tab = activeCollectionsTab === "pairs" ? "pairs" : "albums";
-    setCollectionsTabSelected(tab === "pairs" ? pairsTab || myCollectionsBar : albumsTab || myCollectionsBar);
-    renderCollectionsHome(tab);
+    setCollectionsTabSelected(getActiveTab() || myCollectionsBar);
+    renderCollectionsHome(activeCollectionsTab);
   });
 
   updateNavIcons();
   setCollectionsTabSelected(albumsTab || myCollectionsBar);
 
-  return {
-    resetToHome: () => {
-      enterDiscover();
-    },
-  };
+  return { resetToHome: enterDiscover };
 }

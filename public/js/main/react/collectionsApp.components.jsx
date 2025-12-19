@@ -1,52 +1,84 @@
 function AlbumPreview({ families }) {
   const sampleLetter = "Aa";
   const safeFamilies = Array.isArray(families) ? families.filter(Boolean) : [];
-  const count = safeFamilies.length;
-
-  if (count === 0) {
-    return (
-      <>
-        <h1 style={{ fontFamily: "inherit" }}>{sampleLetter}</h1>
-        <section>
-          <h1 style={{ fontFamily: "inherit" }}>{sampleLetter}</h1>
-          <h1 style={{ fontFamily: "inherit" }}>{sampleLetter}</h1>
-        </section>
-      </>
-    );
-  }
-
-  if (count === 1) {
-    return (
-      <>
-        <h1 style={{ fontFamily: safeFamilies[0] }}>{sampleLetter}</h1>
-        <section>
-          <h1 style={{ fontFamily: safeFamilies[0] }}>{sampleLetter}</h1>
-          <h1 style={{ fontFamily: safeFamilies[0] }}>{sampleLetter}</h1>
-        </section>
-      </>
-    );
-  }
-
-  if (count === 2) {
-    return (
-      <>
-        <h1 style={{ fontFamily: safeFamilies[0] }}>{sampleLetter}</h1>
-        <section>
-          <h1 style={{ fontFamily: safeFamilies[1] }}>{sampleLetter}</h1>
-          <h1 style={{ fontFamily: safeFamilies[0] }}>{sampleLetter}</h1>
-        </section>
-      </>
-    );
-  }
+  
+  const getFamily = (index) => safeFamilies[index] || safeFamilies[0] || "inherit";
 
   return (
     <>
-      <h1 style={{ fontFamily: safeFamilies[0] }}>{sampleLetter}</h1>
+      <h1 style={{ fontFamily: getFamily(0) }}>{sampleLetter}</h1>
       <section>
-        <h1 style={{ fontFamily: safeFamilies[1] }}>{sampleLetter}</h1>
-        <h1 style={{ fontFamily: safeFamilies[2] }}>{sampleLetter}</h1>
+        <h1 style={{ fontFamily: getFamily(1) }}>{sampleLetter}</h1>
+        <h1 style={{ fontFamily: getFamily(2) || getFamily(0) }}>{sampleLetter}</h1>
       </section>
     </>
+  );
+}
+
+function useFontsFromCollection(collection, fontsById) {
+  return React.useMemo(() => {
+    const items = Array.isArray(collection?.items) ? collection.items : [];
+    const seen = new Set();
+    const fonts = [];
+
+    for (const item of items) {
+      const idStr = String(item?.fontId);
+      if (seen.has(idStr)) continue;
+      seen.add(idStr);
+      const font = fontsById.get(idStr);
+      if (font) fonts.push(font);
+    }
+
+    return fonts;
+  }, [collection, fontsById]);
+}
+
+function useFavorite() {
+  const [favSelected, setFavSelected] = React.useState(false);
+  const toggle = (e) => {
+    e?.preventDefault();
+    e?.stopPropagation();
+    setFavSelected((v) => !v);
+  };
+  return { favSelected, toggle };
+}
+
+function useSaveMenu(fontId, openSaveId, setOpenSaveId) {
+  const isOpen = openSaveId === String(fontId);
+  const toggle = (e) => {
+    e?.preventDefault();
+    e?.stopPropagation();
+    setOpenSaveId?.(isOpen ? null : String(fontId));
+  };
+  return { isOpen, toggle };
+}
+
+function FavButton({ selected, onToggle }) {
+  return (
+    <a href="#" className="fav-btn" onClick={onToggle}>
+      <img
+        src={selected ? "../assets/imgs/fav_selected.svg" : "../assets/imgs/fav.svg"}
+        alt="favourite"
+      />
+    </a>
+  );
+}
+
+function SaveMenu({ isOpen }) {
+  return (
+    <section className="save_list" style={{ display: isOpen ? "block" : "none" }}>
+      <h4>Save font on...</h4>
+      <a href="#" onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}>
+        <div><h4>Aa</h4><h4>Web</h4></div>
+        <h5 className="add-text">add</h5>
+        <img src="../assets/imgs/check.svg" className="check-icon" alt="check icon" />
+      </a>
+      <a href="#" onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}>
+        <div><h4>Aa</h4><h4>Print</h4></div>
+        <h5 className="add-text">add</h5>
+        <img src="../assets/imgs/check.svg" className="check-icon" alt="check icon" />
+      </a>
+    </section>
   );
 }
 
@@ -125,7 +157,8 @@ function ListItem({
   openSaveId,
   setOpenSaveId,
 }) {
-  const [favSelected, setFavSelected] = React.useState(false);
+  const { favSelected, toggle: toggleFav } = useFavorite();
+  const { isOpen: isSaveOpen, toggle: toggleSave } = useSaveMenu(font?._id, openSaveId, setOpenSaveId);
   const hasAllCaps = Array.isArray(font?.tags) && font.tags.includes("All Caps");
   const editableRef = React.useRef(null);
 
@@ -146,8 +179,6 @@ function ListItem({
       el.innerText = desiredText;
     }
   }, [desiredText]);
-
-  const isSaveOpen = openSaveId === String(font?._id);
 
   return (
     <div
@@ -176,63 +207,16 @@ function ListItem({
           {font?.variable ? <h3>Variable</h3> : null}
         </section>
         <section className="list_information">
-          <a
-            href="#"
-            className="fav-btn"
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              setFavSelected((v) => !v);
-            }}
-          >
-            <img
-              src={favSelected ? "../assets/imgs/fav_selected.svg" : "../assets/imgs/fav.svg"}
-              alt="favourite"
-            />
-          </a>
+          <FavButton selected={favSelected} onToggle={toggleFav} />
           <a
             href="#"
             className={"button save-btn" + (isSaveOpen ? " selected" : "")}
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              setOpenSaveId(isSaveOpen ? null : String(font?._id));
-            }}
+            onClick={toggleSave}
           >
             <h4>Save</h4>
           </a>
         </section>
-        <section className="save_list" style={{ display: isSaveOpen ? "block" : "none" }}>
-          <h4>Save font on...</h4>
-          <a
-            href="#"
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-            }}
-          >
-            <div>
-              <h4>Aa</h4>
-              <h4>Web</h4>
-            </div>
-            <h5 className="add-text">add</h5>
-            <img src="../assets/imgs/check.svg" className="check-icon" alt="check icon" />
-          </a>
-          <a
-            href="#"
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-            }}
-          >
-            <div>
-              <h4>Aa</h4>
-              <h4>Print</h4>
-            </div>
-            <h5 className="add-text">add</h5>
-            <img src="../assets/imgs/check.svg" className="check-icon" alt="check icon" />
-          </a>
-        </section>
+        <SaveMenu isOpen={isSaveOpen} />
       </div>
 
       <h1
@@ -272,10 +256,8 @@ function ListItem({
 }
 
 function GridItem({ font, onOpenFont }) {
-  const [favSelected, setFavSelected] = React.useState(false);
+  const { favSelected, toggle: toggleFav } = useFavorite();
   const [saveOpen, setSaveOpen] = React.useState(false);
-  const [webSelected, setWebSelected] = React.useState(false);
-  const [printSelected, setPrintSelected] = React.useState(false);
 
   React.useEffect(() => {
     ensureFontFaceInline(font);
@@ -293,9 +275,7 @@ function GridItem({ font, onOpenFont }) {
         }
         onOpenFont?.(font);
       }}
-      onMouseLeave={() => {
-        setSaveOpen(false);
-      }}
+      onMouseLeave={() => setSaveOpen(false)}
     >
       <section className="grid_information">
         <a
@@ -309,58 +289,13 @@ function GridItem({ font, onOpenFont }) {
         >
           <h4>Save</h4>
         </a>
-        <a
-          href="#"
-          className="fav-btn"
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            setFavSelected((v) => !v);
-          }}
-        >
-          <img
-            src={favSelected ? "../assets/imgs/fav_selected.svg" : "../assets/imgs/fav.svg"}
-            alt="favourite"
-          />
-        </a>
+        <FavButton selected={favSelected} onToggle={toggleFav} />
       </section>
 
       <section className="save" style={{ display: saveOpen ? "block" : "none" }}>
         <h4>Save font on...</h4>
-        <a
-          href="#"
-          className={"save-option" + (webSelected ? " selected-option" : "")}
-          data-type="web"
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            setWebSelected((v) => !v);
-          }}
-        >
-          <div>
-            <h4>Aa</h4>
-            <h4>Web</h4>
-          </div>
-          <h5 className="add-text">add</h5>
-          <img src="../assets/imgs/check.svg" className="check-icon" alt="check icon" />
-        </a>
-        <a
-          href="#"
-          className={"save-option" + (printSelected ? " selected-option" : "")}
-          data-type="print"
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            setPrintSelected((v) => !v);
-          }}
-        >
-          <div>
-            <h4>Aa</h4>
-            <h4>Print</h4>
-          </div>
-          <h5 className="add-text">add</h5>
-          <img src="../assets/imgs/check.svg" className="check-icon" alt="check icon" />
-        </a>
+        <SaveOption label="Web" />
+        <SaveOption label="Print" />
       </section>
 
       <h1 className="title_gridview" style={{ fontFamily: `'${font?._id}-font'` }}>
@@ -369,27 +304,34 @@ function GridItem({ font, onOpenFont }) {
 
       <section className="grid_information">
         <h2>{font?.name}</h2>
-        <h3>
-          {numStyles} {numStyles === 1 ? "style" : "styles"}
-        </h3>
+        <h3>{numStyles} {numStyles === 1 ? "style" : "styles"}</h3>
       </section>
     </article>
   );
 }
 
+function SaveOption({ label }) {
+  const [selected, setSelected] = React.useState(false);
+  return (
+    <a
+      href="#"
+      className={"save-option" + (selected ? " selected-option" : "")}
+      data-type={label.toLowerCase()}
+      onClick={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setSelected((v) => !v);
+      }}
+    >
+      <div><h4>Aa</h4><h4>{label}</h4></div>
+      <h5 className="add-text">add</h5>
+      <img src="../assets/imgs/check.svg" className="check-icon" alt="check icon" />
+    </a>
+  );
+}
+
 function CollectionList({ collection, fontsById, globalText, setGlobalText, onOpenFont }) {
-  const items = Array.isArray(collection?.items) ? collection.items : [];
-  const seen = new Set();
-  const fonts = [];
-
-  for (const item of items) {
-    const idStr = String(item?.fontId);
-    if (seen.has(idStr)) continue;
-    seen.add(idStr);
-    const font = fontsById.get(idStr);
-    if (font) fonts.push(font);
-  }
-
+  const fonts = useFontsFromCollection(collection, fontsById);
   const [openSaveId, setOpenSaveId] = React.useState(null);
 
   if (fonts.length === 0) {
@@ -418,17 +360,7 @@ function CollectionList({ collection, fontsById, globalText, setGlobalText, onOp
 }
 
 function CollectionGrid({ collection, fontsById, onOpenFont }) {
-  const items = Array.isArray(collection?.items) ? collection.items : [];
-  const seen = new Set();
-  const fonts = [];
-
-  for (const item of items) {
-    const idStr = String(item?.fontId);
-    if (seen.has(idStr)) continue;
-    seen.add(idStr);
-    const font = fontsById.get(idStr);
-    if (font) fonts.push(font);
-  }
+  const fonts = useFontsFromCollection(collection, fontsById);
 
   if (fonts.length === 0) {
     return (
@@ -448,7 +380,7 @@ function CollectionGrid({ collection, fontsById, onOpenFont }) {
 }
 
 function PairsCard({ headingFont, bodyFont, onOpenFont }) {
-  const [favSelected, setFavSelected] = React.useState(false);
+  const { favSelected, toggle: toggleFav } = useFavorite();
 
   React.useEffect(() => {
     ensureFontFaceInline(headingFont);
@@ -472,20 +404,7 @@ function PairsCard({ headingFont, bodyFont, onOpenFont }) {
       }}
     >
       <section className="grid_information_pairs">
-        <a
-          href="#"
-          className="fav-btn"
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            setFavSelected((v) => !v);
-          }}
-        >
-          <img
-            src={favSelected ? "../assets/imgs/fav_selected.svg" : "../assets/imgs/fav.svg"}
-            alt="favourite"
-          />
-        </a>
+        <FavButton selected={favSelected} onToggle={toggleFav} />
       </section>
 
       <h1 className="pairs_title" style={{ fontFamily: `'${headingFont?._id}-font'` }}>
