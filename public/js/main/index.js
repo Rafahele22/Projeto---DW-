@@ -1,15 +1,25 @@
 import { fetchFonts } from "./fontsApi.js";
 import { filterArticles, filterListItems } from "./filtering.js";
-import { setAllFonts, getAllFonts, getGlobalSampleText, setGlobalSampleText } from "./state.js";
+import {
+  setAllFonts,
+  getAllFonts,
+  getGlobalSampleText,
+  setGlobalSampleText,
+} from "./state.js";
 import { setupViewModeToggle } from "./viewMode.js";
 import { generateGridArticles } from "./views/gridView.js";
 import { generateListItems } from "./views/listView.js";
 import { createSingleFontView } from "./views/singleFontView.js";
-import { setupCollectionsNav, setUserCollections, setAllFontsReference } from "./collections.js";
+import {
+  setupCollectionsNav,
+  setUserCollections,
+  setAllFontsReference,
+} from "./collections.js";
 
 async function main() {
   const abaCollections = document.getElementById("abaCollections");
   const userLoggedIn = localStorage.getItem("user") !== null;
+
   let user = null;
   try {
     const raw = localStorage.getItem("user");
@@ -37,6 +47,9 @@ async function main() {
     getAllFonts,
   });
 
+  // =========================
+  // FILTERS PANEL OPEN/CLOSE
+  // =========================
   if (filtersPanel) {
     filtersPanel.style.display = "none";
   }
@@ -69,6 +82,9 @@ async function main() {
     filtersBtn.classList.remove("selected");
   });
 
+  // =========================
+  // LOAD DATA
+  // =========================
   let collectionsNav = null;
 
   try {
@@ -90,6 +106,9 @@ async function main() {
 
     collectionsNav = setupCollectionsNav();
 
+    // =========================
+    // BUILD TAGS / FOUNDRIES LIST
+    // =========================
     const allTags = [];
     const foundriesMap = {};
 
@@ -112,6 +131,9 @@ async function main() {
 
     allTags.sort();
 
+    // =========================
+    // BUILD UI
+    // =========================
     if (gridEl) {
       generateListItems({
         gridEl,
@@ -121,7 +143,7 @@ async function main() {
         setGlobalSampleText,
       });
 
-      const articles = generateGridArticles({
+      generateGridArticles({
         gridEl,
         fonts,
         onOpenFont: singleFont.showSingleFont,
@@ -129,9 +151,29 @@ async function main() {
 
       const gridViewBtn = document.querySelector("#view_mode_selected");
       const listViewBtn = document.querySelector("#second_bar section a:last-of-type");
-      const mainGrid = document.querySelector(".grid.grid_view");
+      const mainGrid = document.querySelector(".grid");
 
       let getIsGridView = () => true;
+
+      function equalizeGridCardHeights() {
+        if (!getIsGridView()) return;
+
+        const cards = Array.from(gridEl.querySelectorAll("article"));
+        if (!cards.length) return;
+
+        if (!cards.some((c) => c.offsetHeight > 0)) return;
+
+        cards.forEach((c) => (c.style.height = "auto"));
+
+        requestAnimationFrame(() => {
+          let max = 0;
+          for (const c of cards) {
+            const h = c.offsetHeight;
+            if (h > max) max = h;
+          }
+          if (max > 0) cards.forEach((c) => (c.style.height = max + "px"));
+        });
+      }
 
       function filterFonts({
         searchQuery = "",
@@ -141,6 +183,7 @@ async function main() {
         selectedVariables = [],
       } = {}) {
         let visibleCount = 0;
+
         if (getIsGridView()) {
           visibleCount = filterArticles({
             selectedTags,
@@ -176,41 +219,56 @@ async function main() {
       }
 
       const viewMode = setupViewModeToggle({
-  gridViewBtn,
-  listViewBtn,
-  mainGrid,
-  filtersPanel,
-  onToggle: () => filterFonts(),
-});
-getIsGridView = viewMode.getIsGridView;
+        gridViewBtn,
+        listViewBtn,
+        mainGrid,
+        filtersPanel,
+        onToggle: () => {
+          filterFonts();
+          equalizeGridCardHeights();
+        },
+      });
+      getIsGridView = viewMode.getIsGridView;
 
-// =========================
-// LOGO
-// =========================
-const logoLink = document.getElementById("logo")?.closest("a");
+      document.querySelectorAll(".list").forEach((listItem) => {
+        listItem.style.display = "none";
+      });
+      document.querySelectorAll("article").forEach((article) => {
+        article.style.display = "block";
+      });
 
-logoLink?.addEventListener("click", (e) => {
-  e.preventDefault();
-  e.stopPropagation();
+      equalizeGridCardHeights();
+      window.addEventListener("resize", () => {
+        equalizeGridCardHeights();
+      });
 
-  singleFont.closeSingleFontView();
+      // =========================
+      // LOGO
+      // =========================
+      const logoLink = document.getElementById("logo")?.closest("a");
+      logoLink?.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
 
-  collectionsNav?.resetToHome?.();
+        singleFont.closeSingleFontView();
+        collectionsNav?.resetToHome?.();
 
-  if (filtersPanel) filtersPanel.style.display = "none";
-  gridEl?.classList.remove("shifted");
-  filtersBtn?.classList.remove("selected");
+        if (filtersPanel) filtersPanel.style.display = "none";
+        gridEl?.classList.remove("shifted");
+        filtersBtn?.classList.remove("selected");
 
-  viewMode.setGridView();
+        viewMode.setGridView();
 
-  document.querySelectorAll(".list").forEach((li) => (li.style.display = "none"));
-  document.querySelectorAll("article").forEach((a) => (a.style.display = "block"));
+        document.querySelectorAll(".list").forEach((li) => (li.style.display = "none"));
+        document.querySelectorAll("article").forEach((a) => (a.style.display = "block"));
 
-  window.scrollTo(0, 0);
-});
+        equalizeGridCardHeights();
+        window.scrollTo(0, 0);
+      });
 
-
-
+      // =========================
+      // FILTERS + SEARCH
+      // =========================
       const mount = window.mountFiltersAndSearch;
       if (typeof mount !== "function") {
         throw new Error("React JSX mount function not found (window.mountFiltersAndSearch)");
@@ -235,54 +293,19 @@ logoLink?.addEventListener("click", (e) => {
             selectedFamilySizes,
             selectedVariables,
           });
+          equalizeGridCardHeights();
         },
       });
 
       removeAllFiltersBtn?.addEventListener("click", (e) => {
         e.preventDefault();
         reactApi.clearAll();
-      });
-
-      document.querySelectorAll(".list").forEach((listItem) => {
-        listItem.style.display = "none";
-      });
-
-      document.querySelectorAll("article").forEach((article) => {
-        article.style.display = "block";
-      });
-
-      function setInitialCardHeights() {
-        if (!articles.length) return;
-
-        for (const c of articles) c.style.height = "auto";
-
-        let initialMaxHeight = 0;
-        for (const c of articles) {
-          const height = c.offsetHeight;
-          if (height > initialMaxHeight) initialMaxHeight = height;
-        }
-
-        for (const c of articles) c.style.height = initialMaxHeight + "px";
-      }
-
-      setTimeout(() => {
-        setInitialCardHeights();
-      }, 100);
-
-      window.addEventListener("resize", () => {
-        for (const c of articles) c.style.height = "auto";
-
-        let newMax = 0;
-        for (const c of articles) {
-          const height = c.offsetHeight;
-          if (height > newMax) newMax = height;
-        }
-
-        for (const c of articles) c.style.height = newMax + "px";
+        equalizeGridCardHeights();
       });
     }
   } catch (err) {
     console.error("Error loading JSON:", err);
   }
 }
+
 main();

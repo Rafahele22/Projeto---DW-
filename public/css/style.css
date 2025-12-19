@@ -1084,10 +1084,6 @@ button[type="submit"] img {
     width: calc(100% - 32.4vw);
 }
 
-.list_individual.shifted{
-  margin-right: 32.4vw;
-}
-
 .grid.list_view.shifted {
     margin-left: 32.4vw;
     width: calc(100% - 32.4vw);
