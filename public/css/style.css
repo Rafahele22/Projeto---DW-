@@ -685,6 +685,7 @@ body.single-font-open #second_bar section {
     position: relative; 
     width: fit-content; 
     justify-self: right;
+    grid-column: 3/4;
 }
 
 .styles_menu {
@@ -810,8 +811,9 @@ color: var(--light_grey);
 
 .sliders {
     display: flex;
+    padding-left: 1vw;
     gap: 2vw;
-    grid-column: 2/3;
+    grid-column: 1/2;
 }
 
 /* ===== SAVE MENU & POPUPS ===== */
@@ -1089,8 +1091,20 @@ button[type="submit"] img {
     width: calc(100% - 32.4vw);
 }
 
+.list_individual.shifted {
+    margin-right: 32.4vw;
+}
+
 #filters {
     width: 30vw;
+}
+
+.styles_menu {
+  width: 97.2%;
+}
+
+#choose_style_btn { 
+    width: 28vw;
 }
 
 .list {
