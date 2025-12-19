@@ -659,6 +659,7 @@ body.single-font-open #filters {
 #my_collections_second_bar{
     display: flex;
     justify-self: left;
+    gap: 1vw;
 }
 
 body.single-font-open #search_bar,
@@ -985,6 +986,56 @@ form button:hover img {
     color: var(--light_grey);
 }
 
+.exemples_album {
+    display: flex;
+  align-items: stretch;
+  overflow: hidden;  
+  min-height: 24vh; 
+}
+
+.exemples_album > section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.exemples_album h1 {
+    flex: 1;
+  margin: 0;
+  box-sizing: border-box;
+  font-size: 5vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.exemples_album > h1 {
+  padding: 0;
+  border-right: 1px solid var(--black);
+}
+
+.exemples_album > section > h1 {
+padding: 3vh 1vw;
+}
+
+.exemples_album > section > h1:first-child {
+  border-bottom: 1px solid var(--black);
+}
+
+.album > section {
+    display: flex;
+    justify-content: space-between;
+    padding: 2vh 2vw 5vh 2vw;
+}
+
+.album > section > div {
+    display: flex;
+}
+
+.album > section > div > img {
+    padding-right: 0.5vw;
+}
 
 @media (max-width: 950px) {
    
