@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", () => {
+export function setupCollectionsNav() {
   const nav = document.querySelector("header nav");
   const collectionsBtn = document.getElementById("abaCollections");
 
@@ -134,4 +134,5 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   updateNavIcons();
-});
+  return true;
+}

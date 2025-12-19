@@ -5,7 +5,7 @@ import { setupViewModeToggle } from "./viewMode.js";
 import { generateGridArticles } from "./views/gridView.js";
 import { generateListItems } from "./views/listView.js";
 import { createSingleFontView } from "./views/singleFontView.js";
-// import { setupCollectionsView } from "../collections.js"; 
+import { setupCollectionsNav } from "./collections.js";
 
 async function main() {
   const abaCollections = document.getElementById("abaCollections");
