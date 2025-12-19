@@ -188,7 +188,7 @@ export function setupCollectionsNav() {
 
         <section>
           <div>
-            <img src="../assets/imgs/fav_selected.svg" class="check-icon" alt="check icon">
+            <img src="../assets/imgs/fav_selected.svg" class="check-icon" alt="favourite icon">
             <h2>Favourites</h2>
           </div>
           <h3>10 fonts</h3>
