@@ -1,0 +1,4626 @@
+[{
+  "_id": 0,
+  "name": "21 Display",
+  "weights": [
+    {
+      "style": "Regular",
+      "file": "21Display-Regular.otf",
+      "default": true
+    },
+    {
+      "style": "Condensed",
+      "file": "21Display-Condensed.otf"
+    },
+    {
+      "style": "Extended",
+      "file": "21Display-Extended.otf"
+    }
+  ],
+  "foundry": "Suva Type Foundry",
+  "design": [
+    "Marta Celso"
+  ],
+  "variable": false,
+  "tags": [
+    "Display",
+    "All Caps"
+  ]
+},
+{
+  "_id": 1,
+  "name": "ABeeZee",
+  "weights": [
+    {
+      "style": "Regular",
+      "file": "ABeeZee-Regular.ttf",
+      "default": true
+    },
+    {
+      "style": "Italic",
+      "file": "ABeeZee-Italic.ttf"
+    }
+  ],
+  "foundry": "Google",
+  "design": [
+    "Anja Meiners"
+  ],
+  "variable": false,
+  "tags": [
+    "Sans Serif",
+    "Web",
+    "Body Text"
+  ]
+},
+{
+  "_id": 2,
+  "name": "Akijo",
+  "weights": [
+    {
+      "style": "Regular",
+      "file": "Akijo_Regular_AAsztalos.otf",
+      "default": true
+    }
+  ],
+  "foundry": "Suva Type Foundry",
+  "design": [
+    "Adam Asztalos"
+  ],
+  "variable": false,
+  "tags": [
+    "Display",
+    "All Caps"
+  ]
+},
+{
+  "_id": 3,
+  "name": "Allura",
+  "weights": [
+    {
+      "style": "Regular",
+      "file": "Allura-Regular.ttf",
+      "default": true
+    }
+  ],
+  "foundry": "TypeSETit",
+  "design": [
+    "Robert Leuschke"
+  ],
+  "variable": false,
+  "tags": [
+    "Script",
+    "Display"
+  ]
+},
+{
+  "_id": 4,
+  "name": "Anek Latin",
+  "weights": [
+    {
+      "style": "Condensed Thin",
+      "file": "AnekLatin_Condensed-Thin.ttf"
+    },
+    {
+      "style": "Condensed ExtraLight",
+      "file": "AnekLatin_Condensed-ExtraLight.ttf"
+    },
+    {
+      "style": "Condensed Light",
+      "file": "AnekLatin_Condensed-Light.ttf"
+    },
+    {
+      "style": "Condensed Regular",
+      "file": "AnekLatin_Condensed-Regular.ttf"
+    },
+    {
+      "style": "Condensed Medium",
+      "file": "AnekLatin_Condensed-Medium.ttf"
+    },
+    {
+      "style": "Condensed SemiBold",
+      "file": "AnekLatin_Condensed-SemiBold.ttf"
+    },
+    {
+      "style": "Condensed Bold",
+      "file": "AnekLatin_Condensed-Bold.ttf"
+    },
+    {
+      "style": "Condensed ExtraBold",
+      "file": "AnekLatin_Condensed-ExtraBold.ttf"
+    },
+    {
+      "style": "SemiCondensed Thin",
+      "file": "AnekLatin_SemiCondensed-Thin.ttf"
+    },
+    {
+      "style": "SemiCondensed ExtraLight",
+      "file": "AnekLatin_SemiCondensed-ExtraLight.ttf"
+    },
+    {
+      "style": "SemiCondensed Light",
+      "file": "AnekLatin_SemiCondensed-Light.ttf"
+    },
+    {
+      "style": "SemiCondensed Regular",
+      "file": "AnekLatin_SemiCondensed-Regular.ttf"
+    },
+    {
+      "style": "SemiCondensed Medium",
+      "file": "AnekLatin_SemiCondensed-Medium.ttf"
+    },
+    {
+      "style": "SemiCondensed SemiBold",
+      "file": "AnekLatin_SemiCondensed-SemiBold.ttf"
+    },
+    {
+      "style": "SemiCondensed Bold",
+      "file": "AnekLatin_SemiCondensed-Bold.ttf"
+    },
+    {
+      "style": "SemiCondensed ExtraBold",
+      "file": "AnekLatin_SemiCondensed-ExtraBold.ttf"
+    },
+    {
+      "style": "SemiExpanded Thin",
+      "file": "AnekLatin_SemiExpanded-Thin.ttf"
+    },
+    {
+      "style": "SemiExpanded ExtraLight",
+      "file": "AnekLatin_SemiExpanded-ExtraLight.ttf"
+    },
+    {
+      "style": "SemiExpanded Light",
+      "file": "AnekLatin_SemiExpanded-Light.ttf"
+    },
+    {
+      "style": "SemiExpanded Regular",
+      "file": "AnekLatin_SemiExpanded-Regular.ttf"
+    },
+    {
+      "style": "SemiExpanded Medium",
+      "file": "AnekLatin_SemiExpanded-Medium.ttf"
+    },
+    {
+      "style": "SemiExpanded SemiBold",
+      "file": "AnekLatin_SemiExpanded-SemiBold.ttf"
+    },
+    {
+      "style": "SemiExpanded Bold",
+      "file": "AnekLatin_SemiExpanded-Bold.ttf"
+    },
+    {
+      "style": "SemiExpanded ExtraBold",
+      "file": "AnekLatin_SemiExpanded-ExtraBold.ttf"
+    },
+    {
+      "style": "Expanded ExtraLight",
+      "file": "AnekLatin_Expanded-ExtraLight.ttf"
+    },
+    {
+      "style": "Expanded Light",
+      "file": "AnekLatin_Expanded-Light.ttf"
+    },
+    {
+      "style": "Expanded Regular",
+      "file": "AnekLatin_Expanded-Regular.ttf"
+    },
+    {
+      "style": "Expanded Medium",
+      "file": "AnekLatin_Expanded-Medium.ttf"
+    },
+    {
+      "style": "Expanded SemiBold",
+      "file": "AnekLatin_Expanded-SemiBold.ttf"
+    },
+    {
+      "style": "Expanded Bold",
+      "file": "AnekLatin_Expanded-Bold.ttf"
+    },
+    {
+      "style": "Expanded ExtraBold",
+      "file": "AnekLatin_Expanded-ExtraBold.ttf"
+    },
+    {
+      "style": "Thin",
+      "file": "AnekLatin-Thin.ttf"
+    },
+    {
+      "style": "ExtraLight",
+      "file": "AnekLatin-ExtraLight.ttf"
+    },
+    {
+      "style": "Light",
+      "file": "AnekLatin-Light.ttf"
+    },
+    {
+      "style": "Regular",
+      "file": "AnekLatin-Regular.ttf",
+      "default": true
+    },
+    {
+      "style": "Medium",
+      "file": "AnekLatin-Medium.ttf"
+    },
+    {
+      "style": "SemiBold",
+      "file": "AnekLatin-SemiBold.ttf"
+    },
+    {
+      "style": "Bold",
+      "file": "AnekLatin-Bold.ttf"
+    },
+    {
+      "style": "ExtraBold",
+      "file": "AnekLatin-ExtraBold.ttf"
+    },
+    {
+      "style": "Variable",
+      "file": "AnekLatin-VariableFont_wdth,wght.ttf"
+    }
+  ],
+  "foundry": "Ek Type",
+  "design": [
+    "Yesha Goshar"
+  ],
+  "variable": true,
+  "tags": [
+    "Sans Serif",
+    "Body Text"
+  ]
+},
+{
+  "_id": 5,
+  "name": "Apollo",
+  "weights": [
+    {
+      "style": "Regular",
+      "file": "Apollo-Regular.otf",
+      "default": true
+    }
+  ],
+  "foundry": "Suva Type Foundry",
+  "design": [
+    "Mark Albert Villand"
+  ],
+  "variable": false,
+  "tags": [
+    "Display"
+  ]
+},
+{
+  "_id": 6,
+  "name": "Archivo",
+  "weights": [
+    {
+      "style": "Thin",
+      "file": "Archivo-Thin.ttf"
+    },
+    {
+      "style": "Thin Italic",
+      "file": "Archivo-ThinItalic.ttf"
+    },
+    {
+      "style": "ExtraLight",
+      "file": "Archivo-ExtraLight.ttf"
+    },
+    {
+      "style": "ExtraLight Italic",
+      "file": "Archivo-ExtraLightItalic.ttf"
+    },
+    {
+      "style": "Light",
+      "file": "Archivo-Light.ttf"
+    },
+    {
+      "style": "Light Italic",
+      "file": "Archivo-LightItalic.ttf"
+    },
+    {
+      "style": "Regular",
+      "file": "Archivo-Regular.ttf",
+      "default": true
+    },
+    {
+      "style": "Italic",
+      "file": "Archivo-Italic.ttf"
+    },
+    {
+      "style": "Medium",
+      "file": "Archivo-Medium.ttf"
+    },
+    {
+      "style": "Medium Italic",
+      "file": "Archivo-MediumItalic.ttf"
+    },
+    {
+      "style": "SemiBold",
+      "file": "Archivo-SemiBold.ttf"
+    },
+    {
+      "style": "SemiBold Italic",
+      "file": "Archivo-SemiBoldItalic.ttf"
+    },
+    {
+      "style": "Bold",
+      "file": "Archivo-Bold.ttf"
+    },
+    {
+      "style": "Bold Italic",
+      "file": "Archivo-BoldItalic.ttf"
+    },
+    {
+      "style": "ExtraBold",
+      "file": "Archivo-ExtraBold.ttf"
+    },
+    {
+      "style": "ExtraBold Italic",
+      "file": "Archivo-ExtraBoldItalic.ttf"
+    },
+    {
+      "style": "Black",
+      "file": "Archivo-Black.ttf"
+    },
+    {
+      "style": "Black Italic",
+      "file": "Archivo-BlackItalic.ttf"
+    },
+    {
+      "style": "Variable",
+      "file": "Archivo-VariableFont_wdth,wght.ttf"
+    },
+    {
+      "style": "Italic Variable",
+      "file": "Archivo-Italic-VariableFont_wdth,wght.ttf"
+    },
+    {
+      "style": "Condensed Thin",
+      "file": "Archivo_Condensed-Thin.ttf"
+    },
+    {
+      "style": "Condensed Thin Italic",
+      "file": "Archivo_Condensed-ThinItalic.ttf"
+    },
+    {
+      "style": "Condensed ExtraLight",
+      "file": "Archivo_Condensed-ExtraLight.ttf"
+    },
+    {
+      "style": "Condensed ExtraLight Italic",
+      "file": "Archivo_Condensed-ExtraLightItalic.ttf"
+    },
+    {
+      "style": "Condensed Light",
+      "file": "Archivo_Condensed-Light.ttf"
+    },
+    {
+      "style": "Condensed Light Italic",
+      "file": "Archivo_Condensed-LightItalic.ttf"
+    },
+    {
+      "style": "Condensed Regular",
+      "file": "Archivo_Condensed-Regular.ttf"
+    },
+    {
+      "style": "Condensed Italic",
+      "file": "Archivo_Condensed-Italic.ttf"
+    },
+    {
+      "style": "Condensed Medium",
+      "file": "Archivo_Condensed-Medium.ttf"
+    },
+    {
+      "style": "Condensed Medium Italic",
+      "file": "Archivo_Condensed-MediumItalic.ttf"
+    },
+    {
+      "style": "Condensed SemiBold",
+      "file": "Archivo_Condensed-SemiBold.ttf"
+    },
+    {
+      "style": "Condensed SemiBold Italic",
+      "file": "Archivo_Condensed-SemiBoldItalic.ttf"
+    },
+    {
+      "style": "Condensed Bold",
+      "file": "Archivo_Condensed-Bold.ttf"
+    },
+    {
+      "style": "Condensed Bold Italic",
+      "file": "Archivo_Condensed-BoldItalic.ttf"
+    },
+    {
+      "style": "Condensed ExtraBold",
+      "file": "Archivo_Condensed-ExtraBold.ttf"
+    },
+    {
+      "style": "Condensed ExtraBold Italic",
+      "file": "Archivo_Condensed-ExtraBoldItalic.ttf"
+    },
+    {
+      "style": "Condensed Black",
+      "file": "Archivo_Condensed-Black.ttf"
+    },
+    {
+      "style": "Condensed Black Italic",
+      "file": "Archivo_Condensed-BlackItalic.ttf"
+    },
+    {
+      "style": "SemiCondensed Thin",
+      "file": "Archivo_SemiCondensed-Thin.ttf"
+    },
+    {
+      "style": "SemiCondensed Thin Italic",
+      "file": "Archivo_SemiCondensed-ThinItalic.ttf"
+    },
+    {
+      "style": "SemiCondensed ExtraLight",
+      "file": "Archivo_SemiCondensed-ExtraLight.ttf"
+    },
+    {
+      "style": "SemiCondensed ExtraLight Italic",
+      "file": "Archivo_SemiCondensed-ExtraLightItalic.ttf"
+    },
+    {
+      "style": "SemiCondensed Light",
+      "file": "Archivo_SemiCondensed-Light.ttf"
+    },
+    {
+      "style": "SemiCondensed Light Italic",
+      "file": "Archivo_SemiCondensed-LightItalic.ttf"
+    },
+    {
+      "style": "SemiCondensed Regular",
+      "file": "Archivo_SemiCondensed-Regular.ttf"
+    },
+    {
+      "style": "SemiCondensed Italic",
+      "file": "Archivo_SemiCondensed-Italic.ttf"
+    },
+    {
+      "style": "SemiCondensed Medium",
+      "file": "Archivo_SemiCondensed-Medium.ttf"
+    },
+    {
+      "style": "SemiCondensed Medium Italic",
+      "file": "Archivo_SemiCondensed-MediumItalic.ttf"
+    },
+    {
+      "style": "SemiCondensed SemiBold",
+      "file": "Archivo_SemiCondensed-SemiBold.ttf"
+    },
+    {
+      "style": "SemiCondensed SemiBold Italic",
+      "file": "Archivo_SemiCondensed-SemiBoldItalic.ttf"
+    },
+    {
+      "style": "SemiCondensed Bold",
+      "file": "Archivo_SemiCondensed-Bold.ttf"
+    },
+    {
+      "style": "SemiCondensed Bold Italic",
+      "file": "Archivo_SemiCondensed-BoldItalic.ttf"
+    },
+    {
+      "style": "SemiCondensed ExtraBold",
+      "file": "Archivo_SemiCondensed-ExtraBold.ttf"
+    },
+    {
+      "style": "SemiCondensed ExtraBold Italic",
+      "file": "Archivo_SemiCondensed-ExtraBoldItalic.ttf"
+    },
+    {
+      "style": "SemiCondensed Black",
+      "file": "Archivo_SemiCondensed-Black.ttf"
+    },
+    {
+      "style": "SemiCondensed Black Italic",
+      "file": "Archivo_SemiCondensed-BlackItalic.ttf"
+    },
+    {
+      "style": "ExtraCondensed Thin",
+      "file": "Archivo_ExtraCondensed-Thin.ttf"
+    },
+    {
+      "style": "ExtraCondensed Thin Italic",
+      "file": "Archivo_ExtraCondensed-ThinItalic.ttf"
+    },
+    {
+      "style": "ExtraCondensed ExtraLight",
+      "file": "Archivo_ExtraCondensed-ExtraLight.ttf"
+    },
+    {
+      "style": "ExtraCondensed ExtraLight Italic",
+      "file": "Archivo_ExtraCondensed-ExtraLightItalic.ttf"
+    },
+    {
+      "style": "ExtraCondensed Light",
+      "file": "Archivo_ExtraCondensed-Light.ttf"
+    },
+    {
+      "style": "ExtraCondensed Light Italic",
+      "file": "Archivo_ExtraCondensed-LightItalic.ttf"
+    },
+    {
+      "style": "ExtraCondensed Regular",
+      "file": "Archivo_ExtraCondensed-Regular.ttf"
+    },
+    {
+      "style": "ExtraCondensed Italic",
+      "file": "Archivo_ExtraCondensed-Italic.ttf"
+    },
+    {
+      "style": "ExtraCondensed Medium",
+      "file": "Archivo_ExtraCondensed-Medium.ttf"
+    },
+    {
+      "style": "ExtraCondensed Medium Italic",
+      "file": "Archivo_ExtraCondensed-MediumItalic.ttf"
+    },
+    {
+      "style": "ExtraCondensed SemiBold",
+      "file": "Archivo_ExtraCondensed-SemiBold.ttf"
+    },
+    {
+      "style": "ExtraCondensed SemiBold Italic",
+      "file": "Archivo_ExtraCondensed-SemiBoldItalic.ttf"
+    },
+    {
+      "style": "ExtraCondensed Bold",
+      "file": "Archivo_ExtraCondensed-Bold.ttf"
+    },
+    {
+      "style": "ExtraCondensed Bold Italic",
+      "file": "Archivo_ExtraCondensed-BoldItalic.ttf"
+    },
+    {
+      "style": "ExtraCondensed ExtraBold",
+      "file": "Archivo_ExtraCondensed-ExtraBold.ttf"
+    },
+    {
+      "style": "ExtraCondensed ExtraBold Italic",
+      "file": "Archivo_ExtraCondensed-ExtraBoldItalic.ttf"
+    },
+    {
+      "style": "ExtraCondensed Black",
+      "file": "Archivo_ExtraCondensed-Black.ttf"
+    },
+    {
+      "style": "ExtraCondensed Black Italic",
+      "file": "Archivo_ExtraCondensed-BlackItalic.ttf"
+    },
+    {
+      "style": "SemiExpanded Thin",
+      "file": "Archivo_SemiExpanded-Thin.ttf"
+    },
+    {
+      "style": "SemiExpanded Thin Italic",
+      "file": "Archivo_SemiExpanded-ThinItalic.ttf"
+    },
+    {
+      "style": "SemiExpanded ExtraLight",
+      "file": "Archivo_SemiExpanded-ExtraLight.ttf"
+    },
+    {
+      "style": "SemiExpanded ExtraLight Italic",
+      "file": "Archivo_SemiExpanded-ExtraLightItalic.ttf"
+    },
+    {
+      "style": "SemiExpanded Light",
+      "file": "Archivo_SemiExpanded-Light.ttf"
+    },
+    {
+      "style": "SemiExpanded Light Italic",
+      "file": "Archivo_SemiExpanded-LightItalic.ttf"
+    },
+    {
+      "style": "SemiExpanded Regular",
+      "file": "Archivo_SemiExpanded-Regular.ttf"
+    },
+    {
+      "style": "SemiExpanded Italic",
+      "file": "Archivo_SemiExpanded-Italic.ttf"
+    },
+    {
+      "style": "SemiExpanded Medium",
+      "file": "Archivo_SemiExpanded-Medium.ttf"
+    },
+    {
+      "style": "SemiExpanded Medium Italic",
+      "file": "Archivo_SemiExpanded-MediumItalic.ttf"
+    },
+    {
+      "style": "SemiExpanded SemiBold",
+      "file": "Archivo_SemiExpanded-SemiBold.ttf"
+    },
+    {
+      "style": "SemiExpanded SemiBold Italic",
+      "file": "Archivo_SemiExpanded-SemiBoldItalic.ttf"
+    },
+    {
+      "style": "SemiExpanded Bold",
+      "file": "Archivo_SemiExpanded-Bold.ttf"
+    },
+    {
+      "style": "SemiExpanded Bold Italic",
+      "file": "Archivo_SemiExpanded-BoldItalic.ttf"
+    },
+    {
+      "style": "SemiExpanded ExtraBold",
+      "file": "Archivo_SemiExpanded-ExtraBold.ttf"
+    },
+    {
+      "style": "SemiExpanded ExtraBold Italic",
+      "file": "Archivo_SemiExpanded-ExtraBoldItalic.ttf"
+    },
+    {
+      "style": "SemiExpanded Black",
+      "file": "Archivo_SemiExpanded-Black.ttf"
+    },
+    {
+      "style": "SemiExpanded Black Italic",
+      "file": "Archivo_SemiExpanded-BlackItalic.ttf"
+    },
+    {
+      "style": "Expanded Thin",
+      "file": "Archivo_Expanded-Thin.ttf"
+    },
+    {
+      "style": "Expanded Thin Italic",
+      "file": "Archivo_Expanded-ThinItalic.ttf"
+    },
+    {
+      "style": "Expanded ExtraLight",
+      "file": "Archivo_Expanded-ExtraLight.ttf"
+    },
+    {
+      "style": "Expanded ExtraLight Italic",
+      "file": "Archivo_Expanded-ExtraLightItalic.ttf"
+    },
+    {
+      "style": "Expanded Light",
+      "file": "Archivo_Expanded-Light.ttf"
+    },
+    {
+      "style": "Expanded Light Italic",
+      "file": "Archivo_Expanded-LightItalic.ttf"
+    },
+    {
+      "style": "Expanded Regular",
+      "file": "Archivo_Expanded-Regular.ttf"
+    },
+    {
+      "style": "Expanded Italic",
+      "file": "Archivo_Expanded-Italic.ttf"
+    },
+    {
+      "style": "Expanded Medium",
+      "file": "Archivo_Expanded-Medium.ttf"
+    },
+    {
+      "style": "Expanded Medium Italic",
+      "file": "Archivo_Expanded-MediumItalic.ttf"
+    },
+    {
+      "style": "Expanded SemiBold",
+      "file": "Archivo_Expanded-SemiBold.ttf"
+    },
+    {
+      "style": "Expanded SemiBold Italic",
+      "file": "Archivo_Expanded-SemiBoldItalic.ttf"
+    },
+    {
+      "style": "Expanded Bold",
+      "file": "Archivo_Expanded-Bold.ttf"
+    },
+    {
+      "style": "Expanded Bold Italic",
+      "file": "Archivo_Expanded-BoldItalic.ttf"
+    },
+    {
+      "style": "Expanded ExtraBold",
+      "file": "Archivo_Expanded-ExtraBold.ttf"
+    },
+    {
+      "style": "Expanded ExtraBold Italic",
+      "file": "Archivo_Expanded-ExtraBoldItalic.ttf"
+    },
+    {
+      "style": "Expanded Black",
+      "file": "Archivo_Expanded-Black.ttf"
+    },
+    {
+      "style": "Expanded Black Italic",
+      "file": "Archivo_Expanded-BlackItalic.ttf"
+    }
+  ],
+  "foundry": "Omnibus-Type",
+  "design": [
+    "Héctor Gatti"
+  ],
+  "variable": true,
+  "tags": [
+    "Sans Serif",
+    "Display",
+    "Body Text"
+  ]
+},
+{
+  "_id": 7,
+  "name": "Azeret",
+  "weights": [
+    {
+      "style": "Thin",
+      "file": "Azeret-Thin.ttf"
+    },
+    {
+      "style": "Thin Italic",
+      "file": "Azeret-ThinItalic.ttf"
+    },
+    {
+      "style": "Light",
+      "file": "Azeret-Light.ttf"
+    },
+    {
+      "style": "Light Italic",
+      "file": "Azeret-LightItalic.ttf"
+    },
+    {
+      "style": "Regular",
+      "file": "Azeret-Regular.ttf",
+      "default": true
+    },
+    {
+      "style": "Regular Italic",
+      "file": "Azeret-RegularItalic.ttf"
+    },
+    {
+      "style": "Medium",
+      "file": "Azeret-Medium.ttf"
+    },
+    {
+      "style": "Medium Italic",
+      "file": "Azeret-MediumItalic.ttf"
+    },
+    {
+      "style": "SemiBold",
+      "file": "Azeret-SemiBold.ttf"
+    },
+    {
+      "style": "SemiBold Italic",
+      "file": "Azeret-SemiBoldItalic.ttf"
+    },
+    {
+      "style": "Bold",
+      "file": "Azeret-Bold.ttf"
+    },
+    {
+      "style": "Bold Italic",
+      "file": "Azeret-BoldItalic.ttf"
+    },
+    {
+      "style": "ExtraBold",
+      "file": "Azeret-ExtraBold.ttf"
+    },
+    {
+      "style": "ExtraBold Italic",
+      "file": "Azeret-ExtraBoldItalic.ttf"
+    },
+    {
+      "style": "Black",
+      "file": "Azeret-Black.ttf"
+    },
+    {
+      "style": "Black Italic",
+      "file": "Azeret-BlackItalic.ttf"
+    },
+    {
+      "style": "Variable",
+      "file": "Azeret_Var.ttf"
+    },
+    {
+      "style": "SemiMono Thin",
+      "file": "AzeretSemiMono-Thin.ttf"
+    },
+    {
+      "style": "SemiMono Thin Italic",
+      "file": "AzeretSemiMono-ThinItalic.ttf"
+    },
+    {
+      "style": "SemiMono Light",
+      "file": "AzeretSemiMono-Light.ttf"
+    },
+    {
+      "style": "SemiMono Light Italic",
+      "file": "AzeretSemiMono-LightItalic.ttf"
+    },
+    {
+      "style": "SemiMono Regular",
+      "file": "AzeretSemiMono-Regular.ttf"
+    },
+    {
+      "style": "SemiMono Regular Italic",
+      "file": "AzeretSemiMono-RegularItalic.ttf"
+    },
+    {
+      "style": "SemiMono Medium",
+      "file": "AzeretSemiMono-Medium.ttf"
+    },
+    {
+      "style": "SemiMono Medium Italic",
+      "file": "AzeretSemiMono-MediumItalic.ttf"
+    },
+    {
+      "style": "SemiMono SemiBold",
+      "file": "AzeretSemiMono-SemiBold.ttf"
+    },
+    {
+      "style": "SemiMono SemiBold Italic",
+      "file": "AzeretSemiMono-SemiBoldItalic.ttf"
+    },
+    {
+      "style": "SemiMono Bold",
+      "file": "AzeretSemiMono-Bold.ttf"
+    },
+    {
+      "style": "SemiMono Bold Italic",
+      "file": "AzeretSemiMono-BoldItalic.ttf"
+    },
+    {
+      "style": "SemiMono ExtraBold",
+      "file": "AzeretSemiMono-ExtraBold.ttf"
+    },
+    {
+      "style": "SemiMono ExtraBold Italic",
+      "file": "AzeretSemiMono-ExtraBoldItalic.ttf"
+    },
+    {
+      "style": "SemiMono Black",
+      "file": "AzeretSemiMono-Black.ttf"
+    },
+    {
+      "style": "SemiMono Black Italic",
+      "file": "AzeretSemiMono-BlackItalic.ttf"
+    },
+    {
+      "style": "Mono Thin",
+      "file": "AzeretMono-Thin.ttf"
+    },
+    {
+      "style": "Mono Thin Italic",
+      "file": "AzeretMono-ThinItalic.ttf"
+    },
+    {
+      "style": "Mono Light",
+      "file": "AzeretMono-Light.ttf"
+    },
+    {
+      "style": "Mono Light Italic",
+      "file": "AzeretMono-LightItalic.ttf"
+    },
+    {
+      "style": "Mono Regular",
+      "file": "AzeretMono-Regular.ttf"
+    },
+    {
+      "style": "Mono Regular Italic",
+      "file": "AzeretMono-RegularItalic.ttf"
+    },
+    {
+      "style": "Mono Medium",
+      "file": "AzeretMono-Medium.ttf"
+    },
+    {
+      "style": "Mono Medium Italic",
+      "file": "AzeretMono-MediumItalic.ttf"
+    },
+    {
+      "style": "Mono SemiBold",
+      "file": "AzeretMono-SemiBold.ttf"
+    },
+    {
+      "style": "Mono SemiBold Italic",
+      "file": "AzeretMono-SemiBoldItalic.ttf"
+    },
+    {
+      "style": "Mono Bold",
+      "file": "AzeretMono-Bold.ttf"
+    },
+    {
+      "style": "Mono Bold Italic",
+      "file": "AzeretMono-BoldItalic.ttf"
+    },
+    {
+      "style": "Mono ExtraBold",
+      "file": "AzeretMono-ExtraBold.ttf"
+    },
+    {
+      "style": "Mono ExtraBold Italic",
+      "file": "AzeretMono-ExtraBoldItalic.ttf"
+    },
+    {
+      "style": "Mono Black",
+      "file": "AzeretMono-Black.ttf"
+    },
+    {
+      "style": "Mono Black Italic",
+      "file": "AzeretMono-BlackItalic.ttf"
+    }
+  ],
+  "foundry": "Displaay",
+  "design": [
+    "Martin Vácha",
+    "Daniel Quisek"
+  ],
+  "variable": true,
+  "tags": [
+    "Sans Serif",
+    "Monospaced",
+    "Display",
+    "Body Text"
+  ]
+},
+{
+  "_id": 8,
+  "name": "Baskerville",
+  "weights": [
+    {
+      "style": "Regular",
+      "file": "BASKVILL.TTF",
+      "default": true
+    }
+  ],
+  "foundry": "Unknown",
+  "design": [
+    "John Baskerville"
+  ],
+  "variable": false,
+  "tags": [
+    "Serif",
+    "Body Text"
+  ]
+},
+{
+  "_id": 9,
+  "name": "Bazar",
+  "weights": [
+    {
+      "style": "Regular",
+      "file": "Bazar - Olinda Martins.ttf",
+      "default": true
+    }
+  ],
+  "foundry": "FBAUP Types",
+  "design": [
+    "Olinda Martins"
+  ],
+  "variable": false,
+  "tags": [
+    "Display",
+    "All Caps"
+  ]
+},
+{
+  "_id": 10,
+  "name": "Bolas",
+  "weights": [
+    {
+      "style": "Regular",
+      "file": "Bolas-Regular.ttf",
+      "default": true
+    },
+    {
+      "style": "Bold",
+      "file": "Bolas-Bold.ttf"
+    }
+  ],
+  "foundry": "FBAUP Types",
+  "design": [
+    "Maria Figueiredo"
+  ],
+  "variable": false,
+  "tags": [
+    "Display"
+  ]
+},
+{
+  "_id": 11,
+  "name": "Bebas Neue",
+  "weights": [
+    {
+      "style": "Regular",
+      "file": "BebasNeue-Regular.ttf",
+      "default": true
+    }
+  ],
+  "foundry": "Dharma Type",
+  "design": [
+    "Ryoichi Tsunekawa"
+  ],
+  "variable": true,
+  "tags": [
+    "Sans Serif",
+    "Display",
+    "Headings",
+    "All Caps"
+  ]
+},
+{
+  "_id": 12,
+  "name": "Berkshire Swash",
+  "weights": [
+    {
+      "style": "Regular",
+      "file": "BerkshireSwash-Regular.ttf",
+      "default": true
+    }
+  ],
+  "foundry": "Google",
+  "design": [
+    "Astigmatic"
+  ],
+  "variable": false,
+  "tags": [
+    "Script",
+    "Display"
+  ]
+},
+{
+  "_id": 13,
+  "name": "Bookman",
+  "weights": [
+    {
+      "style": "Regular",
+      "file": "bookman-regular.ttf"
+    },
+    {
+      "style": "Regular Italic",
+      "file": "bookman-regularitalic.ttf"
+    },
+    {
+      "style": "Bold",
+      "file": "bookman-bold.ttf"
+    },
+    {
+      "style": "Bold Italic",
+      "file": "bookman-bolditalic.ttf"
+    },
+    {
+      "style": "Regular",
+      "file": "Bookman.ttf",
+      "default": true
+    },
+    {
+      "style": "Italic",
+      "file": "Bookman Italic.ttf"
+    },
+    {
+      "style": "Bold",
+      "file": "Bookman Bold.ttf"
+    },
+    {
+      "style": "Bold Italic",
+      "file": "Bookman Bold Italic.ttf"
+    },
+    {
+      "style": "Italic",
+      "file": "BookmanItalic.ttf"
+    },
+    {
+      "style": "Bold",
+      "file": "BookmanBold.ttf"
+    },
+    {
+      "style": "Bold Italic",
+      "file": "BookmanBoldItalic.ttf"
+    }
+  ],
+  "foundry": "Miller & Richard",
+  "design": [
+    "Unknown"
+  ],
+  "variable": false,
+  "tags": [
+    "Serif",
+    "Body Text"
+  ]
+},
+{
+  "_id": 14,
+  "name": "Brutal",
+  "weights": [
+    {
+      "style": "Light",
+      "file": "Brutal-Light.otf"
+    },
+    {
+      "style": "Regular",
+      "file": "Brutal-Regular.otf",
+      "default": true
+    },
+    {
+      "style": "Bold",
+      "file": "Brutal-Bold.otf"
+    }
+  ],
+  "foundry": "bb-bureau",
+  "design": [
+    "Benoît Bodhuin"
+  ],
+  "variable": false,
+  "tags": [
+    "Display"
+  ]
+},
+{
+  "_id": 15,
+  "name": "Brutneuve",
+  "weights": [
+    {
+      "style": "Serif",
+      "file": "Brutneuve.ttf",
+      "default": true
+    },
+    {
+      "style": "Sans Serif",
+      "file": "Brutneuve Sans.ttf"
+    }
+  ],
+  "foundry": "FBAUP Types",
+  "design": [
+    "Maria Craveiro",
+    "Olga Marinho",
+    "Sofia Paiva"
+  ],
+  "variable": false,
+  "tags": [
+    "Display",
+    "Serif",
+    "Sans Serif",
+    "All Caps"
+  ]
+},
+{
+  "_id": 16,
+  "name": "Cambay",
+  "weights": [
+    {
+      "style": "Regular",
+      "file": "Cambay-Regular.ttf",
+      "default": true
+    },
+    {
+      "style": "Italic",
+      "file": "Cambay-Italic.ttf"
+    },
+    {
+      "style": "Bold",
+      "file": "Cambay-Bold.ttf"
+    },
+    {
+      "style": "Bold Italic",
+      "file": "Cambay-BoldItalic.ttf"
+    }
+  ],
+  "foundry": "Google",
+  "design": [
+    "Pooja Saxena"
+  ],
+  "variable": false,
+  "tags": [
+    "Sans Serif",
+    "Web"
+  ]
+},
+{
+  "_id": 17,
+  "name": "Cantata One",
+  "weights": [
+    {
+      "style": "Regular",
+      "file": "CantataOne-Regular.ttf",
+      "default": true
+    }
+  ],
+  "foundry": "Google",
+  "design": [
+    "Joana Correia"
+  ],
+  "variable": false,
+  "tags": [
+    "Serif",
+    "Display"
+  ]
+},
+{
+  "_id": 18,
+  "name": "Cardo",
+  "weights": [
+    {
+      "style": "Regular",
+      "file": "Cardo-Regular.ttf",
+      "default": true
+    },
+    {
+      "style": "Italic",
+      "file": "Cardo-Italic.ttf"
+    },
+    {
+      "style": "Bold",
+      "file": "Cardo-Bold.ttf"
+    }
+  ],
+  "foundry": "Google",
+  "design": [
+    "David Perry"
+  ],
+  "variable": false,
+  "tags": [
+    "Serif",
+    "Body Text"
+  ]
+},
+{
+  "_id": 19,
+  "name": "Century Schoolbook",
+  "weights": [
+    {
+      "style": "Regular",
+      "file": "Century Schoolbook Regular.ttf",
+      "default": true
+    },
+    {
+      "style": "Italic",
+      "file": "CenturySchool RegularItalic.ttf"
+    },
+    {
+      "style": "Bold",
+      "file": "Century Schoolbook Bold.ttf"
+    },
+    {
+      "style": "Bold Italic",
+      "file": "CenturySchool BoldItalic.ttf"
+    }
+  ],
+  "foundry": "American Type Founders",
+  "design": [
+    "Morris Fuller Benton"
+  ],
+  "variable": false,
+  "tags": [
+    "Serif",
+    "Body Text"
+  ]
+},
+{
+  "_id": 20,
+  "name": "Chango",
+  "weights": [
+    {
+      "style": "Regular",
+      "file": "Chango-Regular.ttf",
+      "default": true
+    }
+  ],
+  "foundry": "Google",
+  "design": [
+    "Fontstage"
+  ],
+  "variable": false,
+  "tags": [
+    "Display",
+    "Rounded"
+  ]
+},
+{
+  "_id": 21,
+  "name": "Chivo Mono",
+  "weights": [
+    {
+      "style": "Thin",
+      "file": "ChivoMono-Thin.ttf"
+    },
+    {
+      "style": "Thin Italic",
+      "file": "ChivoMono-ThinItalic.ttf"
+    },
+    {
+      "style": "ExtraLight",
+      "file": "ChivoMono-ExtraLight.ttf"
+    },
+    {
+      "style": "ExtraLight Italic",
+      "file": "ChivoMono-ExtraLightItalic.ttf"
+    },
+    {
+      "style": "Light",
+      "file": "ChivoMono-Light.ttf"
+    },
+    {
+      "style": "Light Italic",
+      "file": "ChivoMono-LightItalic.ttf"
+    },
+    {
+      "style": "Regular",
+      "file": "ChivoMono-Regular.ttf",
+      "default": true
+    },
+    {
+      "style": "Italic",
+      "file": "ChivoMono-Italic.ttf"
+    },
+    {
+      "style": "Medium",
+      "file": "ChivoMono-Medium.ttf"
+    },
+    {
+      "style": "Medium Italic",
+      "file": "ChivoMono-MediumItalic.ttf"
+    },
+    {
+      "style": "SemiBold",
+      "file": "ChivoMono-SemiBold.ttf"
+    },
+    {
+      "style": "SemiBold Italic",
+      "file": "ChivoMono-SemiBoldItalic.ttf"
+    },
+    {
+      "style": "Bold",
+      "file": "ChivoMono-Bold.ttf"
+    },
+    {
+      "style": "Bold Italic",
+      "file": "ChivoMono-BoldItalic.ttf"
+    },
+    {
+      "style": "ExtraBold",
+      "file": "ChivoMono-ExtraBold.ttf"
+    },
+    {
+      "style": "ExtraBold Italic",
+      "file": "ChivoMono-ExtraBoldItalic.ttf"
+    },
+    {
+      "style": "Black",
+      "file": "ChivoMono-Black.ttf"
+    },
+    {
+      "style": "Black Italic",
+      "file": "ChivoMono-BlackItalic.ttf"
+    },
+    {
+      "style": "Variable",
+      "file": "ChivoMono-VariableFont_wght.ttf"
+    },
+    {
+      "style": "Italic Variable",
+      "file": "ChivoMono-Italic-VariableFont_wght.ttf"
+    }
+  ],
+  "foundry": "Omnibus Type",
+  "design": [
+    "Héctor Gatti"
+  ],
+  "variable": true,
+  "tags": [
+    "Monospaced",
+    "Sans Serif",
+    "Web"
+  ]
+},
+{
+  "_id": 22,
+  "name": "Circular Std",
+  "weights": [
+    {
+      "style": "Light",
+      "file": "CircularStd-Light.otf"
+    },
+    {
+      "style": "Light Italic",
+      "file": "CircularStd-Light Italic.otf"
+    },
+    {
+      "style": "Book",
+      "file": "CircularStd-Book.otf",
+      "default": true
+    },
+    {
+      "style": "Book Italic",
+      "file": "CircularStd-BookItalic.otf"
+    },
+    {
+      "style": "Medium",
+      "file": "CircularStd-Medium.otf"
+    },
+    {
+      "style": "Medium Italic",
+      "file": "CircularStd-MediumItalic.otf"
+    },
+    {
+      "style": "Bold",
+      "file": "CircularStd-Bold.otf"
+    },
+    {
+      "style": "Bold Italic",
+      "file": "CircularStd-BoldItalic.otf"
+    },
+    {
+      "style": "Black",
+      "file": "CircularStd-Black.otf"
+    },
+    {
+      "style": "Black Italic",
+      "file": "CircularStd-BlackItalic.otf"
+    }
+  ],
+  "foundry": "Lineto",
+  "design": [
+    "Laurenz Brunner"
+  ],
+  "variable": false,
+  "tags": [
+    "Sans Serif",
+    "Headings"
+  ]
+},
+{
+  "_id": 23,
+  "name": "Comic Sans",
+  "weights": [
+    {
+      "style": "Regular",
+      "file": "Comic Sans MS.ttf",
+      "default": true
+    },
+    {
+      "style": "Bold",
+      "file": "Comic Sans MS Bold.ttf"
+    }
+  ],
+  "foundry": "Microsoft",
+  "design": [
+    "Vincent Connare",
+    "Terrance Weinzierl"
+  ],
+  "variable": false,
+  "tags": [
+    "Display",
+    "Script"
+  ]
+},
+{
+  "_id": 24,
+  "name": "Coolvetica",
+  "weights": [
+    {
+      "style": "Regular",
+      "file": "coolvetica rg.otf",
+      "default": true
+    },
+    {
+      "style": "Regular Italic",
+      "file": "coolvetica rg it.otf"
+    },
+    {
+      "style": "Condensed Regular",
+      "file": "coolvetica condensed rg.otf"
+    },
+    {
+      "style": "Crammed Regular",
+      "file": "coolvetica crammed rg.otf"
+    },
+    {
+      "style": "Compressed Heavy",
+      "file": "coolvetica compressed hv.otf"
+    }
+  ],
+  "foundry": "Typodermic",
+  "design": [
+    "Ray Larabie"
+  ],
+  "variable": false,
+  "tags": [
+    "Sans Serif",
+    "Display",
+    "Body Text"
+  ]
+},
+{
+  "_id": 25,
+  "name": "Cormorant Garamond",
+  "weights": [
+    {
+      "style": "Light",
+      "file": "CormorantGaramond-Light.ttf"
+    },
+    {
+      "style": "Light Italic",
+      "file": "CormorantGaramond-LightItalic.ttf"
+    },
+    {
+      "style": "Regular",
+      "file": "CormorantGaramond-Regular.ttf",
+      "default": true
+    },
+    {
+      "style": "Italic",
+      "file": "CormorantGaramond-Italic.ttf"
+    },
+    {
+      "style": "Medium",
+      "file": "CormorantGaramond-Medium.ttf"
+    },
+    {
+      "style": "Medium Italic",
+      "file": "CormorantGaramond-MediumItalic.ttf"
+    },
+    {
+      "style": "SemiBold",
+      "file": "CormorantGaramond-SemiBold.ttf"
+    },
+    {
+      "style": "SemiBold Italic",
+      "file": "CormorantGaramond-SemiBoldItalic.ttf"
+    },
+    {
+      "style": "Bold",
+      "file": "CormorantGaramond-Bold.ttf"
+    },
+    {
+      "style": "Bold Italic",
+      "file": "CormorantGaramond-BoldItalic.ttf"
+    },
+    {
+      "style": "Variable",
+      "file": "CormorantGaramond-VariableFont.ttf"
+    }
+  ],
+  "foundry": "Catharsis Fonts",
+  "design": [
+    "Christian Thalmann"
+  ],
+  "variable": true,
+  "tags": [
+    "Serif",
+    "Display",
+    "Body Text"
+  ]
+},
+{
+  "_id": 26,
+  "name": "Courier",
+  "weights": [
+    {
+      "style": "Regular",
+      "file": "CourierStd.otf",
+      "default": true
+    },
+    {
+      "style": "Oblique",
+      "file": "CourierStd-Oblique.otf"
+    },
+    {
+      "style": "Bold",
+      "file": "CourierStd-Bold.otf"
+    },
+    {
+      "style": "Bold Oblique",
+      "file": "CourierStd-BoldOblique.otf"
+    }
+  ],
+  "foundry": "IBM",
+  "design": [
+    "Howard Kettler"
+  ],
+  "variable": false,
+  "tags": [
+    "Monospaced"
+  ]
+},
+{
+  "_id": 27,
+  "name": "Dancing Script",
+  "weights": [
+    {
+      "style": "Regular",
+      "file": "DancingScript-Regular.ttf",
+      "default": true
+    },
+    {
+      "style": "Medium",
+      "file": "DancingScript-Medium.ttf"
+    },
+    {
+      "style": "SemiBold",
+      "file": "DancingScript-SemiBold.ttf"
+    },
+    {
+      "style": "Bold",
+      "file": "DancingScript-Bold.ttf"
+    },
+    {
+      "style": "Variable",
+      "file": "DancingScript-VariableFont_wght.ttf"
+    }
+  ],
+  "foundry": "Impallari Type",
+  "design": [
+    "Pablo Impallari"
+  ],
+  "variable": true,
+  "tags": [
+    "Script",
+    "Display"
+  ]
+},
+{
+  "_id": 28,
+  "name": "Darker Grotesque",
+  "weights": [
+    {
+      "style": "Light",
+      "file": "DarkerGrotesque-Light.ttf"
+    },
+    {
+      "style": "Regular",
+      "file": "DarkerGrotesque-Regular.ttf",
+      "default": true
+    },
+    {
+      "style": "Medium",
+      "file": "DarkerGrotesque-Medium.ttf"
+    },
+    {
+      "style": "SemiBold",
+      "file": "DarkerGrotesque-SemiBold.ttf"
+    },
+    {
+      "style": "Bold",
+      "file": "DarkerGrotesque-Bold.ttf"
+    },
+    {
+      "style": "ExtraBold",
+      "file": "DarkerGrotesque-ExtraBold.ttf"
+    },
+    {
+      "style": "Black",
+      "file": "DarkerGrotesque-Black.ttf"
+    },
+    {
+      "style": "Variable",
+      "file": "DarkerGrotesque-VariableFont.ttf"
+    }
+  ],
+  "foundry": "Unknown",
+  "design": [
+    "Gabriel Lam",
+    "ViệtAnh Nguyễn"
+  ],
+  "variable": true,
+  "tags": [
+    "Sans Serif",
+    "Body Text"
+  ]
+},
+{
+  "_id": 29,
+  "name": "DM Sans",
+  "weights": [
+    {
+      "style": "Thin",
+      "file": "DMSans-Thin.ttf"
+    },
+    {
+      "style": "Thin Italic",
+      "file": "DMSans-ThinItalic.ttf"
+    },
+    {
+      "style": "ExtraLight",
+      "file": "DMSans-ExtraLight.ttf"
+    },
+    {
+      "style": "ExtraLight Italic",
+      "file": "DMSans-ExtraLightItalic.ttf"
+    },
+    {
+      "style": "Light",
+      "file": "DMSans-Light.ttf"
+    },
+    {
+      "style": "Light Italic",
+      "file": "DMSans-LightItalic.ttf"
+    },
+    {
+      "style": "Regular",
+      "file": "DMSans-Regular.ttf",
+      "default": true
+    },
+    {
+      "style": "Italic",
+      "file": "DMSans-Italic.ttf"
+    },
+    {
+      "style": "Medium",
+      "file": "DMSans-Medium.ttf"
+    },
+    {
+      "style": "Medium Italic",
+      "file": "DMSans-MediumItalic.ttf"
+    },
+    {
+      "style": "SemiBold",
+      "file": "DMSans-SemiBold.ttf"
+    },
+    {
+      "style": "SemiBold Italic",
+      "file": "DMSans-SemiBoldItalic.ttf"
+    },
+    {
+      "style": "Bold",
+      "file": "DMSans-Bold.ttf"
+    },
+    {
+      "style": "Bold Italic",
+      "file": "DMSans-BoldItalic.ttf"
+    },
+    {
+      "style": "ExtraBold",
+      "file": "DMSans-ExtraBold.ttf"
+    },
+    {
+      "style": "ExtraBold Italic",
+      "file": "DMSans-ExtraBoldItalic.ttf"
+    },
+    {
+      "style": "Black",
+      "file": "DMSans-Black.ttf"
+    },
+    {
+      "style": "Black Italic",
+      "file": "DMSans-BlackItalic.ttf"
+    },
+    {
+      "style": "Variable",
+      "file": "DMSans-VariableFont_opsz,wght.ttf"
+    },
+    {
+      "style": "Italic Variable",
+      "file": "DMSans-Italic-VariableFont_opsz,wght.ttf"
+    }
+  ],
+  "foundry": "Colophon",
+  "design": [
+    "Jonny Pinhorn"
+  ],
+  "variable": true,
+  "tags": [
+    "Sans Serif",
+    "Web",
+    "Body Text"
+  ]
+},
+{
+  "_id": 30,
+  "name": "Dogica",
+  "weights": [
+    {
+      "style": "Regular",
+      "file": "dogicapixel.otf",
+      "default": true
+    },
+    {
+      "style": "Bold",
+      "file": "dogicapixelbold.otf"
+    }
+  ],
+  "foundry": "GB Studio",
+  "design": [
+    "Unknown"
+  ],
+  "variable": false,
+  "tags": [
+    "Monospaced",
+    "Display"
+  ]
+},
+{
+  "_id": 31,
+  "name": "DRUZHOK",
+  "weights": [
+    {
+      "style": "Regular",
+      "file": "DRUZHOK.otf",
+      "default": true
+    }
+  ],
+  "foundry": "Unknown",
+  "design": [
+    "Vlada Oleynik"
+  ],
+  "variable": false,
+  "tags": [
+    "Display",
+    "Headings"
+  ]
+},
+{
+  "_id": 32,
+  "name": "DryTransfer Clarendon Crusty",
+  "weights": [
+    {
+      "style": "Regular",
+      "file": "DryTransferClarendonCrusty.otf",
+      "default": true
+    }
+  ],
+  "foundry": "Unknown",
+  "design": [
+    "Carl Seal"
+  ],
+  "variable": false,
+  "tags": [
+    "Serif",
+    "Display",
+    "All Caps"
+  ]
+},
+{
+  "_id": 33,
+  "name": "East Sea Dokdo",
+  "weights": [
+    {
+      "style": "Regular",
+      "file": "EastSeaDokdo-Regular.ttf",
+      "default": true
+    }
+  ],
+  "foundry": "YoonDesign Inc",
+  "design": [
+    "Unknown"
+  ],
+  "variable": false,
+  "tags": [
+    "Script",
+    "Display"
+  ]
+},
+{
+  "_id": 34,
+  "name": "Frank Ruhl Libre",
+  "weights": [
+    {
+      "style": "Light",
+      "file": "FrankRuhlLibre-Light.ttf"
+    },
+    {
+      "style": "Regular",
+      "file": "FrankRuhlLibre-Regular.ttf",
+      "default": true
+    },
+    {
+      "style": "Medium",
+      "file": "FrankRuhlLibre-Medium.ttf"
+    },
+    {
+      "style": "SemiBold",
+      "file": "FrankRuhlLibre-SemiBold.ttf"
+    },
+    {
+      "style": "Bold",
+      "file": "FrankRuhlLibre-Bold.ttf"
+    },
+    {
+      "style": "ExtraBold",
+      "file": "FrankRuhlLibre-ExtraBold.ttf"
+    },
+    {
+      "style": "Black",
+      "file": "FrankRuhlLibre-Black.ttf"
+    },
+    {
+      "style": "Variable",
+      "file": "FrankRuhlLibre-VariableFont_wght.ttf"
+    }
+  ],
+  "foundry": "Google",
+  "design": [
+    "Frank Ruhl"
+  ],
+  "variable": true,
+  "tags": [
+    "Serif",
+    "Body Text"
+  ]
+},
+{
+  "_id": 35,
+  "name": "Garamond",
+  "weights": [
+    {
+      "style": "Regular",
+      "file": "Garamond Regular.ttf",
+      "default": true
+    },
+    {
+      "style": "Italic",
+      "file": "GARAIT.TTF"
+    },
+    {
+      "style": "Roman",
+      "file": "Garamond Roman.ttf"
+    },
+    {
+      "style": "Medium Italic",
+      "file": "Garamond Medium Italic.ttf"
+    },
+    {
+      "style": "Bold",
+      "file": "Garamond Bold font.ttf"
+    }
+  ],
+  "foundry": "Unknown",
+  "design": [
+    "Claude Garamond"
+  ],
+  "variable": false,
+  "tags": [
+    "Serif",
+    "Body Text"
+  ]
+},
+{
+  "_id": 36,
+  "name": "Gideon Roman",
+  "weights": [
+    {
+      "style": "Regular",
+      "file": "GideonRoman-Regular.ttf",
+      "default": true
+    }
+  ],
+  "foundry": "Google",
+  "design": [
+    "Robert Leuschke"
+  ],
+  "variable": false,
+  "tags": [
+    "Display",
+    "Serif"
+  ]
+},
+{
+  "_id": 37,
+  "name": "Gochi Hand",
+  "weights": [
+    {
+      "style": "Regular",
+      "file": "GochiHand-Regular.ttf",
+      "default": true
+    }
+  ],
+  "foundry": "Google",
+  "design": [
+    "Huerta Tipográfica"
+  ],
+  "variable": false,
+  "tags": [
+    "Script",
+    "Display"
+  ]
+},
+{
+  "_id": 38,
+  "name": "Great Vibes",
+  "weights": [
+    {
+      "style": "Regular",
+      "file": "GreatVibes-Regular.ttf",
+      "default": true
+    }
+  ],
+  "foundry": "Google",
+  "design": [
+    "Robert Leuschke"
+  ],
+  "variable": false,
+  "tags": [
+    "Script"
+  ]
+},
+{
+  "_id": 39,
+  "name": "Gudea",
+  "weights": [
+    {
+      "style": "Regular",
+      "file": "Gudea-Regular.ttf",
+      "default": true
+    },
+    {
+      "style": "Italic",
+      "file": "Gudea-Italic.ttf"
+    },
+    {
+      "style": "Bold",
+      "file": "Gudea-Bold.ttf"
+    }
+  ],
+  "foundry": "Google",
+  "design": [
+    "Agustina Mingote"
+  ],
+  "variable": false,
+  "tags": [
+    "Sans Serif",
+    "Web"
+  ]
+},
+{
+  "_id": 40,
+  "name": "Gulax",
+  "weights": [
+    {
+      "style": "Regular",
+      "file": "Gulax-Regular.otf",
+      "default": true
+    }
+  ],
+  "foundry": "Velvetyne",
+  "design": [
+    "Morgan Gilbert",
+    "Anton Moglia"
+  ],
+  "variable": false,
+  "tags": [
+    "Display",
+    "Sans Serif"
+  ]
+},
+{
+  "_id": 41,
+  "name": "Helvetica",
+  "weights": [
+    {
+      "style": "Roman",
+      "file": "Helvetica Roman.ttf",
+      "default": true
+    },
+    {
+      "style": "Roman Italic",
+      "file": "Helvetica RomanItalic.ttf"
+    },
+    {
+      "style": "Bold",
+      "file": "Helvetica BoldOblique.ttf"
+    },
+    {
+      "style": "Bold Italic",
+      "file": "Helvetica Bold Italic.ttf"
+    },
+    {
+      "style": "Light Condensed",
+      "file": "Helvetica Light Condensed.otf"
+    },
+    {
+      "style": "Light Condensed Oblique",
+      "file": "Helvetica Light Condensed Oblique.otf"
+    },
+    {
+      "style": "Medium Condensed",
+      "file": "Helvetica Medium Condensed.otf"
+    },
+    {
+      "style": "Medium Condensed Oblique",
+      "file": "Helvetica Condensed Oblique.otf"
+    },
+    {
+      "style": "Bold Condensed",
+      "file": "Helvetica Bold Condensed.otf"
+    },
+    {
+      "style": "Bold Condensed Oblique",
+      "file": "Helvetica Bold Condensed Oblique.otf"
+    },
+    {
+      "style": "Black Condensed",
+      "file": "Helvetica Black Condensed.otf"
+    },
+    {
+      "style": "Black Condensed Oblique",
+      "file": "Helvetica Black Condensed Oblique.otf"
+    },
+    {
+      "style": "Bold Narrow Oblique",
+      "file": "Helvetica Bold Narrow Oblique.otf"
+    },
+    {
+      "style": "Ultra Compressed",
+      "file": "Helvetica Ultra Compressed.otf"
+    }
+  ],
+  "foundry": "Unknown",
+  "design": [
+    "Max Miedinger",
+    "Eduard Hoffmann"
+  ],
+  "variable": false,
+  "tags": [
+    "Sans Serif",
+    "Body Text"
+  ]
+},
+{
+  "_id": 42,
+  "name": "Helvoni",
+  "weights": [
+    {
+      "style": "Regular",
+      "file": "HELVONI-Regular.ttf",
+      "default": true
+    }
+  ],
+  "foundry": "FBAUP Types",
+  "design": [
+    "Rui Marques"
+  ],
+  "variable": false,
+  "tags": [
+    "Serif",
+    "All Caps"
+  ]
+},
+{
+  "_id": 43,
+  "name": "Honey",
+  "weights": [
+    {
+      "style": "Variable",
+      "file": "Honey-VF.ttf",
+      "default": true
+    }
+  ],
+  "foundry": "FBAUP Types",
+  "design": [
+    "Laura Jardim"
+  ],
+  "variable": true,
+  "tags": [
+    "Display",
+    "All Caps"
+  ]
+},
+{
+  "_id": 44,
+  "name": "IBM Plex Mono",
+  "weights": [
+    {
+      "style": "Thin",
+      "file": "IBMPlexMono-Thin.ttf"
+    },
+    {
+      "style": "Thin Italic",
+      "file": "IBMPlexMono-ThinItalic.ttf"
+    },
+    {
+      "style": "ExtraLight",
+      "file": "IBMPlexMono-ExtraLight.ttf"
+    },
+    {
+      "style": "ExtraLight Italic",
+      "file": "IBMPlexMono-ExtraLightItalic.ttf"
+    },
+    {
+      "style": "Light",
+      "file": "IBMPlexMono-Light.ttf"
+    },
+    {
+      "style": "Light Italic",
+      "file": "IBMPlexMono-LightItalic.ttf"
+    },
+    {
+      "style": "Regular",
+      "file": "IBMPlexMono-Regular.ttf",
+      "default": true
+    },
+    {
+      "style": "Italic",
+      "file": "IBMPlexMono-Italic.ttf"
+    },
+    {
+      "style": "Medium",
+      "file": "IBMPlexMono-Medium.ttf"
+    },
+    {
+      "style": "Medium Italic",
+      "file": "IBMPlexMono-MediumItalic.ttf"
+    },
+    {
+      "style": "SemiBold",
+      "file": "IBMPlexMono-SemiBold.ttf"
+    },
+    {
+      "style": "SemiBold Italic",
+      "file": "IBMPlexMono-SemiBoldItalic.ttf"
+    },
+    {
+      "style": "Bold",
+      "file": "IBMPlexMono-Bold.ttf"
+    },
+    {
+      "style": "Bold Italic",
+      "file": "IBMPlexMono-BoldItalic.ttf"
+    }
+  ],
+  "foundry": "IBM",
+  "design": [
+    "Mike Abbink",
+    "Paul van der Laan",
+    "Pieter van Rosmalen"
+  ],
+  "variable": false,
+  "tags": [
+    "Monospaced",
+    "Web"
+  ]
+},
+{
+  "_id": 45,
+  "name": "Instrument Serif",
+  "weights": [
+    {
+      "style": "Regular",
+      "file": "InstrumentSerif-Regular.ttf",
+      "default": true
+    },
+    {
+      "style": "Italic",
+      "file": "InstrumentSerif-Italic.ttf"
+    }
+  ],
+  "foundry": "Google",
+  "design": [
+    "Rodrigo Fuenzalida",
+    "Jordan Egstad"
+  ],
+  "variable": false,
+  "tags": [
+    "Serif",
+    "Display",
+    "Headings"
+  ]
+},
+{
+  "_id": 46,
+  "name": "Inter",
+  "weights": [
+    {
+      "style": "Thin",
+      "file": "Inter_18pt-Thin.ttf"
+    },
+    {
+      "style": "Thin Italic",
+      "file": "Inter_18pt-ThinItalic.ttf"
+    },
+    {
+      "style": "ExtraLight",
+      "file": "Inter_18pt-ExtraLight.ttf"
+    },
+    {
+      "style": "ExtraLight Italic",
+      "file": "Inter_18pt-ExtraLightItalic.ttf"
+    },
+    {
+      "style": "Light",
+      "file": "Inter_18pt-Light.ttf"
+    },
+    {
+      "style": "Light Italic",
+      "file": "Inter_18pt-LightItalic.ttf"
+    },
+    {
+      "style": "Regular",
+      "file": "Inter_18pt-Regular.ttf",
+      "default": true
+    },
+    {
+      "style": "Italic",
+      "file": "Inter_18pt-Italic.ttf"
+    },
+    {
+      "style": "Medium",
+      "file": "Inter_18pt-Medium.ttf"
+    },
+    {
+      "style": "Medium Italic",
+      "file": "Inter_18pt-MediumItalic.ttf"
+    },
+    {
+      "style": "SemiBold",
+      "file": "Inter_18pt-SemiBold.ttf"
+    },
+    {
+      "style": "SemiBold Italic",
+      "file": "Inter_18pt-SemiBoldItalic.ttf"
+    },
+    {
+      "style": "Bold",
+      "file": "Inter_18pt-Bold.ttf"
+    },
+    {
+      "style": "Bold Italic",
+      "file": "Inter_18pt-BoldItalic.ttf"
+    },
+    {
+      "style": "ExtraBold",
+      "file": "Inter_18pt-ExtraBold.ttf"
+    },
+    {
+      "style": "ExtraBold Italic",
+      "file": "Inter_18pt-ExtraBoldItalic.ttf"
+    },
+    {
+      "style": "Black",
+      "file": "Inter_18pt-Black.ttf"
+    },
+    {
+      "style": "Black Italic",
+      "file": "Inter_18pt-BlackItalic.ttf"
+    },
+    {
+      "style": "Variable",
+      "file": "Inter-VariableFont_opsz,wght.ttf"
+    },
+    {
+      "style": "Variable Italic",
+      "file": "Inter-Italic-VariableFont_opsz,wght.ttf"
+    }
+  ],
+  "foundry": "Google",
+  "design": [
+    "Rasmus Andersson"
+  ],
+  "variable": true,
+  "tags": [
+    "Sans Serif",
+    "Web",
+    "Body Text"
+  ]
+},
+{
+  "_id": 47,
+  "name": "Josefin Sans",
+  "weights": [
+    {
+      "style": "Thin",
+      "file": "JosefinSans-Thin.ttf"
+    },
+    {
+      "style": "Thin Italic",
+      "file": "JosefinSans-ThinItalic.ttf"
+    },
+    {
+      "style": "Light",
+      "file": "JosefinSans-Light.ttf"
+    },
+    {
+      "style": "Light Italic",
+      "file": "JosefinSans-LightItalic.ttf"
+    },
+    {
+      "style": "Regular",
+      "file": "JosefinSans-Regular.ttf",
+      "default": true
+    },
+    {
+      "style": "Italic",
+      "file": "JosefinSans-Italic.ttf"
+    },
+    {
+      "style": "SemiBold",
+      "file": "JosefinSans-SemiBold.ttf"
+    },
+    {
+      "style": "SemiBold Italic",
+      "file": "JosefinSans-SemiBoldItalic.ttf"
+    },
+    {
+      "style": "Bold",
+      "file": "JosefinSans-Bold.ttf"
+    },
+    {
+      "style": "Bold Italic",
+      "file": "JosefinSans-BoldItalic.ttf"
+    }
+  ],
+  "foundry": "Typemade",
+  "design": [
+    "Santiago Orozco"
+  ],
+  "variable": false,
+  "tags": [
+    "Sans Serif",
+    "Display"
+  ]
+},
+{
+  "_id": 48,
+  "name": "Kevad",
+  "weights": [
+    {
+      "style": "Regular",
+      "file": "kevad.otf",
+      "default": true
+    }
+  ],
+  "foundry": "Suva Type Foundry",
+  "design": [
+    "Karl Kevad"
+  ],
+  "variable": false,
+  "tags": [
+    "Display",
+    "Serif"
+  ]
+},
+{
+  "_id": 49,
+  "name": "Krona One",
+  "weights": [
+    {
+      "style": "Regular",
+      "file": "KronaOne-Regular.ttf",
+      "default": true
+    }
+  ],
+  "foundry": "Google",
+  "design": [
+    "Yvonne Schüttler"
+  ],
+  "variable": false,
+  "tags": [
+    "Sans Serif",
+    "Display",
+    "Headings"
+  ]
+},
+{
+  "_id": 50,
+  "name": "Kykeon",
+  "weights": [
+    {
+      "style": "Regular",
+      "file": "kykeon.otf",
+      "default": true
+    }
+  ],
+  "foundry": "Suva Type Foundry",
+  "design": [
+    "Martin Kislõi"
+  ],
+  "variable": false,
+  "tags": [
+    "Display",
+    "All Caps"
+  ]
+},
+{
+  "_id": 51,
+  "name": "Lato",
+  "weights": [
+    {
+      "style": "Thin",
+      "file": "Lato-Thin.ttf"
+    },
+    {
+      "style": "Thin Italic",
+      "file": "Lato-ThinItalic.ttf"
+    },
+    {
+      "style": "Light",
+      "file": "Lato-Light.ttf"
+    },
+    {
+      "style": "Light Italic",
+      "file": "Lato-LightItalic.ttf"
+    },
+    {
+      "style": "Regular",
+      "file": "Lato-Regular.ttf",
+      "default": true
+    },
+    {
+      "style": "Italic",
+      "file": "Lato-Italic.ttf"
+    },
+    {
+      "style": "Bold",
+      "file": "Lato-Bold.ttf"
+    },
+    {
+      "style": "Bold Italic",
+      "file": "Lato-BoldItalic.ttf"
+    },
+    {
+      "style": "Black",
+      "file": "Lato-Black.ttf"
+    },
+    {
+      "style": "Black Italic",
+      "file": "Lato-BlackItalic.ttf"
+    }
+  ],
+  "foundry": "tyPoland",
+  "design": [
+    "Łukasz Dziedzic"
+  ],
+  "variable": false,
+  "tags": [
+    "Sans Serif",
+    "Web",
+    "Body Text"
+  ]
+},
+{
+  "_id": 52,
+  "name": "Leone",
+  "weights": [
+    {
+      "style": "Regular",
+      "file": "LEONE-Regular_LMartens.otf",
+      "default": true
+    }
+  ],
+  "foundry": "Suva Type Foundry",
+  "design": [
+    "Laura Martens"
+  ],
+  "variable": false,
+  "tags": [
+    "Display",
+    "All Caps"
+  ]
+},
+{
+  "_id": 53,
+  "name": "Libre Caslon Display",
+  "weights": [
+    {
+      "style": "Regular",
+      "file": "LibreCaslonDisplay-Regular.ttf",
+      "default": true
+    }
+  ],
+  "foundry": "Impallari Type",
+  "design": [
+    "Pablo Impallari",
+    "Rodrigo Fuenzalida"
+  ],
+  "variable": false,
+  "tags": [
+    "Serif",
+    "Display"
+  ]
+},
+{
+  "_id": 54,
+  "name": "Livvic",
+  "weights": [
+    {
+      "style": "Thin",
+      "file": "Livvic-Thin.ttf"
+    },
+    {
+      "style": "Thin Italic",
+      "file": "Livvic-ThinItalic.ttf"
+    },
+    {
+      "style": "ExtraLight",
+      "file": "Livvic-ExtraLight.ttf"
+    },
+    {
+      "style": "ExtraLight Italic",
+      "file": "Livvic-ExtraLightItalic.ttf"
+    },
+    {
+      "style": "Light",
+      "file": "Livvic-Light.ttf"
+    },
+    {
+      "style": "Light Italic",
+      "file": "Livvic-LightItalic.ttf"
+    },
+    {
+      "style": "Regular",
+      "file": "Livvic-Regular.ttf",
+      "default": true
+    },
+    {
+      "style": "Italic",
+      "file": "Livvic-Italic.ttf"
+    },
+    {
+      "style": "Medium",
+      "file": "Livvic-Medium.ttf"
+    },
+    {
+      "style": "Medium Italic",
+      "file": "Livvic-MediumItalic.ttf"
+    },
+    {
+      "style": "SemiBold",
+      "file": "Livvic-SemiBold.ttf"
+    },
+    {
+      "style": "SemiBold Italic",
+      "file": "Livvic-SemiBoldItalic.ttf"
+    },
+    {
+      "style": "Bold",
+      "file": "Livvic-Bold.ttf"
+    },
+    {
+      "style": "Bold Italic",
+      "file": "Livvic-BoldItalic.ttf"
+    },
+    {
+      "style": "Black",
+      "file": "Livvic-Black.ttf"
+    },
+    {
+      "style": "Black Italic",
+      "file": "Livvic-BlackItalic.ttf"
+    }
+  ],
+  "foundry": "Google",
+  "design": [
+    "Jacques Le Bailly"
+  ],
+  "variable": false,
+  "tags": [
+    "Sans Serif",
+    "Headings"
+  ]
+},
+{
+  "_id": 55,
+  "name": "Lora",
+  "weights": [
+    {
+      "style": "Regular",
+      "file": "Lora-Regular.ttf",
+      "default": true
+    },
+    {
+      "style": "Italic",
+      "file": "Lora-Italic.ttf"
+    },
+    {
+      "style": "Medium",
+      "file": "Lora-Medium.ttf"
+    },
+    {
+      "style": "Medium Italic",
+      "file": "Lora-MediumItalic.ttf"
+    },
+    {
+      "style": "SemiBold",
+      "file": "Lora-SemiBold.ttf"
+    },
+    {
+      "style": "SemiBold Italic",
+      "file": "Lora-SemiBoldItalic.ttf"
+    },
+    {
+      "style": "Bold",
+      "file": "Lora-Bold.ttf"
+    },
+    {
+      "style": "Bold Italic",
+      "file": "Lora-BoldItalic.ttf"
+    },
+    {
+      "style": "Variable",
+      "file": "Lora-VariableFont_wght.ttf"
+    },
+    {
+      "style": "Variable Italic",
+      "file": "Lora-Italic-VariableFont_wght.ttf"
+    }
+  ],
+  "foundry": "Cyreal",
+  "design": [
+    "Alexei Vanyashin",
+    "Olga Karpushina"
+  ],
+  "variable": true,
+  "tags": [
+    "Serif",
+    "Body Text"
+  ]
+},
+{
+  "_id": 56,
+  "name": "Mali",
+  "weights": [
+    {
+      "style": "ExtraLight",
+      "file": "Mali-ExtraLight.ttf"
+    },
+    {
+      "style": "ExtraLight Italic",
+      "file": "Mali-ExtraLightItalic.ttf"
+    },
+    {
+      "style": "Light",
+      "file": "Mali-Light.ttf"
+    },
+    {
+      "style": "Light Italic",
+      "file": "Mali-LightItalic.ttf"
+    },
+    {
+      "style": "Regular",
+      "file": "Mali-Regular.ttf",
+      "default": true
+    },
+    {
+      "style": "Italic",
+      "file": "Mali-Italic.ttf"
+    },
+    {
+      "style": "Medium",
+      "file": "Mali-Medium.ttf"
+    },
+    {
+      "style": "Medium Italic",
+      "file": "Mali-MediumItalic.ttf"
+    },
+    {
+      "style": "SemiBold",
+      "file": "Mali-SemiBold.ttf"
+    },
+    {
+      "style": "SemiBold Italic",
+      "file": "Mali-SemiBoldItalic.ttf"
+    },
+    {
+      "style": "Bold",
+      "file": "Mali-Bold.ttf"
+    },
+    {
+      "style": "Bold Italic",
+      "file": "Mali-BoldItalic.ttf"
+    }
+  ],
+  "foundry": "Google",
+  "design": [
+    "Cadson Demak"
+  ],
+  "variable": false,
+  "tags": [
+    "Script",
+    "Body Text"
+  ]
+},
+{
+  "_id": 57,
+  "name": "Manrope",
+  "weights": [
+    {
+      "style": "ExtraLight",
+      "file": "Manrope-ExtraLight.ttf"
+    },
+    {
+      "style": "Light",
+      "file": "Manrope-Light.ttf"
+    },
+    {
+      "style": "Regular",
+      "file": "Manrope-Regular.ttf",
+      "default": true
+    },
+    {
+      "style": "Medium",
+      "file": "Manrope-Medium.ttf"
+    },
+    {
+      "style": "SemiBold",
+      "file": "Manrope-SemiBold.ttf"
+    },
+    {
+      "style": "Bold",
+      "file": "Manrope-Bold.ttf"
+    },
+    {
+      "style": "ExtraBold",
+      "file": "Manrope-ExtraBold.ttf"
+    },
+    {
+      "style": "Variable",
+      "file": "Manrope-VariableFont_wght.ttf"
+    }
+  ],
+  "foundry": "Google",
+  "design": [
+    "Mikhail Sharanda"
+  ],
+  "variable": true,
+  "tags": [
+    "Sans Serif",
+    "Web"
+  ]
+},
+{
+  "_id": 58,
+  "name": "Modak",
+  "weights": [
+    {
+      "style": "Regular",
+      "file": "Modak-Regular.ttf",
+      "default": true
+    }
+  ],
+  "foundry": "Ek Type",
+  "design": [
+    "Girish Dalvi",
+    "Maithili Shingre",
+    "Noopur Datye",
+    "Pradnya Naik",
+    "Sarang Kulkarni"
+  ],
+  "variable": false,
+  "tags": [
+    "Display",
+    "Rounded"
+  ]
+},
+{
+  "_id": 59,
+  "name": "Mohave",
+  "weights": [
+    {
+      "style": "Light",
+      "file": "Mohave-Light.ttf"
+    },
+    {
+      "style": "Light Italic",
+      "file": "Mohave-LightItalic.ttf"
+    },
+    {
+      "style": "Regular",
+      "file": "Mohave-Regular.ttf",
+      "default": true
+    },
+    {
+      "style": "Italic",
+      "file": "Mohave-Italic.ttf"
+    },
+    {
+      "style": "Medium",
+      "file": "Mohave-Medium.ttf"
+    },
+    {
+      "style": "Medium Italic",
+      "file": "Mohave-MediumItalic.ttf"
+    },
+    {
+      "style": "SemiBold",
+      "file": "Mohave-SemiBold.ttf"
+    },
+    {
+      "style": "SemiBold Italic",
+      "file": "Mohave-SemiBoldItalic.ttf"
+    },
+    {
+      "style": "Bold",
+      "file": "Mohave-Bold.ttf"
+    },
+    {
+      "style": "Bold Italic",
+      "file": "Mohave-BoldItalic.ttf"
+    },
+    {
+      "style": "Variable",
+      "file": "Mohave-VariableFont_wght.ttf"
+    },
+    {
+      "style": "Variable Italic",
+      "file": "Mohave-Italic-VariableFont_wght.ttf"
+    }
+  ],
+  "foundry": "Tokotype",
+  "design": [
+    "Gumpita Rahayu"
+  ],
+  "variable": true,
+  "tags": [
+    "Sans Serif",
+    "Display"
+  ]
+},
+{
+  "_id": 60,
+  "name": "Montserrat",
+  "weights": [
+    {
+      "style": "Thin",
+      "file": "Montserrat-Thin.ttf"
+    },
+    {
+      "style": "Thin Italic",
+      "file": "Montserrat-ThinItalic.ttf"
+    },
+    {
+      "style": "ExtraLight",
+      "file": "Montserrat-ExtraLight.ttf"
+    },
+    {
+      "style": "ExtraLight Italic",
+      "file": "Montserrat-ExtraLightItalic.ttf"
+    },
+    {
+      "style": "Light",
+      "file": "Montserrat-Light.ttf"
+    },
+    {
+      "style": "Light Italic",
+      "file": "Montserrat-LightItalic.ttf"
+    },
+    {
+      "style": "Regular",
+      "file": "Montserrat-Regular.ttf",
+      "default": true
+    },
+    {
+      "style": "Italic",
+      "file": "Montserrat-Italic.ttf"
+    },
+    {
+      "style": "Medium",
+      "file": "Montserrat-Medium.ttf"
+    },
+    {
+      "style": "Medium Italic",
+      "file": "Montserrat-MediumItalic.ttf"
+    },
+    {
+      "style": "SemiBold",
+      "file": "Montserrat-SemiBold.ttf"
+    },
+    {
+      "style": "SemiBold Italic",
+      "file": "Montserrat-SemiBoldItalic.ttf"
+    },
+    {
+      "style": "Bold",
+      "file": "Montserrat-Bold.ttf"
+    },
+    {
+      "style": "Bold Italic",
+      "file": "Montserrat-BoldItalic.ttf"
+    },
+    {
+      "style": "ExtraBold",
+      "file": "Montserrat-ExtraBold.ttf"
+    },
+    {
+      "style": "ExtraBold Italic",
+      "file": "Montserrat-ExtraBoldItalic.ttf"
+    },
+    {
+      "style": "Black",
+      "file": "Montserrat-Black.ttf"
+    },
+    {
+      "style": "Black Italic",
+      "file": "Montserrat-BlackItalic.ttf"
+    },
+    {
+      "style": "Variable",
+      "file": "Montserrat-VariableFont_wght.ttf"
+    },
+    {
+      "style": "Variable Italic",
+      "file": "Montserrat-Italic-VariableFont_wght.ttf"
+    }
+  ],
+  "foundry": "Google",
+  "design": [
+    "Julieta Ulanovsky",
+    "Sol Matas",
+    "Juan Pablo del Peral",
+    "Jacques Le Bailly"
+  ],
+  "variable": true,
+  "tags": [
+    "Sans Serif",
+    "Web",
+    "Headings"
+  ]
+},
+{
+  "_id": 61,
+  "name": "MuseoModerno",
+  "weights": [
+    {
+      "style": "Thin",
+      "file": "MuseoModerno-Thin.ttf"
+    },
+    {
+      "style": "ExtraLight",
+      "file": "MuseoModerno-ExtraLight.ttf"
+    },
+    {
+      "style": "Light",
+      "file": "MuseoModerno-Light.ttf"
+    },
+    {
+      "style": "Regular",
+      "file": "MuseoModerno-Regular.ttf",
+      "default": true
+    },
+    {
+      "style": "Medium",
+      "file": "MuseoModerno-Medium.ttf"
+    },
+    {
+      "style": "SemiBold",
+      "file": "MuseoModerno-SemiBold.ttf"
+    },
+    {
+      "style": "Bold",
+      "file": "MuseoModerno-Bold.ttf"
+    },
+    {
+      "style": "ExtraBold",
+      "file": "MuseoModerno-ExtraBold.ttf"
+    },
+    {
+      "style": "Black",
+      "file": "MuseoModerno-Black.ttf"
+    },
+    {
+      "style": "Variable",
+      "file": "MuseoModerno-VariableFont_wght.ttf"
+    }
+  ],
+  "foundry": "Omnibus Type",
+  "design": [
+    "Héctor Gatti",
+    "Marcela Romero",
+    "Pablo Cosgaya"
+  ],
+  "variable": true,
+  "tags": [
+    "Sans Serif",
+    "Display"
+  ]
+},
+{
+  "_id": 62,
+  "name": "Nova",
+  "weights": [
+    {
+      "style": "Regular",
+      "file": "NOVA.otf",
+      "default": true
+    }
+  ],
+  "foundry": "MVD Type Foundry",
+  "design": [
+    "Lola Mallue"
+  ],
+  "variable": false,
+  "tags": [
+    "Display",
+    "All Caps"
+  ]
+},
+{
+  "_id": 63,
+  "name": "Ofortuna",
+  "weights": [
+    {
+      "style": "Regular",
+      "file": "ofortuna.ttf",
+      "default": true
+    }
+  ],
+  "foundry": "Suva Type Foundry",
+  "design": [
+    "Anastassia Tšepaikina"
+  ],
+  "variable": false,
+  "tags": [
+    "Serif",
+    "Display",
+    "All Caps"
+  ]
+},
+{
+  "_id": 64,
+  "name": "Old Standard TT",
+  "weights": [
+    {
+      "style": "Regular",
+      "file": "OldStandardTT-Regular.ttf",
+      "default": true
+    },
+    {
+      "style": "Italic",
+      "file": "OldStandardTT-Italic.ttf"
+    },
+    {
+      "style": "Bold",
+      "file": "OldStandardTT-Bold.ttf"
+    }
+  ],
+  "foundry": "Google",
+  "design": [
+    "Alexey Kryukov"
+  ],
+  "variable": false,
+  "tags": [
+    "Serif",
+    "Body Text"
+  ]
+},
+{
+  "_id": 65,
+  "name": "Oleo Script",
+  "weights": [
+    {
+      "style": "Regular",
+      "file": "OleoScript-Regular.ttf",
+      "default": true
+    },
+    {
+      "style": "Bold",
+      "file": "OleoScript-Bold.ttf"
+    },
+    {
+      "style": "Regular Swash Caps",
+      "file": "OleoScriptSwashCaps-Regular.ttf"
+    },
+    {
+      "style": "Bold Swash Caps",
+      "file": "OleoScriptSwashCaps-Bold.ttf"
+    }
+  ],
+  "foundry": "soytutype fonts",
+  "design": [
+    "Unknown"
+  ],
+  "variable": false,
+  "tags": [
+    "Script",
+    "Display"
+  ]
+},
+{
+  "_id": 66,
+  "name": "Open Sans",
+  "weights": [
+    {
+      "style": "Condensed Light",
+      "file": "OpenSans_Condensed-Light.ttf"
+    },
+    {
+      "style": "Condensed Light Italic",
+      "file": "OpenSans_Condensed-LightItalic.ttf"
+    },
+    {
+      "style": "Condensed Regular",
+      "file": "OpenSans_Condensed-Regular.ttf"
+    },
+    {
+      "style": "Condensed Italic",
+      "file": "OpenSans_Condensed-Italic.ttf"
+    },
+    {
+      "style": "Condensed Medium",
+      "file": "OpenSans_Condensed-Medium.ttf"
+    },
+    {
+      "style": "Condensed Medium Italic",
+      "file": "OpenSans_Condensed-MediumItalic.ttf"
+    },
+    {
+      "style": "Condensed SemiBold",
+      "file": "OpenSans_Condensed-SemiBold.ttf"
+    },
+    {
+      "style": "Condensed SemiBold Italic",
+      "file": "OpenSans_Condensed-SemiBoldItalic.ttf"
+    },
+    {
+      "style": "Condensed Bold",
+      "file": "OpenSans_Condensed-Bold.ttf"
+    },
+    {
+      "style": "Condensed Bold Italic",
+      "file": "OpenSans_Condensed-BoldItalic.ttf"
+    },
+    {
+      "style": "Condensed ExtraBold",
+      "file": "OpenSans_Condensed-ExtraBold.ttf"
+    },
+    {
+      "style": "Condensed ExtraBold Italic",
+      "file": "OpenSans_Condensed-ExtraBoldItalic.ttf"
+    },
+    {
+      "style": "SemiCondensed Light",
+      "file": "OpenSans_SemiCondensed-Light.ttf"
+    },
+    {
+      "style": "SemiCondensed Light Italic",
+      "file": "OpenSans_SemiCondensed-LightItalic.ttf"
+    },
+    {
+      "style": "SemiCondensed Regular",
+      "file": "OpenSans_SemiCondensed-Regular.ttf"
+    },
+    {
+      "style": "SemiCondensed Italic",
+      "file": "OpenSans_SemiCondensed-Italic.ttf"
+    },
+    {
+      "style": "SemiCondensed Medium",
+      "file": "OpenSans_SemiCondensed-Medium.ttf"
+    },
+    {
+      "style": "SemiCondensed Medium Italic",
+      "file": "OpenSans_SemiCondensed-MediumItalic.ttf"
+    },
+    {
+      "style": "SemiCondensed SemiBold",
+      "file": "OpenSans_SemiCondensed-SemiBold.ttf"
+    },
+    {
+      "style": "SemiCondensed SemiBold Italic",
+      "file": "OpenSans_SemiCondensed-SemiBoldItalic.ttf"
+    },
+    {
+      "style": "SemiCondensed Bold",
+      "file": "OpenSans_SemiCondensed-Bold.ttf"
+    },
+    {
+      "style": "SemiCondensed Bold Italic",
+      "file": "OpenSans_SemiCondensed-BoldItalic.ttf"
+    },
+    {
+      "style": "SemiCondensed ExtraBold",
+      "file": "OpenSans_SemiCondensed-ExtraBold.ttf"
+    },
+    {
+      "style": "SemiCondensed ExtraBold Italic",
+      "file": "OpenSans_SemiCondensed-ExtraBoldItalic.ttf"
+    },
+    {
+      "style": "Light",
+      "file": "OpenSans-Light.ttf"
+    },
+    {
+      "style": "Light Italic",
+      "file": "OpenSans-LightItalic.ttf"
+    },
+    {
+      "style": "Regular",
+      "file": "OpenSans-Regular.ttf",
+      "default": true
+    },
+    {
+      "style": "Italic",
+      "file": "OpenSans-Italic.ttf"
+    },
+    {
+      "style": "Medium",
+      "file": "OpenSans-Medium.ttf"
+    },
+    {
+      "style": "Medium Italic",
+      "file": "OpenSans-MediumItalic.ttf"
+    },
+    {
+      "style": "SemiBold",
+      "file": "OpenSans-SemiBold.ttf"
+    },
+    {
+      "style": "SemiBold Italic",
+      "file": "OpenSans-SemiBoldItalic.ttf"
+    },
+    {
+      "style": "Bold",
+      "file": "OpenSans-Bold.ttf"
+    },
+    {
+      "style": "Bold Italic",
+      "file": "OpenSans-BoldItalic.ttf"
+    },
+    {
+      "style": "ExtraBold",
+      "file": "OpenSans-ExtraBold.ttf"
+    },
+    {
+      "style": "ExtraBold Italic",
+      "file": "OpenSans-ExtraBoldItalic.ttf"
+    },
+    {
+      "style": "Variable",
+      "file": "OpenSans-VariableFont_wdth,wght.ttf"
+    },
+    {
+      "style": "Variable Italic",
+      "file": "OpenSans-Italic-VariableFont_wdth,wght.ttf"
+    }
+  ],
+  "foundry": "Ascender Corp.",
+  "design": [
+    "Steve Matteson"
+  ],
+  "variable": true,
+  "tags": [
+    "Sans Serif",
+    "Web",
+    "Body Text"
+  ]
+},
+{
+  "_id": 67,
+  "name": "Pacifico",
+  "weights": [
+    {
+      "style": "Regular",
+      "file": "Pacifico-Regular.ttf",
+      "default": true
+    }
+  ],
+  "foundry": "Vernon Adams",
+  "design": [
+    "Jacques Le Bailly",
+    "Vernon Adams"
+  ],
+  "variable": false,
+  "tags": [
+    "Script",
+    "Display"
+  ]
+},
+{
+  "_id": 68,
+  "name": "Pilowlava",
+  "weights": [
+    {
+      "style": "Regular",
+      "file": "Pilowlava-Regular.otf",
+      "default": true
+    }
+  ],
+  "foundry": "Velvetyne",
+  "design": [
+    "Anton Moglia",
+    "Jérémy Landes"
+  ],
+  "variable": false,
+  "tags": [
+    "Display",
+    "All Caps"
+  ]
+},
+{
+  "_id": 69,
+  "name": "Playfair Display",
+  "weights": [
+    {
+      "style": "Regular",
+      "file": "PlayfairDisplay-Regular.ttf",
+      "default": true
+    },
+    {
+      "style": "Italic",
+      "file": "PlayfairDisplay-Italic.ttf"
+    },
+    {
+      "style": "Medium",
+      "file": "PlayfairDisplay-Medium.ttf"
+    },
+    {
+      "style": "Medium Italic",
+      "file": "PlayfairDisplay-MediumItalic.ttf"
+    },
+    {
+      "style": "SemiBold",
+      "file": "PlayfairDisplay-SemiBold.ttf"
+    },
+    {
+      "style": "SemiBold Italic",
+      "file": "PlayfairDisplay-SemiBoldItalic.ttf"
+    },
+    {
+      "style": "Bold",
+      "file": "PlayfairDisplay-Bold.ttf"
+    },
+    {
+      "style": "Bold Italic",
+      "file": "PlayfairDisplay-BoldItalic.ttf"
+    },
+    {
+      "style": "ExtraBold",
+      "file": "PlayfairDisplay-ExtraBold.ttf"
+    },
+    {
+      "style": "ExtraBold Italic",
+      "file": "PlayfairDisplay-ExtraBoldItalic.ttf"
+    },
+    {
+      "style": "Black",
+      "file": "PlayfairDisplay-Black.ttf"
+    },
+    {
+      "style": "Black Italic",
+      "file": "PlayfairDisplay-BlackItalic.ttf"
+    },
+    {
+      "style": "Variable",
+      "file": "PlayfairDisplay-VariableFont_wght.ttf"
+    },
+    {
+      "style": "Variable Italic",
+      "file": "PlayfairDisplay-Italic-VariableFont_wght.ttf"
+    }
+  ],
+  "foundry": "Claus Eggers Sørensen",
+  "design": [
+    "Claus Eggers Sørensen"
+  ],
+  "variable": true,
+  "tags": [
+    "Serif",
+    "Display",
+    "Headings"
+  ]
+},
+{
+  "_id": 70,
+  "name": "Poppins",
+  "weights": [
+    {
+      "style": "Thin",
+      "file": "Poppins-Thin.ttf"
+    },
+    {
+      "style": "Thin Italic",
+      "file": "Poppins-ThinItalic.ttf"
+    },
+    {
+      "style": "ExtraLight",
+      "file": "Poppins-ExtraLight.ttf"
+    },
+    {
+      "style": "ExtraLight Italic",
+      "file": "Poppins-ExtraLightItalic.ttf"
+    },
+    {
+      "style": "Light",
+      "file": "Poppins-Light.ttf"
+    },
+    {
+      "style": "Light Italic",
+      "file": "Poppins-LightItalic.ttf"
+    },
+    {
+      "style": "Regular",
+      "file": "Poppins-Regular.ttf",
+      "default": true
+    },
+    {
+      "style": "Italic",
+      "file": "Poppins-Italic.ttf"
+    },
+    {
+      "style": "Medium",
+      "file": "Poppins-Medium.ttf"
+    },
+    {
+      "style": "Medium Italic",
+      "file": "Poppins-MediumItalic.ttf"
+    },
+    {
+      "style": "SemiBold",
+      "file": "Poppins-SemiBold.ttf"
+    },
+    {
+      "style": "SemiBold Italic",
+      "file": "Poppins-SemiBoldItalic.ttf"
+    },
+    {
+      "style": "Bold",
+      "file": "Poppins-Bold.ttf"
+    },
+    {
+      "style": "Bold Italic",
+      "file": "Poppins-BoldItalic.ttf"
+    },
+    {
+      "style": "ExtraBold",
+      "file": "Poppins-ExtraBold.ttf"
+    },
+    {
+      "style": "ExtraBold Italic",
+      "file": "Poppins-ExtraBoldItalic.ttf"
+    },
+    {
+      "style": "Black",
+      "file": "Poppins-Black.ttf"
+    },
+    {
+      "style": "Black Italic",
+      "file": "Poppins-BlackItalic.ttf"
+    }
+  ],
+  "foundry": "Indian Type Foundry",
+  "design": [
+    "Jonny Pinhorn",
+    "Ninad Kale"
+  ],
+  "variable": false,
+  "tags": [
+    "Sans Serif",
+    "Web"
+  ]
+},
+{
+  "_id": 71,
+  "name": "PT Mono",
+  "weights": [
+    {
+      "style": "Regular",
+      "file": "PTMono-Regular.ttf",
+      "default": true
+    }
+  ],
+  "foundry": "ParaType",
+  "design": [
+    "Alexandra Korolkova"
+  ],
+  "variable": false,
+  "tags": [
+    "Monospaced",
+    "Web"
+  ]
+},
+{
+  "_id": 72,
+  "name": "PT Sans Narrow",
+  "weights": [
+    {
+      "style": "Regular",
+      "file": "PTSansNarrow-Regular.ttf",
+      "default": true
+    },
+    {
+      "style": "Bold",
+      "file": "PTSansNarrow-Bold.ttf"
+    }
+  ],
+  "foundry": "ParaType",
+  "design": [
+    "Alexandra Korolkova"
+  ],
+  "variable": false,
+  "tags": [
+    "Sans Serif"
+  ]
+},
+{
+  "_id": 73,
+  "name": "Public Sans",
+  "weights": [
+    {
+      "style": "Thin",
+      "file": "PublicSans-Thin.ttf"
+    },
+    {
+      "style": "Thin Italic",
+      "file": "PublicSans-ThinItalic.ttf"
+    },
+    {
+      "style": "ExtraLight",
+      "file": "PublicSans-ExtraLight.ttf"
+    },
+    {
+      "style": "ExtraLight Italic",
+      "file": "PublicSans-ExtraLightItalic.ttf"
+    },
+    {
+      "style": "Light",
+      "file": "PublicSans-Light.ttf"
+    },
+    {
+      "style": "Light Italic",
+      "file": "PublicSans-LightItalic.ttf"
+    },
+    {
+      "style": "Regular",
+      "file": "PublicSans-Regular.ttf",
+      "default": true
+    },
+    {
+      "style": "Italic",
+      "file": "PublicSans-Italic.ttf"
+    },
+    {
+      "style": "Medium",
+      "file": "PublicSans-Medium.ttf"
+    },
+    {
+      "style": "Medium Italic",
+      "file": "PublicSans-MediumItalic.ttf"
+    },
+    {
+      "style": "SemiBold",
+      "file": "PublicSans-SemiBold.ttf"
+    },
+    {
+      "style": "SemiBold Italic",
+      "file": "PublicSans-SemiBoldItalic.ttf"
+    },
+    {
+      "style": "Bold",
+      "file": "PublicSans-Bold.ttf"
+    },
+    {
+      "style": "Bold Italic",
+      "file": "PublicSans-BoldItalic.ttf"
+    },
+    {
+      "style": "ExtraBold",
+      "file": "PublicSans-ExtraBold.ttf"
+    },
+    {
+      "style": "ExtraBold Italic",
+      "file": "PublicSans-ExtraBoldItalic.ttf"
+    },
+    {
+      "style": "Black",
+      "file": "PublicSans-Black.ttf"
+    },
+    {
+      "style": "Black Italic",
+      "file": "PublicSans-BlackItalic.ttf"
+    },
+    {
+      "style": "Variable",
+      "file": "PublicSans-VariableFont_wght.ttf"
+    },
+    {
+      "style": "Variable Italic",
+      "file": "PublicSans-Italic-VariableFont_wght.ttf"
+    }
+  ],
+  "foundry": "U.S. Government",
+  "design": [
+    "U.S. Web Design System"
+  ],
+  "variable": true,
+  "tags": [
+    "Sans Serif",
+    "Web"
+  ]
+},
+{
+  "_id": 74,
+  "name": "Raleway",
+  "weights": [
+    {
+      "style": "Thin",
+      "file": "Raleway-Thin.ttf"
+    },
+    {
+      "style": "Thin Italic",
+      "file": "Raleway-ThinItalic.ttf"
+    },
+    {
+      "style": "ExtraLight",
+      "file": "Raleway-ExtraLight.ttf"
+    },
+    {
+      "style": "ExtraLight Italic",
+      "file": "Raleway-ExtraLightItalic.ttf"
+    },
+    {
+      "style": "Light",
+      "file": "Raleway-Light.ttf"
+    },
+    {
+      "style": "Light Italic",
+      "file": "Raleway-LightItalic.ttf"
+    },
+    {
+      "style": "Regular",
+      "file": "Raleway-Regular.ttf",
+      "default": true
+    },
+    {
+      "style": "Italic",
+      "file": "Raleway-Italic.ttf"
+    },
+    {
+      "style": "Medium",
+      "file": "Raleway-Medium.ttf"
+    },
+    {
+      "style": "Medium Italic",
+      "file": "Raleway-MediumItalic.ttf"
+    },
+    {
+      "style": "SemiBold",
+      "file": "Raleway-SemiBold.ttf"
+    },
+    {
+      "style": "SemiBold Italic",
+      "file": "Raleway-SemiBoldItalic.ttf"
+    },
+    {
+      "style": "Bold",
+      "file": "Raleway-Bold.ttf"
+    },
+    {
+      "style": "Bold Italic",
+      "file": "Raleway-BoldItalic.ttf"
+    },
+    {
+      "style": "ExtraBold",
+      "file": "Raleway-ExtraBold.ttf"
+    },
+    {
+      "style": "ExtraBold Italic",
+      "file": "Raleway-ExtraBoldItalic.ttf"
+    },
+    {
+      "style": "Black",
+      "file": "Raleway-Black.ttf"
+    },
+    {
+      "style": "Black Italic",
+      "file": "Raleway-BlackItalic.ttf"
+    },
+    {
+      "style": "Variable",
+      "file": "Raleway-VariableFont_wght.ttf"
+    },
+    {
+      "style": "Variable Italic",
+      "file": "Raleway-Italic-VariableFont_wght.ttf"
+    }
+  ],
+  "foundry": "Impallari Type",
+  "design": [
+    "Matt McInerney",
+    "Pablo Impallari",
+    "Rodrigo Fuenzalida"
+  ],
+  "variable": true,
+  "tags": [
+    "Sans Serif"
+  ]
+},
+{
+  "_id": 75,
+  "name": "Roboto",
+  "weights": [
+    {
+      "style": "Condensed Thin",
+      "file": "Roboto_Condensed-Thin.ttf"
+    },
+    {
+      "style": "Condensed Thin Italic",
+      "file": "Roboto_Condensed-ThinItalic.ttf"
+    },
+    {
+      "style": "Condensed ExtraLight",
+      "file": "Roboto_Condensed-ExtraLight.ttf"
+    },
+    {
+      "style": "Condensed ExtraLight Italic",
+      "file": "Roboto_Condensed-ExtraLightItalic.ttf"
+    },
+    {
+      "style": "Condensed Light",
+      "file": "Roboto_Condensed-Light.ttf"
+    },
+    {
+      "style": "Condensed Light Italic",
+      "file": "Roboto_Condensed-LightItalic.ttf"
+    },
+    {
+      "style": "Condensed Regular",
+      "file": "Roboto_Condensed-Regular.ttf"
+    },
+    {
+      "style": "Condensed Italic",
+      "file": "Roboto_Condensed-Italic.ttf"
+    },
+    {
+      "style": "Condensed Medium",
+      "file": "Roboto_Condensed-Medium.ttf"
+    },
+    {
+      "style": "Condensed Medium Italic",
+      "file": "Roboto_Condensed-MediumItalic.ttf"
+    },
+    {
+      "style": "Condensed SemiBold",
+      "file": "Roboto_Condensed-SemiBold.ttf"
+    },
+    {
+      "style": "Condensed SemiBold Italic",
+      "file": "Roboto_Condensed-SemiBoldItalic.ttf"
+    },
+    {
+      "style": "Condensed Bold",
+      "file": "Roboto_Condensed-Bold.ttf"
+    },
+    {
+      "style": "Condensed Bold Italic",
+      "file": "Roboto_Condensed-BoldItalic.ttf"
+    },
+    {
+      "style": "Condensed ExtraBold",
+      "file": "Roboto_Condensed-ExtraBold.ttf"
+    },
+    {
+      "style": "Condensed ExtraBold Italic",
+      "file": "Roboto_Condensed-ExtraBoldItalic.ttf"
+    },
+    {
+      "style": "Condensed Black",
+      "file": "Roboto_Condensed-Black.ttf"
+    },
+    {
+      "style": "Condensed Black Italic",
+      "file": "Roboto_Condensed-BlackItalic.ttf"
+    },
+    {
+      "style": "SemiCondensed Thin",
+      "file": "Roboto_SemiCondensed-Thin.ttf"
+    },
+    {
+      "style": "SemiCondensed Thin Italic",
+      "file": "Roboto_SemiCondensed-ThinItalic.ttf"
+    },
+    {
+      "style": "SemiCondensed ExtraLight",
+      "file": "Roboto_SemiCondensed-ExtraLight.ttf"
+    },
+    {
+      "style": "SemiCondensed ExtraLight Italic",
+      "file": "Roboto_SemiCondensed-ExtraLightItalic.ttf"
+    },
+    {
+      "style": "SemiCondensed Light",
+      "file": "Roboto_SemiCondensed-Light.ttf"
+    },
+    {
+      "style": "SemiCondensed Light Italic",
+      "file": "Roboto_SemiCondensed-LightItalic.ttf"
+    },
+    {
+      "style": "SemiCondensed Regular",
+      "file": "Roboto_SemiCondensed-Regular.ttf"
+    },
+    {
+      "style": "SemiCondensed Italic",
+      "file": "Roboto_SemiCondensed-Italic.ttf"
+    },
+    {
+      "style": "SemiCondensed Medium",
+      "file": "Roboto_SemiCondensed-Medium.ttf"
+    },
+    {
+      "style": "SemiCondensed Medium Italic",
+      "file": "Roboto_SemiCondensed-MediumItalic.ttf"
+    },
+    {
+      "style": "SemiCondensed SemiBold",
+      "file": "Roboto_SemiCondensed-SemiBold.ttf"
+    },
+    {
+      "style": "SemiCondensed SemiBold Italic",
+      "file": "Roboto_SemiCondensed-SemiBoldItalic.ttf"
+    },
+    {
+      "style": "SemiCondensed Bold",
+      "file": "Roboto_SemiCondensed-Bold.ttf"
+    },
+    {
+      "style": "SemiCondensed Bold Italic",
+      "file": "Roboto_SemiCondensed-BoldItalic.ttf"
+    },
+    {
+      "style": "SemiCondensed ExtraBold",
+      "file": "Roboto_SemiCondensed-ExtraBold.ttf"
+    },
+    {
+      "style": "SemiCondensed ExtraBold Italic",
+      "file": "Roboto_SemiCondensed-ExtraBoldItalic.ttf"
+    },
+    {
+      "style": "SemiCondensed Black",
+      "file": "Roboto_SemiCondensed-Black.ttf"
+    },
+    {
+      "style": "SemiCondensed Black Italic",
+      "file": "Roboto_SemiCondensed-BlackItalic.ttf"
+    },
+    {
+      "style": "Thin",
+      "file": "Roboto-Thin.ttf"
+    },
+    {
+      "style": "Thin Italic",
+      "file": "Roboto-ThinItalic.ttf"
+    },
+    {
+      "style": "ExtraLight",
+      "file": "Roboto-ExtraLight.ttf"
+    },
+    {
+      "style": "ExtraLight Italic",
+      "file": "Roboto-ExtraLightItalic.ttf"
+    },
+    {
+      "style": "Light",
+      "file": "Roboto-Light.ttf"
+    },
+    {
+      "style": "Light Italic",
+      "file": "Roboto-LightItalic.ttf"
+    },
+    {
+      "style": "Regular",
+      "file": "Roboto-Regular.ttf",
+      "default": true
+    },
+    {
+      "style": "Italic",
+      "file": "Roboto-Italic.ttf"
+    },
+    {
+      "style": "Medium",
+      "file": "Roboto-Medium.ttf"
+    },
+    {
+      "style": "Medium Italic",
+      "file": "Roboto-MediumItalic.ttf"
+    },
+    {
+      "style": "SemiBold",
+      "file": "Roboto-SemiBold.ttf"
+    },
+    {
+      "style": "SemiBold Italic",
+      "file": "Roboto-SemiBoldItalic.ttf"
+    },
+    {
+      "style": "Bold",
+      "file": "Roboto-Bold.ttf"
+    },
+    {
+      "style": "Bold Italic",
+      "file": "Roboto-BoldItalic.ttf"
+    },
+    {
+      "style": "ExtraBold",
+      "file": "Roboto-ExtraBold.ttf"
+    },
+    {
+      "style": "ExtraBold Italic",
+      "file": "Roboto-ExtraBoldItalic.ttf"
+    },
+    {
+      "style": "Black",
+      "file": "Roboto-Black.ttf"
+    },
+    {
+      "style": "Black Italic",
+      "file": "Roboto-BlackItalic.ttf"
+    },
+    {
+      "style": "Variable",
+      "file": "Roboto-VariableFont_wdth,wght.ttf"
+    },
+    {
+      "style": "Variable Italic",
+      "file": "Roboto-Italic-VariableFont_wdth,wght.ttf"
+    }
+  ],
+  "foundry": "Google",
+  "design": [
+    "Christian Robertson",
+    "David Berlow"
+  ],
+  "variable": true,
+  "tags": [
+    "Sans Serif",
+    "Web",
+    "Body Text"
+  ]
+},
+{
+  "_id": 76,
+  "name": "Rochester",
+  "weights": [
+    {
+      "style": "Regular",
+      "file": "Rochester-Regular.ttf",
+      "default": true
+    }
+  ],
+  "foundry": "Google",
+  "design": [
+    "Sideshow"
+  ],
+  "variable": false,
+  "tags": [
+    "Script",
+    "Display"
+  ]
+},
+{
+  "_id": 77,
+  "name": "RR Pinhais",
+  "weights": [
+    {
+      "style": "Regular",
+      "file": "RR Pinhais - Rui Marques.ttf",
+      "default": true
+    }
+  ],
+  "foundry": "FBAUP Types",
+  "design": [
+    "Rui Marques",
+    "Ricardo Sousa"
+  ],
+  "variable": false,
+  "tags": [
+    "Display",
+    "All Caps"
+  ]
+},
+{
+  "_id": 78,
+  "name": "Sonsie One",
+  "weights": [
+    {
+      "style": "Regular",
+      "file": "SonsieOne-Regular.ttf",
+      "default": true
+    }
+  ],
+  "foundry": "Google",
+  "design": [
+    "Riccardo De Franceschi"
+  ],
+  "variable": false,
+  "tags": [
+    "Display"
+  ]
+},
+{
+  "_id": 79,
+  "name": "Source Sans Pro",
+  "weights": [
+    {
+      "style": "ExtraLight",
+      "file": "SourceSansPro-ExtraLight.ttf"
+    },
+    {
+      "style": "ExtraLight Italic",
+      "file": "SourceSansPro-ExtraLightItalic.ttf"
+    },
+    {
+      "style": "Light",
+      "file": "SourceSansPro-Light.ttf"
+    },
+    {
+      "style": "Light Italic",
+      "file": "SourceSansPro-LightItalic.ttf"
+    },
+    {
+      "style": "Regular",
+      "file": "SourceSansPro-Regular.ttf",
+      "default": true
+    },
+    {
+      "style": "Italic",
+      "file": "SourceSansPro-Italic.ttf"
+    },
+    {
+      "style": "SemiBold",
+      "file": "SourceSansPro-SemiBold.ttf"
+    },
+    {
+      "style": "SemiBold Italic",
+      "file": "SourceSansPro-SemiBoldItalic.ttf"
+    },
+    {
+      "style": "Bold",
+      "file": "SourceSansPro-Bold.ttf"
+    },
+    {
+      "style": "Bold Italic",
+      "file": "SourceSansPro-BoldItalic.ttf"
+    },
+    {
+      "style": "Black",
+      "file": "SourceSansPro-Black.ttf"
+    },
+    {
+      "style": "Black Italic",
+      "file": "SourceSansPro-BlackItalic.ttf"
+    }
+  ],
+  "foundry": "Adobe",
+  "design": [
+    "Paul D. Hunt"
+  ],
+  "variable": false,
+  "tags": [
+    "Sans Serif",
+    "Web",
+    "Body Text"
+  ]
+},
+{
+  "_id": 80,
+  "name": "Space Grotesk",
+  "weights": [
+    {
+      "style": "Light",
+      "file": "SpaceGrotesk-Light.ttf"
+    },
+    {
+      "style": "Regular",
+      "file": "SpaceGrotesk-Regular.ttf",
+      "default": true
+    },
+    {
+      "style": "Medium",
+      "file": "SpaceGrotesk-Medium.ttf"
+    },
+    {
+      "style": "SemiBold",
+      "file": "SpaceGrotesk-SemiBold.ttf"
+    },
+    {
+      "style": "Bold",
+      "file": "SpaceGrotesk-Bold.ttf"
+    },
+    {
+      "style": "Variable",
+      "file": "SpaceGrotesk-VariableFont_wght.ttf"
+    }
+  ],
+  "foundry": "Florian Karsten Typefaces",
+  "design": [
+    "Florian Karsten"
+  ],
+  "variable": true,
+  "tags": [
+    "Monospaced",
+    "Web"
+  ]
+},
+{
+  "_id": 81,
+  "name": "Supermarket",
+  "weights": [
+    {
+      "style": "Regular",
+      "file": "SuperMarketTypeface-Regular.otf",
+      "default": true
+    }
+  ],
+  "foundry": "MVD Type Foundry",
+  "design": [
+    "Marta Celso"
+  ],
+  "variable": false,
+  "tags": [
+    "Display"
+  ]
+},
+{
+  "_id": 82,
+  "name": "Syne",
+  "weights": [
+    {
+      "style": "Regular",
+      "file": "Syne-Regular.ttf",
+      "default": true
+    },
+    {
+      "style": "Medium",
+      "file": "Syne-Medium.ttf"
+    },
+    {
+      "style": "SemiBold",
+      "file": "Syne-SemiBold.ttf"
+    },
+    {
+      "style": "Bold",
+      "file": "Syne-Bold.ttf"
+    },
+    {
+      "style": "ExtraBold",
+      "file": "Syne-ExtraBold.ttf"
+    },
+    {
+      "style": "Variable",
+      "file": "Syne-VariableFont_wght.ttf"
+    }
+  ],
+  "foundry": "Google",
+  "design": [
+    "Bonjour Monde",
+    "Lucas Descroix"
+  ],
+  "variable": true,
+  "tags": [
+    "Sans Serif",
+    "Display"
+  ]
+},
+{
+  "_id": 83,
+  "name": "Tiltortion",
+  "weights": [
+    {
+      "style": "Regular",
+      "file": "Tiltortion.otf",
+      "default": true
+    }
+  ],
+  "foundry": "Suva Type Foundry",
+  "design": [
+    "Cristopher Siniväli"
+  ],
+  "variable": false,
+  "tags": [
+    "Display"
+  ]
+},
+{
+  "_id": 84,
+  "name": "Tilt Warp",
+  "weights": [
+    {
+      "style": "Regular",
+      "file": "TiltWarp-Regular.ttf",
+      "default": true
+    },
+    {
+      "style": "Variable",
+      "file": "TiltWarp-Regular-VariableFont_XROT,YROT.ttf"
+    }
+  ],
+  "foundry": "Google",
+  "design": [
+    "Andy Clymer"
+  ],
+  "variable": true,
+  "tags": [
+    "Display"
+  ]
+},
+{
+  "_id": 85,
+  "name": "Times New Roman",
+  "weights": [
+    {
+      "style": "Regular",
+      "file": "Times New Roman.ttf",
+      "default": true
+    },
+    {
+      "style": "Italic",
+      "file": "Times New Roman Italic.ttf"
+    },
+    {
+      "style": "Bold",
+      "file": "Times New Roman Bold.ttf"
+    },
+    {
+      "style": "Bold Italic",
+      "file": "Times New Roman Bold Italic.ttf"
+    }
+  ],
+  "foundry": "Monotype",
+  "design": [
+    "Stanley Morison",
+    "Victor Lardent"
+  ],
+  "variable": false,
+  "tags": [
+    "Serif",
+    "Body Text"
+  ]
+},
+{
+  "_id": 86,
+  "name": "Tir Not Mono",
+  "weights": [
+    {
+      "style": "Regular",
+      "file": "tir-notmono.otf",
+      "default": true
+    }
+  ],
+  "foundry": "Suva Type Foundry",
+  "design": [
+    "Aimur Takk"
+  ],
+  "variable": false,
+  "tags": [
+    "Monospaced"
+  ]
+},
+{
+  "_id": 87,
+  "name": "Titan One",
+  "weights": [
+    {
+      "style": "Regular",
+      "file": "TitanOne-Regular.ttf",
+      "default": true
+    }
+  ],
+  "foundry": "Google",
+  "design": [
+    "Rodrigo Fuenzalida"
+  ],
+  "variable": false,
+  "tags": [
+    "Display"
+  ]
+},
+{
+  "_id": 88,
+  "name": "Typefesse",
+  "weights": [
+    {
+      "style": "Claire-Obscure",
+      "file": "Typefesse_Claire-Obscure.otf"
+    },
+    {
+      "style": "Pleine",
+      "file": "Typefesse_Pleine.otf",
+      "default": true
+    }
+  ],
+  "foundry": "Velvetyne",
+  "design": [
+    "Océane Juvin"
+  ],
+  "variable": false,
+  "tags": [
+    "Display"
+  ]
+},
+{
+  "_id": 89,
+  "name": "Typewriter",
+  "weights": [
+    {
+      "style": "Regular",
+      "file": "Typewriter - Regular.ttf",
+      "default": true
+    },
+    {
+      "style": "Medium",
+      "file": "Typewriter - Medium.ttf"
+    },
+    {
+      "style": "Bold",
+      "file": "Typewriter - Bold.ttf"
+    }
+  ],
+  "foundry": "A2-Type",
+  "design": [
+    "Henrik Kubel"
+  ],
+  "variable": false,
+  "tags": [
+    "Monospaced",
+    "Display"
+  ]
+},
+{
+  "_id": 90,
+  "name": "Univers LT Std",
+  "weights": [
+    {
+      "style": "Condensed Thin",
+      "file": "UniversLTStd-ThinUltraCn.otf"
+    },
+    {
+      "style": "Condensed Light",
+      "file": "UniversLTStd-LightCn.otf"
+    },
+    {
+      "style": "Condensed Light Oblique",
+      "file": "UniversLTStd-LightCnObl.otf"
+    },
+    {
+      "style": "Condensed Regular",
+      "file": "UniversLTStd-Cn.otf"
+    },
+    {
+      "style": "Condensed Oblique",
+      "file": "UniversLTStd-CnObl.otf"
+    },
+    {
+      "style": "Condensed Bold",
+      "file": "UniversLTStd-BoldCn.otf"
+    },
+    {
+      "style": "Condensed Black",
+      "file": "UniversLTStd-BlackCn.otf"
+    },
+    {
+      "style": "Condensed Extra Black",
+      "file": "UniversLTStd-XBlackCn.otf"
+    },
+    {
+      "style": "Light",
+      "file": "UniversLTStd-Light.otf"
+    },
+    {
+      "style": "Light Oblique",
+      "file": "UniversLTStd-LightObl.otf"
+    },
+    {
+      "style": "Regular",
+      "file": "UniversLTStd.otf",
+      "default": true
+    },
+    {
+      "style": "Oblique",
+      "file": "UniversLTStd-Obl.otf"
+    },
+    {
+      "style": "Bold",
+      "file": "UniversLTStd-Bold.otf"
+    },
+    {
+      "style": "Bold Oblique",
+      "file": "UniversLTStd-BoldObl.otf"
+    },
+    {
+      "style": "Black",
+      "file": "UniversLTStd-Black.otf"
+    },
+    {
+      "style": "Black Oblique",
+      "file": "UniversLTStd-BlackObl.otf"
+    },
+    {
+      "style": "Extra Black",
+      "file": "UniversLTStd-XBlack.otf"
+    },
+    {
+      "style": "Extra Black Oblique",
+      "file": "UniversLTStd-XBlackObl.otf"
+    },
+    {
+      "style": "Extended Light",
+      "file": "UniversLTStd-LightEx.otf"
+    },
+    {
+      "style": "Extended Light Oblique",
+      "file": "UniversLTStd-LightExObl.otf"
+    },
+    {
+      "style": "Extended Regular",
+      "file": "UniversLTStd-Ex.otf"
+    },
+    {
+      "style": "Extended Oblique",
+      "file": "UniversLTStd-ExObl.otf"
+    },
+    {
+      "style": "Extended Bold",
+      "file": "UniversLTStd-BoldEx.otf"
+    },
+    {
+      "style": "Extended Bold Oblique",
+      "file": "UniversLTStd-BoldExObl.otf"
+    },
+    {
+      "style": "Extended Black",
+      "file": "UniversLTStd-BlackEx.otf"
+    },
+    {
+      "style": "Extended Black Oblique",
+      "file": "UniversLTStd-BlackExObl.otf"
+    },
+    {
+      "style": "Extended Extra Black",
+      "file": "UniversLTStd-XBlackEx.otf"
+    },
+    {
+      "style": "Extended Extra Black Oblique",
+      "file": "UniversLTStd-XBlackExObl.otf"
+    }
+  ],
+  "foundry": "Linotype",
+  "design": [
+    "Adrian Frutiger"
+  ],
+  "variable": false,
+  "tags": [
+    "Sans Serif"
+  ]
+},
+{
+  "_id": 91,
+  "name": "Valentina",
+  "weights": [
+    {
+      "style": "Regular",
+      "file": "ValentinaSans-Regular.ttf",
+      "default": true
+    }
+  ],
+  "foundry": "FBAUP Types",
+  "design": [
+    "Rita Melo"
+  ],
+  "variable": false,
+  "tags": [
+    "Display",
+    "Sans Serif",
+    "All Caps"
+  ]
+},
+{
+  "_id": 92,
+  "name": "Xewer",
+  "weights": [
+    {
+      "style": "Regular",
+      "file": "XewerTypeface-Regular.otf",
+      "default": true
+    }
+  ],
+  "foundry": "MVD Type Foundry",
+  "design": [
+    "Angela Hernandez Moron"
+  ],
+  "variable": false,
+  "tags": [
+    "Display"
+  ]
+},
+{
+  "_id": 93,
+  "name": "Yoga",
+  "weights": [
+    {
+      "style": "Regular",
+      "file": "Yoga-Regular.otf",
+      "default": true
+    }
+  ],
+  "foundry": "Suva Type Foundry",
+  "design": [
+    "Elisabeth Juusu"
+  ],
+  "variable": false,
+  "tags": [
+    "Display",
+    "All Caps"
+  ]
+}]

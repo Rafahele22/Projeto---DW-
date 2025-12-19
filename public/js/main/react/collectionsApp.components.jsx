@@ -127,13 +127,25 @@ function ListItem({
 }) {
   const [favSelected, setFavSelected] = React.useState(false);
   const hasAllCaps = Array.isArray(font?.tags) && font.tags.includes("All Caps");
+  const editableRef = React.useRef(null);
 
   React.useEffect(() => {
     ensureFontFaceInline(font);
   }, [font?._id]);
 
   const numStyles = Array.isArray(font?.weights) ? font.weights.length : 0;
-  const displayText = hasAllCaps ? String(globalText || "").toUpperCase() : String(globalText || "");
+  const desiredText = hasAllCaps
+    ? String(globalText || "").toUpperCase()
+    : String(globalText || "");
+
+  React.useEffect(() => {
+    const el = editableRef.current;
+    if (!el) return;
+    if (document.activeElement === el) return;
+    if (el.innerText !== desiredText) {
+      el.innerText = desiredText;
+    }
+  }, [desiredText]);
 
   const isSaveOpen = openSaveId === String(font?._id);
 
@@ -227,6 +239,7 @@ function ListItem({
         className="sampleText"
         contentEditable={true}
         suppressContentEditableWarning={true}
+        ref={editableRef}
         style={{
           fontFamily: `'${font?._id}-font'`,
           lineHeight: "4.5vw",
@@ -253,9 +266,7 @@ function ListItem({
             setGlobalText?.(visualText);
           }
         }}
-      >
-        {displayText}
-      </h1>
+      />
     </div>
   );
 }
@@ -432,6 +443,100 @@ function CollectionGrid({ collection, fontsById, onOpenFont }) {
       {fonts.map((font) => (
         <GridItem key={String(font._id)} font={font} onOpenFont={onOpenFont} />
       ))}
+    </>
+  );
+}
+
+function PairsCard({ headingFont, bodyFont, onOpenFont }) {
+  const [favSelected, setFavSelected] = React.useState(false);
+
+  React.useEffect(() => {
+    ensureFontFaceInline(headingFont);
+    ensureFontFaceInline(bodyFont);
+  }, [headingFont?._id, bodyFont?._id]);
+
+  const numStyles = Array.isArray(bodyFont?.weights) ? bodyFont.weights.length : 0;
+  const headingBase = "Sample Heading";
+  const isAllCaps = Array.isArray(headingFont?.tags) && headingFont.tags.includes("All Caps");
+  const headingText = isAllCaps ? headingBase.toUpperCase() : headingBase;
+
+  const bodyText =
+    "This is sample text used to demonstrate how typefaces work together. It allows designers to focus on form, spacing, hierarchy, and contrast. By removing meaning from the content, attention shifts to structure, rhythm, and the relationship between headline and body text.";
+
+  return (
+    <article
+      data-font-id={String(bodyFont?._id)}
+      onClick={(e) => {
+        if (e.target.closest("a") || e.target.closest("button")) return;
+        onOpenFont?.(bodyFont);
+      }}
+    >
+      <section className="grid_information_pairs">
+        <a
+          href="#"
+          className="fav-btn"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setFavSelected((v) => !v);
+          }}
+        >
+          <img
+            src={favSelected ? "../assets/imgs/fav_selected.svg" : "../assets/imgs/fav.svg"}
+            alt="favourite"
+          />
+        </a>
+      </section>
+
+      <h1 className="pairs_title" style={{ fontFamily: `'${headingFont?._id}-font'` }}>
+        {headingText}
+      </h1>
+
+      <p style={{ fontFamily: `'${bodyFont?._id}-font'` }}>{bodyText}</p>
+
+      <section className="grid_information">
+        <h2>{bodyFont?.name}</h2>
+        <h3>
+          {numStyles} {numStyles === 1 ? "style" : "styles"}
+        </h3>
+      </section>
+    </article>
+  );
+}
+
+function PairsGrid({ collection, fontsById, onOpenFont }) {
+  const items = Array.isArray(collection?.items) ? collection.items : [];
+  const ids = items.map((it) => String(it?.fontId)).filter(Boolean);
+  const fonts = ids.map((id) => fontsById.get(id)).filter(Boolean);
+
+  if (fonts.length === 0) {
+    return (
+      <p style={{ fontFamily: "roboto regular", color: "var(--darker-grey)" }}>
+        No pairs yet.
+      </p>
+    );
+  }
+
+  if (fonts.length === 1) {
+    const only = fonts[0];
+    return <PairsCard headingFont={only} bodyFont={only} onOpenFont={onOpenFont} />;
+  }
+
+  // If the data doesn't store explicit pairs, use a simple deterministic rule:
+  // each item becomes a card where the heading is that font and the body is the next font.
+  return (
+    <>
+      {fonts.map((headingFont, idx) => {
+        const bodyFont = fonts[(idx + 1) % fonts.length];
+        return (
+          <PairsCard
+            key={String(headingFont._id) + "-" + String(bodyFont?._id)}
+            headingFont={headingFont}
+            bodyFont={bodyFont}
+            onOpenFont={onOpenFont}
+          />
+        );
+      })}
     </>
   );
 }

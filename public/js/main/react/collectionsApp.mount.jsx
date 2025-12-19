@@ -81,6 +81,11 @@ function mountCollectionsImpl({
       return all.filter((c) => c?.type === "fonts");
     }, [state.collections, state.view, state.activeTab]);
 
+    const pairsCollection = React.useMemo(() => {
+      const all = Array.isArray(state.collections) ? state.collections : [];
+      return all.find((c) => c?.type === "pairs") || null;
+    }, [state.collections]);
+
     const openedCollection = React.useMemo(() => {
       if (!state.openedCollectionId) return null;
       const all = Array.isArray(state.collections) ? state.collections : [];
@@ -105,13 +110,7 @@ function mountCollectionsImpl({
       }
 
       if (state.view === "pairs") {
-        return (
-          <AlbumsGrid
-            collections={visibleCollections}
-            fontsById={fontsById}
-            onSelectCollection={(id) => onSelectCollection?.(id)}
-          />
-        );
+        return <PairsGrid collection={pairsCollection} fontsById={fontsById} onOpenFont={onOpenFont} />;
       }
 
       return (
