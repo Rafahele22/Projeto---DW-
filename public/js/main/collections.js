@@ -156,8 +156,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (noResultsEl) noResultsEl.style.display = "none";
 
     gridEl.innerHTML = `
-      <div>
-        <article class="album">
+      <div class="album">
+          <article class="exemples_album">
           <h1 style="font-family:${ff1}">${sampleLetter}</h1>
           <section>
             <h1 style="font-family:${ff2}">${sampleLetter}</h1>
@@ -167,15 +167,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
         <section>
           <div>
-            <img src="../assets/imgs/favourite.svg" class="check-icon" alt="check icon">
+            <img src="../assets/imgs/fav_selected.svg" class="check-icon" alt="check icon">
             <h2>Favourite</h2>
           </div>
           <h3>10 fonts</h3>
         </section>
       </div>
 
-      <div>
-          <article class="album">
+      <div class="album">
+          <article class="exemples_album">
           <h1 style="font-family:${ff1}">${sampleLetter}</h1>
           <section>
             <h1 style="font-family:${ff2}">${sampleLetter}</h1>

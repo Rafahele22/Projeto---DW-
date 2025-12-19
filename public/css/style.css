@@ -659,6 +659,7 @@ body.single-font-open #filters {
 #my_collections_second_bar{
     display: flex;
     justify-self: left;
+    gap: 1vw;
 }
 
 body.single-font-open #search_bar,
@@ -985,23 +986,21 @@ form button:hover img {
     color: var(--light_grey);
 }
 
-.album {
+.exemples_album {
     display: flex;
   align-items: stretch;
   overflow: hidden;  
   min-height: 24vh; 
 }
 
-
-
-.album > section {
+.exemples_album > section {
   flex: 1;
   display: flex;
   flex-direction: column;
   align-items: stretch;
 }
 
-.album h1 {
+.exemples_album h1 {
     flex: 1;
   margin: 0;
   box-sizing: border-box;
@@ -1011,17 +1010,31 @@ form button:hover img {
   justify-content: center;
 }
 
-.album > h1 {
+.exemples_album > h1 {
   padding: 0;
   border-right: 1px solid var(--black);
 }
 
-.album > section > h1 {
+.exemples_album > section > h1 {
 padding: 3vh 1vw;
 }
 
-.album > section > h1:first-child {
+.exemples_album > section > h1:first-child {
   border-bottom: 1px solid var(--black);
+}
+
+.album > section {
+    display: flex;
+    justify-content: space-between;
+    padding: 2vh 2vw 5vh 2vw;
+}
+
+.album > section > div {
+    display: flex;
+}
+
+.album > section > div > img {
+    padding-right: 0.5vw;
 }
 
 @media (max-width: 950px) {
