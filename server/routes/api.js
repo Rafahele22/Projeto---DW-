@@ -35,6 +35,23 @@ async function handleApiRequest(req, res) {
         return;
     }
 
+    if (url.pathname === '/api/collections' && req.method === 'GET') {
+        try {
+            const userIdRaw = url.searchParams.get('userId');
+            const query = userIdRaw ? { userId: String(userIdRaw) } : {};
+
+            const collections = await db.collection('collections').find(query).toArray();
+
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify(collections));
+        } catch (error) {
+            console.error('Error fetching collections:', error);
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Failed to fetch collections' }));
+        }
+        return;
+    }
+
     if (url.pathname.startsWith('/api/fonts/') && req.method === 'GET') {
         const fontId = url.pathname.split('/')[3];
         

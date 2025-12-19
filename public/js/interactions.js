@@ -1,4 +1,3 @@
-document.addEventListener("DOMContentLoaded", () => {
   const profileBtn = document.getElementById("profile");
   const loginContainer = document.querySelector(".loginContentor");
   
@@ -38,4 +37,3 @@ document.addEventListener("DOMContentLoaded", () => {
       e.stopPropagation();
     });
   }
-});
