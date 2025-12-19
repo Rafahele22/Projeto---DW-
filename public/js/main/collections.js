@@ -1,6 +1,8 @@
 let userCollections = [];
 let allFontsRef = [];
 
+import { getGlobalSampleText, setGlobalSampleText } from "./state.js";
+
 export function setUserCollections(collections) {
   userCollections = Array.isArray(collections) ? collections : [];
 }
@@ -9,7 +11,9 @@ export function setAllFontsReference(fonts) {
   allFontsRef = Array.isArray(fonts) ? fonts : [];
 }
 
-export function setupCollectionsNav() {
+export function setupCollectionsNav(options = {}) {
+  const onOpenFont = typeof options.onOpenFont === "function" ? options.onOpenFont : null;
+
   const nav = document.querySelector("header nav");
   const collectionsBtn = document.getElementById("abaCollections");
   const discoverBtn = nav?.querySelector('a.button:not(#abaCollections)');
@@ -134,15 +138,6 @@ export function setupCollectionsNav() {
     });
   }
 
-  function showOnlyCollectionsSecondBar() {
-    myCollectionsBar.style.display = "flex";
-
-    if (filtersBtn) filtersBtn.style.display = "none";
-    if (searchBar) searchBar.style.display = "none";
-    if (backToCollection) backToCollection.style.display = "none";
-    if (viewModeSection) viewModeSection.style.display = "none";
-  }
-
   function restoreDiscoverSecondBar() {
     myCollectionsBar.style.display = secondBarDefaults.get(myCollectionsBar) ?? "none";
 
@@ -156,128 +151,108 @@ export function setupCollectionsNav() {
 
   const discoverStashEl = document.createElement("div");
 
-function stashDiscoverGridNodes() {
-  if (!gridEl || gridEl.childNodes.length === 0) return;
+  let discoverWasGridView = true;
+  let activeCollectionsTab = "albums";
+  let openedCollectionId = null;
+  let collectionsReact = null;
 
-  discoverStashEl.replaceChildren(...gridEl.childNodes);
-}
-
-function restoreDiscoverGridNodes() {
-  if (!discoverStashEl || discoverStashEl.childNodes.length === 0) return;
-
-  gridEl.replaceChildren(...discoverStashEl.childNodes);
-}
-
-
-  function getFontFamilyById(fontId) {
-    const font = allFontsRef.find((f) => f._id === fontId || f.id === fontId);
-    return font?.family || font?.name || null;
-  }
-
-  function getFontFamiliesForCollection(collection, max = 3) {
-    const items = Array.isArray(collection.items) ? collection.items : [];
-    const families = [];
-
-    for (const item of items) {
-      if (families.length >= max) break;
-      const ff = getFontFamilyById(item.fontId);
-      if (ff) families.push(ff);
+  function ensureCollectionsReactMounted() {
+    if (collectionsReact) return collectionsReact;
+    const mount = window.mountCollections;
+    if (typeof mount !== "function") {
+      throw new Error("Collections JSX mount function not found (window.mountCollections)");
     }
 
-    return families;
+    collectionsReact = mount({
+      mountEl: gridEl,
+      getGlobalSampleText,
+      setGlobalSampleText,
+      onSelectCollection: (id) => {
+        openedCollectionId = String(id);
+        showCollectionsListBar();
+        setGridAsListLayout();
+        collectionsReact?.update?.({
+          view: "collection",
+          openedCollectionId,
+        });
+        window.scrollTo(0, 0);
+      },
+      onOpenFont: (font) => onOpenFont?.(font),
+    });
+
+    return collectionsReact;
   }
 
-  function buildAlbumHTML(collection) {
-    const families = getFontFamiliesForCollection(collection, 3);
-    const count = families.length;
-    const itemsCount = Array.isArray(collection.items) ? collection.items.length : 0;
-    const sampleLetter = "Aa";
+  function stashDiscoverGridNodes() {
+    if (!gridEl || gridEl.childNodes.length === 0) return;
 
-    const isFavourites = collection.name === "Favourites";
-    const iconHTML = isFavourites
-      ? `<img src="../assets/imgs/fav_selected.svg" class="check-icon" alt="favourite icon">`
-      : "";
+    discoverWasGridView =
+      gridEl.classList.contains("grid_view") && !gridEl.classList.contains("list_view");
 
-    let articleContent = "";
+    discoverStashEl.replaceChildren(...gridEl.childNodes);
+  }
 
-    if (count === 0) {
-      articleContent = `
-        <h1 style="font-family:inherit">${sampleLetter}</h1>
-        <section>
-          <h1 style="font-family:inherit">${sampleLetter}</h1>
-          <h1 style="font-family:inherit">${sampleLetter}</h1>
-        </section>
-      `;
-    } else if (count === 1) {
-      articleContent = `
-        <h1 style="font-family:${families[0]}">${sampleLetter}</h1>
-        <section>
-          <h1 style="font-family:${families[0]}">${sampleLetter}</h1>
-          <h1 style="font-family:${families[0]}">${sampleLetter}</h1>
-        </section>
-      `;
-    } else if (count === 2) {
-      articleContent = `
-        <h1 style="font-family:${families[0]}">${sampleLetter}</h1>
-        <section>
-          <h1 style="font-family:${families[1]}">${sampleLetter}</h1>
-          <h1 style="font-family:${families[0]}">${sampleLetter}</h1>
-        </section>
-      `;
+  function restoreDiscoverGridNodes() {
+    if (!discoverStashEl || discoverStashEl.childNodes.length === 0) return;
+
+    collectionsReact?.unmount?.();
+    collectionsReact = null;
+
+    gridEl.replaceChildren(...discoverStashEl.childNodes);
+
+    if (discoverWasGridView) {
+      gridEl.classList.add("grid_view");
+      gridEl.classList.remove("list_view");
     } else {
-      articleContent = `
-        <h1 style="font-family:${families[0]}">${sampleLetter}</h1>
-        <section>
-          <h1 style="font-family:${families[1]}">${sampleLetter}</h1>
-          <h1 style="font-family:${families[2]}">${sampleLetter}</h1>
-        </section>
-      `;
+      gridEl.classList.add("list_view");
+      gridEl.classList.remove("grid_view");
     }
-
-    return `
-      <div class="album">
-        <article class="exemples_album">
-          ${articleContent}
-        </article>
-        <section>
-          <div>
-            ${iconHTML}
-            <h2>${collection.name}</h2>
-          </div>
-          <h3>${itemsCount} font${itemsCount !== 1 ? "s" : ""}</h3>
-        </section>
-      </div>
-    `;
   }
 
-  function renderAlbumsMain() {
-    hideMainCompletely();
+  function setGridAsAlbumsLayout() {
+    gridEl.classList.add("grid_view");
+    gridEl.classList.remove("list_view");
     gridEl.style.display = "grid";
-    if (noResultsEl) noResultsEl.style.display = "none";
-
-    const fontsCollections = userCollections.filter((c) => c.type === "fonts");
-
-    if (fontsCollections.length === 0) {
-      gridEl.innerHTML = `<p style="font-family: 'roboto regular'; color: var(--darker-grey);">No collections yet.</p>`;
-      return;
-    }
-
-    gridEl.innerHTML = fontsCollections.map(buildAlbumHTML).join("");
   }
 
-  function renderPairsMain() {
+  function setGridAsListLayout() {
+    gridEl.classList.add("list_view");
+    gridEl.classList.remove("grid_view");
+    gridEl.style.display = "";
+  }
+
+  function showCollectionsListBar() {
+    if (myCollectionsBar) myCollectionsBar.style.display = "none";
+    if (backToCollection) backToCollection.style.display = "";
+    if (filtersBtn) filtersBtn.style.display = "none";
+    if (searchBar) searchBar.style.display = "none";
+    if (viewModeSection) viewModeSection.style.display = "none";
+  }
+
+  function showCollectionsTabsBar() {
+    if (myCollectionsBar) myCollectionsBar.style.display = "flex";
+    if (backToCollection) backToCollection.style.display = "none";
+    if (filtersBtn) filtersBtn.style.display = "none";
+    if (searchBar) searchBar.style.display = "none";
+    if (viewModeSection) viewModeSection.style.display = "none";
+  }
+
+  function renderCollectionsHome(tab) {
+    const safeTab = tab === "pairs" ? "pairs" : "albums";
+
     hideMainCompletely();
-    gridEl.style.display = "grid";
+    showCollectionsTabsBar();
+    setGridAsAlbumsLayout();
     if (noResultsEl) noResultsEl.style.display = "none";
 
-    const pairsCollections = userCollections.filter((c) => c.type === "pairs");
-
-    if (pairsCollections.length === 0) {
-      gridEl.innerHTML = `<p style="font-family: 'roboto regular'; color: var(--darker-grey);">No pairs yet.</p>`;
-      return;
-    }
-
-    gridEl.innerHTML = pairsCollections.map(buildAlbumHTML).join("");
+    openedCollectionId = null;
+    ensureCollectionsReactMounted().update({
+      view: safeTab,
+      activeTab: safeTab,
+      openedCollectionId: null,
+      collections: userCollections,
+      fonts: allFontsRef,
+    });
   }
 
   // =========================
@@ -294,16 +269,18 @@ function restoreDiscoverGridNodes() {
 
     stashDiscoverGridNodes();
 
-    showOnlyCollectionsSecondBar();
-
-    setCollectionsTabSelected(albumsTab || myCollectionsBar);
-    renderAlbumsMain();
+    const tab = activeCollectionsTab === "pairs" ? "pairs" : "albums";
+    setCollectionsTabSelected(tab === "pairs" ? pairsTab || myCollectionsBar : albumsTab || myCollectionsBar);
+    renderCollectionsHome(tab);
 
     window.scrollTo(0, 0);
   }
 
   function enterDiscover() {
     setSelected(discoverBtn);
+
+    collectionsReact?.unmount?.();
+    collectionsReact = null;
 
     restoreMainBaseVisibility();
     restoreDiscoverGridNodes();
@@ -324,14 +301,27 @@ function restoreDiscoverGridNodes() {
 
   albumsTab?.addEventListener("click", (e) => {
     e.preventDefault();
+    activeCollectionsTab = "albums";
+    openedCollectionId = null;
     setCollectionsTabSelected(albumsTab);
-    renderAlbumsMain();
+    renderCollectionsHome("albums");
   });
 
   pairsTab?.addEventListener("click", (e) => {
     e.preventDefault();
+    activeCollectionsTab = "pairs";
+    openedCollectionId = null;
     setCollectionsTabSelected(pairsTab);
-    renderPairsMain();
+    renderCollectionsHome("pairs");
+  });
+
+  backToCollection?.addEventListener("click", (e) => {
+    e.preventDefault();
+    openedCollectionId = null;
+
+    const tab = activeCollectionsTab === "pairs" ? "pairs" : "albums";
+    setCollectionsTabSelected(tab === "pairs" ? pairsTab || myCollectionsBar : albumsTab || myCollectionsBar);
+    renderCollectionsHome(tab);
   });
 
   updateNavIcons();
