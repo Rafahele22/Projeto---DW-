@@ -3,6 +3,7 @@ function AlbumPreview({ families }) {
   const safeFamilies = Array.isArray(families) ? families.filter(Boolean) : [];
   const getFamily = (index) => safeFamilies[index] || safeFamilies[0] || "inherit";
 
+
   return (
     <>
       <h1 style={{ fontFamily: getFamily(0) }}>{sampleLetter}</h1>
@@ -13,6 +14,7 @@ function AlbumPreview({ families }) {
     </>
   );
 }
+
 
 function useFontsFromCollection(collection, fontsById) {
   return React.useMemo(() => {
@@ -29,6 +31,7 @@ function useFontsFromCollection(collection, fontsById) {
     return fonts;
   }, [collection, fontsById]);
 }
+
 
 function useFavorite(fontId) {
   const [favSelected, setFavSelected] = React.useState(false);
@@ -50,6 +53,7 @@ function useFavorite(fontId) {
   return { favSelected, toggle };
 }
 
+
 function useSaveMenu(fontId, openSaveId, setOpenSaveId) {
   const isOpen = openSaveId === String(fontId);
   const toggle = (e) => {
@@ -59,6 +63,7 @@ function useSaveMenu(fontId, openSaveId, setOpenSaveId) {
   };
   return { isOpen, toggle };
 }
+
 
 function FavButton({ selected, onToggle }) {
   return (
@@ -70,6 +75,7 @@ function FavButton({ selected, onToggle }) {
     </a>
   );
 }
+
 
 function SaveMenu({ isOpen }) {
   return (
@@ -89,6 +95,7 @@ function SaveMenu({ isOpen }) {
   );
 }
 
+
 function SaveOption({ label }) {
   const [selected, setSelected] = React.useState(false);
   return (
@@ -100,9 +107,11 @@ function SaveOption({ label }) {
   );
 }
 
+
 /* =========================================================================
    HEADER & TOOLBAR
    ========================================================================= */
+
 
 function CollectionHeader({ collectionName, count }) {
   return (
@@ -125,8 +134,10 @@ function CollectionHeader({ collectionName, count }) {
   );
 }
 
+
 function CollectionToolbar({ searchTerm, setSearchTerm, currentMode, onSetMode }) {
   const activeMode = currentMode || 'grid';
+
 
   return (
     <div 
@@ -146,6 +157,7 @@ function CollectionToolbar({ searchTerm, setSearchTerm, currentMode, onSetMode }
       {}
       <div></div>
 
+
       {}
       <div className="button" id="search_bar" style={{ display: 'flex' }}>
          <input 
@@ -156,6 +168,7 @@ function CollectionToolbar({ searchTerm, setSearchTerm, currentMode, onSetMode }
          />
          <img src="../assets/imgs/search.svg" alt="search icon"/>
       </div>
+
 
       {}
       <section style={{ display: 'flex', gap: '0.2vw' }}>
@@ -171,6 +184,7 @@ function CollectionToolbar({ searchTerm, setSearchTerm, currentMode, onSetMode }
             />
           </a>
 
+
           <a 
             href="#" 
             id={activeMode === 'list' ? "view_mode_selected" : ""}
@@ -183,13 +197,11 @@ function CollectionToolbar({ searchTerm, setSearchTerm, currentMode, onSetMode }
           </a>
       </section>
 
+
     </div>
   );
 }
 
-/* =========================================================================
-   PRINCIPAIS VIEWS
-   ========================================================================= */
 
 function AlbumsGrid({ collections, fontsById, onSelectCollection }) {
   const list = Array.isArray(collections) ? collections : [];
@@ -205,14 +217,30 @@ function AlbumsGrid({ collections, fontsById, onSelectCollection }) {
     return families;
   };
 
-  if (list.length === 0) return <p style={{ fontFamily: "roboto regular", color: "var(--darker-grey)" }}>No collections yet.</p>;
-
   return (
     <div className="grid grid_view">
+      
+      {}
+      <div
+        className="create_album"
+        onClick={(e) => {
+          e.preventDefault();
+          console.log("Create new album clicked");
+        }}
+      >
+        <img 
+          src="../assets/imgs/create.svg" 
+          alt="create album icon" 
+        />
+        <h4>Create New Album</h4>
+      </div>
+      {}
+
       {list.map((collection) => {
         const families = getFamiliesForCollection(collection, 3);
         const itemsCount = Array.isArray(collection?.items) ? collection.items.length : 0;
         const isFavourites = collection?.name === "Favourites";
+
 
         return (
           <div
@@ -236,6 +264,7 @@ function AlbumsGrid({ collections, fontsById, onSelectCollection }) {
   );
 }
 
+
 function ListItem({ font, globalText, setGlobalText, onOpenFont, openSaveId, setOpenSaveId }) {
   const { favSelected, toggle: toggleFav } = useFavorite(font?._id);
   const { isOpen: isSaveOpen, toggle: toggleSave } = useSaveMenu(font?._id, openSaveId, setOpenSaveId);
@@ -245,12 +274,14 @@ function ListItem({ font, globalText, setGlobalText, onOpenFont, openSaveId, set
   const numStyles = Array.isArray(font?.weights) ? font.weights.length : 0;
   const desiredText = hasAllCaps ? String(globalText || "").toUpperCase() : String(globalText || "");
 
+
   React.useEffect(() => {
     const el = editableRef.current;
     if (!el) return;
     if (document.activeElement === el) return;
     if (el.innerText !== desiredText) el.innerText = desiredText;
   }, [desiredText]);
+
 
   return (
     <div
@@ -292,12 +323,14 @@ function ListItem({ font, globalText, setGlobalText, onOpenFont, openSaveId, set
   );
 }
 
+
 function GridItem({ font, onOpenFont }) {
   const { favSelected, toggle: toggleFav } = useFavorite(font?._id);
   const [saveOpen, setSaveOpen] = React.useState(false);
   React.useEffect(() => { ensureFontFaceInline(font); }, [font?._id]);
   const numStyles = Array.isArray(font?.weights) ? font.weights.length : 0;
   const sampleLetter = Array.isArray(font?.tags) && font.tags.includes("All Caps") ? "AA" : "Aa";
+
 
   return (
     <article
@@ -325,15 +358,18 @@ function GridItem({ font, onOpenFont }) {
         <FavButton selected={favSelected} onToggle={toggleFav} />
       </section>
 
+
       <section className="save" style={{ display: saveOpen ? "block" : "none" }}>
         <h4>Save font on...</h4>
         <SaveOption label="Web" />
         <SaveOption label="Print" />
       </section>
 
+
       <h1 className="title_gridview" style={{ fontFamily: `'${font?._id}-font'` }}>
         {sampleLetter}
       </h1>
+
 
       <section className="grid_information">
         <h2>{font?.name}</h2>
@@ -343,16 +379,19 @@ function GridItem({ font, onOpenFont }) {
   );
 }
 
+
 function CollectionList({ collection, fontsById, globalText, setGlobalText, onOpenFont, currentViewMode, onSetViewMode }) {
   const allFonts = useFontsFromCollection(collection, fontsById);
   const [searchTerm, setSearchTerm] = React.useState("");
   const [openSaveId, setOpenSaveId] = React.useState(null);
+
 
   const displayedFonts = React.useMemo(() => {
     if (!searchTerm) return allFonts;
     const lower = searchTerm.toLowerCase();
     return allFonts.filter(f => f.name.toLowerCase().includes(lower) || (f.foundry && f.foundry.toLowerCase().includes(lower)));
   }, [allFonts, searchTerm]);
+
 
   return (
     <>
@@ -390,9 +429,11 @@ function CollectionList({ collection, fontsById, globalText, setGlobalText, onOp
   );
 }
 
+
 function CollectionGrid({ collection, fontsById, onOpenFont, currentViewMode, onSetViewMode }) {
   const allFonts = useFontsFromCollection(collection, fontsById);
   const [searchTerm, setSearchTerm] = React.useState("");
+
 
   const displayedFonts = React.useMemo(() => {
     if (!searchTerm) return allFonts;
@@ -400,9 +441,11 @@ function CollectionGrid({ collection, fontsById, onOpenFont, currentViewMode, on
     return allFonts.filter(f => f.name.toLowerCase().includes(lower) || (f.foundry && f.foundry.toLowerCase().includes(lower)));
   }, [allFonts, searchTerm]);
 
+
   return (
     <>
       <CollectionHeader collectionName={collection?.name} count={allFonts.length} />
+
 
       {allFonts.length > 0 && (
         <CollectionToolbar 
@@ -412,6 +455,7 @@ function CollectionGrid({ collection, fontsById, onOpenFont, currentViewMode, on
           onSetMode={onSetViewMode} 
         />
       )}
+
 
       <div className="grid grid_view">
         {displayedFonts.length === 0 ? (
@@ -428,15 +472,18 @@ function CollectionGrid({ collection, fontsById, onOpenFont, currentViewMode, on
   );
 }
 
+
 function PairsCard({ headingFont, bodyFont, onOpenFont }) {
   const { favSelected, toggle: toggleFav } = useFavorite(bodyFont?._id);
   React.useEffect(() => { ensureFontFaceInline(headingFont); ensureFontFaceInline(bodyFont); }, [headingFont?._id, bodyFont?._id]);
+
 
   const numStyles = Array.isArray(bodyFont?.weights) ? bodyFont.weights.length : 0;
   const headingBase = "Sample Heading";
   const isAllCaps = Array.isArray(headingFont?.tags) && headingFont.tags.includes("All Caps");
   const headingText = isAllCaps ? headingBase.toUpperCase() : headingBase;
   const bodyText = "This is sample text used to demonstrate how typefaces work together. It allows designers to focus on form, spacing, hierarchy, and contrast.";
+
 
   return (
     <article
@@ -450,8 +497,10 @@ function PairsCard({ headingFont, bodyFont, onOpenFont }) {
         <FavButton selected={favSelected} onToggle={toggleFav} />
       </section>
 
+
       <h1 className="pairs_title" style={{ fontFamily: `'${headingFont?._id}-font'` }}>{headingText}</h1>
       <p style={{ fontFamily: `'${bodyFont?._id}-font'` }}>{bodyText}</p>
+
 
       <section className="grid_information">
         <h2>{bodyFont?.name}</h2>
@@ -461,13 +510,16 @@ function PairsCard({ headingFont, bodyFont, onOpenFont }) {
   );
 }
 
+
 function PairsGrid({ collection, fontsById, onOpenFont }) {
   const items = Array.isArray(collection?.items) ? collection.items : [];
   const ids = items.map((it) => String(it?.fontId)).filter(Boolean);
   const fonts = ids.map((id) => fontsById.get(id)).filter(Boolean);
 
+
   if (fonts.length === 0) return <p style={{ fontFamily: "roboto regular", color: "var(--darker-grey)" }}>No pairs yet.</p>;
   if (fonts.length === 1) { const only = fonts[0]; return <PairsCard headingFont={only} bodyFont={only} onOpenFont={onOpenFont} />; }
+
 
   return (
     <div className="grid grid_view">

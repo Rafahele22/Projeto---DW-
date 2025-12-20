@@ -1066,6 +1066,36 @@ form button:hover img {
     margin: 0;
 }
 
+.create_album {
+    background-color: var(--grey);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    border-radius: 5vh;
+    margin-bottom: 9vh;
+}
+
+.create_album:hover {
+    background-color: var(--dark-grey);
+}
+
+.create_album img{
+    padding-top: 4vh;
+    width: 3vw;
+    height: auto;
+}
+
+.create_album h4 {
+    opacity: 0;
+    padding-top: 4vh;
+}
+
+.create_album:hover h4 {
+    opacity: 1;
+}
+
 
 /* ===== COLLECTION TOOLBAR OVERRIDES ===== */
 .collection-toolbar-container {
