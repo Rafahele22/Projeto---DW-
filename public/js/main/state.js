@@ -38,6 +38,10 @@ export function removeFavorite(fontId) {
   favoriteFontIds.delete(String(fontId));
 }
 
+export function clearAllFavorites() {
+  favoriteFontIds.clear();
+}
+
 export async function toggleFavorite(fontId) {
   const user = JSON.parse(localStorage.getItem("user") || "null");
   if (!user || !user._id) return false;

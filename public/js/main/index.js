@@ -102,21 +102,25 @@ async function main() {
 
     try {
       const userId = user?._id ?? user?.userId ?? user?.id;
-      const collectionsUrl = userId
-        ? `http://localhost:4000/api/collections?userId=${encodeURIComponent(userId)}`
-        : "http://localhost:4000/api/collections";
-      const collectionsRes = await fetch(collectionsUrl);
-      const collectionsData = await collectionsRes.json().catch(() => []);
-      if (collectionsRes.ok) {
-        setUserCollections(collectionsData);
-        
-        const favCollection = collectionsData.find(c => c.name === 'Favourites' && c.type === 'fonts');
-        if (favCollection && Array.isArray(favCollection.items)) {
-          const favIds = favCollection.items.map(item => String(item.fontId)).filter(Boolean);
-          setFavoriteFontIds(favIds);
+      if (userId) {
+        const collectionsUrl = `http://localhost:4000/api/collections?userId=${encodeURIComponent(userId)}`;
+        const collectionsRes = await fetch(collectionsUrl);
+        const collectionsData = await collectionsRes.json().catch(() => []);
+        if (collectionsRes.ok) {
+          setUserCollections(collectionsData);
+          
+          const favCollection = collectionsData.find(c => c.name === 'Favourites' && c.type === 'fonts');
+          if (favCollection && Array.isArray(favCollection.items)) {
+            const favIds = favCollection.items.map(item => String(item.fontId)).filter(Boolean);
+            setFavoriteFontIds(favIds);
+          }
         }
+      } else {
+        setFavoriteFontIds([]);
       }
-    } catch (_) {}
+    } catch (_) {
+      setFavoriteFontIds([]);
+    }
 
     collectionsNav = setupCollectionsNav({
       onOpenFont: singleFont.showSingleFont,

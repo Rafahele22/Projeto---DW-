@@ -18,6 +18,11 @@ const AuthManager = {
 
   logout() {
     localStorage.removeItem("user");
+    
+    import("./main/state.js").then(({ clearAllFavorites }) => {
+      clearAllFavorites();
+    }).catch(() => {});
+    
     window.location.reload();
   },
 
