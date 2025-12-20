@@ -92,22 +92,38 @@ function mountCollectionsImpl({
       return all.find((c) => String(c?._id) === String(state.openedCollectionId)) || null;
     }, [state.collections, state.openedCollectionId]);
 
+    const setViewMode = (mode) => {
+  setState((prev) => ({ ...prev, collectionViewMode: mode }));
+};
+
+
     const content = (() => {
       if (state.view === "collection") {
-        if (state.collectionViewMode === "grid") {
-          return <CollectionGrid collection={openedCollection} fontsById={fontsById} onOpenFont={onOpenFont} />;
-        }
+  if (state.collectionViewMode === "grid") {
+    return (
+      <CollectionGrid
+        collection={openedCollection}
+        fontsById={fontsById}
+        onOpenFont={onOpenFont}
+        currentViewMode={state.collectionViewMode}
+        onSetViewMode={setViewMode}
+      />
+    );
+  }
 
-        return (
-          <CollectionList
-            collection={openedCollection}
-            fontsById={fontsById}
-            globalText={globalText}
-            setGlobalText={setGlobalText}
-            onOpenFont={onOpenFont}
-          />
-        );
-      }
+  return (
+    <CollectionList
+      collection={openedCollection}
+      fontsById={fontsById}
+      globalText={globalText}
+      setGlobalText={setGlobalText}
+      onOpenFont={onOpenFont}
+      currentViewMode={state.collectionViewMode}
+      onSetViewMode={setViewMode}
+    />
+  );
+}
+
 
       if (state.view === "pairs") {
   return (

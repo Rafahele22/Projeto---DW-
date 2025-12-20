@@ -1095,14 +1095,11 @@ form button:hover img {
 
 /* ===== COLLECTION TOOLBAR OVERRIDES ===== */
 .collection-toolbar-container {
-    grid-column: 1 / -1;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr; 
     align-items: center;
     width: 100%;
     margin-bottom: 4vh;
-    padding-bottom: 1vh;
-    border-bottom: 1px solid var(--grey); 
 }
 
 .collection-toolbar-container > .search-wrapper {
@@ -1111,11 +1108,10 @@ form button:hover img {
     width: 80%; 
 }
 
-.collection-toolbar-container > .view-mode-wrapper {
-    grid-column: 3;
+.collection-toolbar-container section{
     justify-self: right;
-    display: flex;
-    gap: 1vw;
+    
+  
 }
 
 .collection-search-bar {

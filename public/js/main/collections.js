@@ -184,7 +184,7 @@ export function setupCollectionsNav(options = {}) {
     hide(myCollectionsBar);   
     hide(filtersBtn);      
     hide(searchBar);
-    show(viewModeSection);   
+    hide(viewModeSection); 
     
     show(backToCollection); 
   }
