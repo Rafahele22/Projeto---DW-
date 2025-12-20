@@ -265,7 +265,7 @@ function AlbumsGrid({ collections, fontsById, onSelectCollection }) {
 }
 
 
-function ListItem({ font, globalText, setGlobalText, onOpenFont, openSaveId, setOpenSaveId }) {
+function ListItem({ font, forceFavSelected = false, globalText, setGlobalText, onOpenFont, openSaveId, setOpenSaveId }) {
   const { favSelected, toggle: toggleFav } = useFavorite(font?._id);
   const { isOpen: isSaveOpen, toggle: toggleSave } = useSaveMenu(font?._id, openSaveId, setOpenSaveId);
   const hasAllCaps = Array.isArray(font?.tags) && font.tags.includes("All Caps");
@@ -300,7 +300,7 @@ function ListItem({ font, globalText, setGlobalText, onOpenFont, openSaveId, set
           {font?.variable ? <h3>Variable</h3> : null}
         </section>
         <section className="list_information">
-          <FavButton selected={favSelected} onToggle={toggleFav} />
+          <FavButton selected={forceFavSelected ? true : favSelected} onToggle={toggleFav} />
           <a href="#" className={"button save-btn" + (isSaveOpen ? " selected" : "")} onClick={toggleSave}><h4>Save</h4></a>
         </section>
         <SaveMenu isOpen={isSaveOpen} />
@@ -324,7 +324,7 @@ function ListItem({ font, globalText, setGlobalText, onOpenFont, openSaveId, set
 }
 
 
-function GridItem({ font, onOpenFont }) {
+function GridItem({ font, onOpenFont, forceFavSelected = false }) {
   const { favSelected, toggle: toggleFav } = useFavorite(font?._id);
   const [saveOpen, setSaveOpen] = React.useState(false);
   React.useEffect(() => { ensureFontFaceInline(font); }, [font?._id]);
@@ -355,7 +355,7 @@ function GridItem({ font, onOpenFont }) {
         >
           <h4>Save</h4>
         </a>
-        <FavButton selected={favSelected} onToggle={toggleFav} />
+        <FavButton selected={forceFavSelected ? true : favSelected} onToggle={toggleFav} />
       </section>
 
 
@@ -384,6 +384,7 @@ function CollectionList({ collection, fontsById, globalText, setGlobalText, onOp
   const allFonts = useFontsFromCollection(collection, fontsById);
   const [searchTerm, setSearchTerm] = React.useState("");
   const [openSaveId, setOpenSaveId] = React.useState(null);
+  const forceFavSelected = collection?.name === "Favourites";
 
 
   const displayedFonts = React.useMemo(() => {
@@ -416,6 +417,7 @@ function CollectionList({ collection, fontsById, globalText, setGlobalText, onOp
             <ListItem
               key={String(font._id)}
               font={font}
+              forceFavSelected={forceFavSelected}
               globalText={globalText}
               setGlobalText={setGlobalText}
               onOpenFont={onOpenFont}
@@ -433,6 +435,7 @@ function CollectionList({ collection, fontsById, globalText, setGlobalText, onOp
 function CollectionGrid({ collection, fontsById, onOpenFont, currentViewMode, onSetViewMode }) {
   const allFonts = useFontsFromCollection(collection, fontsById);
   const [searchTerm, setSearchTerm] = React.useState("");
+  const forceFavSelected = collection?.name === "Favourites";
 
 
   const displayedFonts = React.useMemo(() => {
@@ -464,7 +467,7 @@ function CollectionGrid({ collection, fontsById, onOpenFont, currentViewMode, on
           </p>
         ) : (
           displayedFonts.map((font) => (
-            <GridItem key={String(font._id)} font={font} onOpenFont={onOpenFont} />
+            <GridItem key={String(font._id)} font={font} forceFavSelected={forceFavSelected} onOpenFont={onOpenFont} />
           ))
         )}
       </div>
