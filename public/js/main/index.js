@@ -45,6 +45,8 @@ async function main() {
     abaCollections.style.display = userLoggedIn ? "" : "none";
   }
 
+  const discoverUniverse = document.getElementById("discover-universe");
+  const collectionsUniverse = document.getElementById("collections-universe");
   const gridUniverse = document.getElementById("grid-universe");
   const listUniverse = document.getElementById("list-universe");
   const filtersBtn = document.querySelector("#filters_btn");
@@ -57,6 +59,7 @@ async function main() {
   const singleFont = createSingleFontView({
     gridEl: gridUniverse,
     listEl: listUniverse,
+    discoverUniverseEl: discoverUniverse,
     filtersPanelEl: filtersPanel,
     filtersBtnEl: filtersBtn,
     getAllFonts,
@@ -205,12 +208,12 @@ async function main() {
       });
 
       singleFont.setOnClose(() => {
-        viewMode.syncFromActualMode();
         doEqualizeHeights();
       });
 
       collectionsNav?.setOnEnterDiscover?.(() => {
         viewMode.syncFromActualMode();
+        doEqualizeHeights();
       });
 
       doEqualizeHeights();

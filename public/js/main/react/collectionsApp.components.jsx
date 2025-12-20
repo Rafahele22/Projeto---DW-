@@ -208,7 +208,7 @@ function AlbumsGrid({ collections, fontsById, onSelectCollection }) {
   if (list.length === 0) return <p style={{ fontFamily: "roboto regular", color: "var(--darker-grey)" }}>No collections yet.</p>;
 
   return (
-    <>
+    <div className="grid grid_view">
       {list.map((collection) => {
         const families = getFamiliesForCollection(collection, 3);
         const itemsCount = Array.isArray(collection?.items) ? collection.items.length : 0;
@@ -232,7 +232,7 @@ function AlbumsGrid({ collections, fontsById, onSelectCollection }) {
           </div>
         );
       })}
-    </>
+    </div>
   );
 }
 
@@ -367,23 +367,25 @@ function CollectionList({ collection, fontsById, globalText, setGlobalText, onOp
         />
       )}
       
-      {displayedFonts.length === 0 ? (
-        <p style={{ fontFamily: "roboto regular", color: "var(--darker-grey)" }}>
-          {allFonts.length === 0 ? "No fonts in this collection yet." : "No results found."}
-        </p>
-      ) : (
-        displayedFonts.map((font) => (
-          <ListItem
-            key={String(font._id)}
-            font={font}
-            globalText={globalText}
-            setGlobalText={setGlobalText}
-            onOpenFont={onOpenFont}
-            openSaveId={openSaveId}
-            setOpenSaveId={setOpenSaveId}
-          />
-        ))
-      )}
+      <div className="list-container">
+        {displayedFonts.length === 0 ? (
+          <p style={{ fontFamily: "roboto regular", color: "var(--darker-grey)" }}>
+            {allFonts.length === 0 ? "No fonts in this collection yet." : "No results found."}
+          </p>
+        ) : (
+          displayedFonts.map((font) => (
+            <ListItem
+              key={String(font._id)}
+              font={font}
+              globalText={globalText}
+              setGlobalText={setGlobalText}
+              onOpenFont={onOpenFont}
+              openSaveId={openSaveId}
+              setOpenSaveId={setOpenSaveId}
+            />
+          ))
+        )}
+      </div>
     </>
   );
 }
@@ -411,15 +413,17 @@ function CollectionGrid({ collection, fontsById, onOpenFont, currentViewMode, on
         />
       )}
 
-      {displayedFonts.length === 0 ? (
-        <p style={{ fontFamily: "roboto regular", color: "var(--darker-grey)", gridColumn: "1 / -1" }}>
-          {allFonts.length === 0 ? "No fonts in this collection yet." : "No results found."}
-        </p>
-      ) : (
-        displayedFonts.map((font) => (
-          <GridItem key={String(font._id)} font={font} onOpenFont={onOpenFont} />
-        ))
-      )}
+      <div className="grid grid_view">
+        {displayedFonts.length === 0 ? (
+          <p style={{ fontFamily: "roboto regular", color: "var(--darker-grey)", gridColumn: "1 / -1" }}>
+            {allFonts.length === 0 ? "No fonts in this collection yet." : "No results found."}
+          </p>
+        ) : (
+          displayedFonts.map((font) => (
+            <GridItem key={String(font._id)} font={font} onOpenFont={onOpenFont} />
+          ))
+        )}
+      </div>
     </>
   );
 }
@@ -466,7 +470,7 @@ function PairsGrid({ collection, fontsById, onOpenFont }) {
   if (fonts.length === 1) { const only = fonts[0]; return <PairsCard headingFont={only} bodyFont={only} onOpenFont={onOpenFont} />; }
 
   return (
-    <>
+    <div className="grid grid_view">
       {fonts.map((headingFont, idx) => {
         const bodyFont = fonts[(idx + 1) % fonts.length];
         return (
@@ -478,6 +482,6 @@ function PairsGrid({ collection, fontsById, onOpenFont }) {
           />
         );
       })}
-    </>
+    </div>
   );
 }

@@ -224,7 +224,7 @@ async function buildSimilarSection({ currentFont, fontsAll, onOpenFont }) {
   return root;
 }
 
-export function createSingleFontView({ gridEl, listEl, filtersPanelEl, filtersBtnEl, getAllFonts }) {
+export function createSingleFontView({ gridEl, listEl, discoverUniverseEl, filtersPanelEl, filtersBtnEl, getAllFonts }) {
   let singleFontView = document.getElementById("singleFontView");
   if (!singleFontView) {
     singleFontView = document.createElement("div");
@@ -238,8 +238,7 @@ export function createSingleFontView({ gridEl, listEl, filtersPanelEl, filtersBt
   let lastScrollY = 0;
   let teardownController = null;
   let onCloseCallback = null;
-  let wasGridVisible = true;
-
+  
   const uiStash = {
     filtersPanelDisplay: null,
     filtersBtnDisplay: null,
@@ -247,6 +246,9 @@ export function createSingleFontView({ gridEl, listEl, filtersPanelEl, filtersBt
     myCollectionsBarDisplay: null,
     searchBarDisplay: null,
     viewModeSectionDisplay: null,
+    discoverUniverseDisplay: null,
+    gridDisplay: null,
+    listDisplay: null,
   };
 
   const headerBackBtn = document.getElementById("backToCollection");
@@ -263,12 +265,13 @@ export function createSingleFontView({ gridEl, listEl, filtersPanelEl, filtersBt
     uiStash.myCollectionsBarDisplay = myCollectionsBarEl ? myCollectionsBarEl.style.display : null;
     uiStash.searchBarDisplay = searchBarEl ? searchBarEl.style.display : null;
     uiStash.viewModeSectionDisplay = viewModeSectionEl ? viewModeSectionEl.style.display : null;
-    
-    wasGridVisible = gridEl?.style.display !== "none";
+    uiStash.discoverUniverseDisplay = discoverUniverseEl ? discoverUniverseEl.style.display : null;
+    uiStash.gridDisplay = gridEl ? gridEl.style.display : null;
+    uiStash.listDisplay = listEl ? listEl.style.display : null;
 
     document.body.classList.add("single-font-open");
-    if (gridEl) gridEl.style.display = "none";
-    if (listEl) listEl.style.display = "none";
+    
+    if (discoverUniverseEl) discoverUniverseEl.style.display = "none";
 
     singleFontView.style.display = "block";
 
@@ -294,12 +297,15 @@ export function createSingleFontView({ gridEl, listEl, filtersPanelEl, filtersBt
 
     document.body.classList.remove("single-font-open");
 
+    if (discoverUniverseEl) discoverUniverseEl.style.display = uiStash.discoverUniverseDisplay ?? "";
     if (filtersPanelEl) filtersPanelEl.style.display = uiStash.filtersPanelDisplay ?? "";
     if (filtersBtnEl) filtersBtnEl.style.display = uiStash.filtersBtnDisplay ?? "";
     if (headerBackBtn) headerBackBtn.style.display = uiStash.headerBackDisplay ?? "none";
     if (myCollectionsBarEl) myCollectionsBarEl.style.display = uiStash.myCollectionsBarDisplay ?? "";
     if (searchBarEl) searchBarEl.style.display = uiStash.searchBarDisplay ?? "";
     if (viewModeSectionEl) viewModeSectionEl.style.display = uiStash.viewModeSectionDisplay ?? "";
+    if (gridEl) gridEl.style.display = uiStash.gridDisplay ?? "";
+    if (listEl) listEl.style.display = uiStash.listDisplay ?? "none";
 
     window.scrollTo(0, lastScrollY);
     

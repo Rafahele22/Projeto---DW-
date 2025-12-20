@@ -513,6 +513,11 @@ main {
     display: none !important;
 }
 
+#discover-universe,
+#collections-universe {
+    width: 100%;
+}
+
 .list-container {
     display: flex;
     flex-direction: column;

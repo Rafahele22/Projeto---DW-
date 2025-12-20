@@ -61,11 +61,14 @@ export function setupCollectionsNav(options = {}) {
   const viewModeBtns = viewModeSection ? Array.from(viewModeSection.querySelectorAll("a")) : [];
   const [gridModeBtn, listModeBtn] = viewModeBtns;
   const filtersPanel = document.getElementById("filters");
+  
+  const discoverUniverse = document.getElementById("discover-universe");
+  const collectionsUniverse = document.getElementById("collections-universe");
   const gridUniverse = document.getElementById("grid-universe");
   const listUniverse = document.getElementById("list-universe");
   const noResultsEl = document.getElementById("no_results");
 
-  if (!nav || !collectionsBtn || !discoverBtn || !mainEl || !myCollectionsBar || !gridUniverse || !listUniverse) return;
+  if (!nav || !collectionsBtn || !discoverBtn || !mainEl || !myCollectionsBar || !discoverUniverse || !collectionsUniverse) return;
 
   function updateNavIcons() {
     updateIcon(discoverBtn?.querySelector("img"), "discover", discoverBtn.classList.contains("selected"));
@@ -89,33 +92,14 @@ export function setupCollectionsNav(options = {}) {
     updateIcon(pairsTab.querySelector("img"), "collections", pairsTab.classList.contains("selected"));
   }
 
-  const secondBarDefaults = new Map();
-  [myCollectionsBar, filtersBtn, searchBar, backToCollection, viewModeSection].forEach((el) => {
-    if (el) secondBarDefaults.set(el, el.style.display);
-  });
-
-  const mainDefaults = new Map(Array.from(mainEl.children).map((el) => [el, el.style.display]));
-
-  function hideMainCompletely() {
-    Array.from(mainEl.children).forEach((child) => hide(child));
+  function showDiscoverSecondBar() {
+    hide(myCollectionsBar);
+    hide(backToCollection);
+    if (filtersBtn) filtersBtn.style.display = "";
+    if (searchBar) searchBar.style.display = "";
+    if (viewModeSection) viewModeSection.style.display = "";
   }
 
-  function restoreMainBaseVisibility() {
-    Array.from(mainEl.children).forEach((child) => {
-      child.style.display = mainDefaults.get(child) ?? "";
-    });
-  }
-
-  function restoreDiscoverSecondBar() {
-    myCollectionsBar.style.display = secondBarDefaults.get(myCollectionsBar) ?? "none";
-    if (filtersBtn) filtersBtn.style.display = secondBarDefaults.get(filtersBtn) ?? "";
-    if (searchBar) searchBar.style.display = secondBarDefaults.get(searchBar) ?? "";
-    if (backToCollection) backToCollection.style.display = secondBarDefaults.get(backToCollection) ?? "none";
-    if (viewModeSection) viewModeSection.style.display = secondBarDefaults.get(viewModeSection) ?? "";
-  }
-
-  const discoverStashEl = document.createElement("div");
-  let discoverWasGridView = true;
   let activeCollectionsTab = "albums";
   let openedCollectionId = null;
   let collectionsReact = null;
@@ -129,7 +113,7 @@ export function setupCollectionsNav(options = {}) {
     }
 
     collectionsReact = mount({
-      mountEl: gridUniverse,
+      mountEl: collectionsUniverse,
       getGlobalSampleText,
       setGlobalSampleText,
       onSelectCollection: (id) => {
@@ -157,30 +141,8 @@ export function setupCollectionsNav(options = {}) {
     return collectionsReact;
   }
 
-  function stashDiscoverGridNodes() {
-    if (!gridEl || gridEl.childNodes.length === 0) return;
-    discoverWasGridView = gridEl.classList.contains("grid_view") && !gridEl.classList.contains("list_view");
-    discoverStashEl.replaceChildren(...gridEl.childNodes);
-  }
-
-  function restoreDiscoverGridNodes() {
-    if (!discoverStashEl || discoverStashEl.childNodes.length === 0) return;
-    collectionsReact?.unmount?.();
-    collectionsReact = null;
-    gridEl.replaceChildren(...discoverStashEl.childNodes);
-    gridEl.classList.toggle("grid_view", discoverWasGridView);
-    gridEl.classList.toggle("list_view", !discoverWasGridView);
-  }
-
-  function setGridLayout(isGrid) {
-    gridEl.classList.toggle("grid_view", isGrid);
-    gridEl.classList.toggle("list_view", !isGrid);
-    gridEl.style.display = isGrid ? "grid" : "";
-  }
-
   function setCollectionsViewMode(mode) {
     const isGrid = mode === "grid";
-    setGridLayout(isGrid);
 
     if (gridModeBtn) gridModeBtn.id = isGrid ? "view_mode_selected" : "";
     if (listModeBtn) listModeBtn.id = isGrid ? "" : "view_mode_selected";
@@ -211,7 +173,7 @@ export function setupCollectionsNav(options = {}) {
     hide(myCollectionsBar);   
     hide(filtersBtn);      
     hide(searchBar);
-    hide(viewModeSection);   
+    show(viewModeSection);   
     
     show(backToCollection); 
   }
@@ -223,10 +185,7 @@ export function setupCollectionsNav(options = {}) {
 
   function renderCollectionsHome(tab) {
     const safeTab = tab === "pairs" ? "pairs" : "albums";
-    hideMainCompletely();
     showCollectionsTabsBar();
-    setGridLayout(true);
-    if (noResultsEl) hide(noResultsEl);
 
     openedCollectionId = null;
     isInCollectionsDetail = false;
@@ -253,28 +212,44 @@ export function setupCollectionsNav(options = {}) {
   }
 
   function enterCollections() {
+    const singleFontViewEl = document.getElementById("singleFontView");
+    if (singleFontViewEl) {
+      singleFontViewEl.innerHTML = "";
+      singleFontViewEl.style.display = "none";
+    }
+    document.body.classList.remove("single-font-open");
+    
+    hide(discoverUniverse);
+    collectionsUniverse.style.display = "block";
+    
     setSelected(collectionsBtn);
     hide(filtersPanel);
-    gridEl.classList.remove("shifted");
     filtersBtn?.classList.remove("selected");
-    document.body.classList.remove("single-font-open");
-    stashDiscoverGridNodes();
+    
     attachCollectionsViewModeInterceptors();
-    setCollectionsTabSelected(getActiveTab() || myCollectionsBar);
+    setCollectionsTabSelected(getActiveTab() || albumsTab);
     renderCollectionsHome(activeCollectionsTab);
     isInCollectionsDetail = false;
     window.scrollTo(0, 0);
   }
 
   function enterDiscover() {
+    const singleFontViewEl = document.getElementById("singleFontView");
+    if (singleFontViewEl) {
+      singleFontViewEl.innerHTML = "";
+      singleFontViewEl.style.display = "none";
+    }
+    document.body.classList.remove("single-font-open");
+    
+    hide(collectionsUniverse);
+    discoverUniverse.style.display = "block";
+    
     setSelected(discoverBtn);
-    collectionsReact?.unmount?.();
-    collectionsReact = null;
-    restoreMainBaseVisibility();
-    restoreDiscoverGridNodes();
-    restoreDiscoverSecondBar();
+    showDiscoverSecondBar();
     isInCollectionsDetail = false;
+    
     onEnterDiscover?.();
+    
     window.scrollTo(0, 0);
   }
 
