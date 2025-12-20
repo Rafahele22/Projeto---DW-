@@ -998,10 +998,11 @@ form button:hover img {
     content: url("../../assets/imgs/login_selected.svg");
 }
 
+
 /* ===== ALBUM ===== */
 .album_information {
     width: 100%;
-    padding: 3vh 0 7vh 1vw;
+    padding: 0vh 0 2vh 1vw;
     grid-column: 1 / -1; 
 }
 
@@ -1026,6 +1027,62 @@ form button:hover img {
     color: var(--darker-grey);
     margin: 0;
 }
+
+
+/* ===== COLLECTION TOOLBAR OVERRIDES ===== */
+.collection-toolbar-container {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr; 
+    align-items: center;
+    width: 100%;
+    margin-bottom: 4vh;
+    padding-bottom: 1vh;
+    border-bottom: 1px solid var(--grey); 
+}
+
+.collection-toolbar-container > .search-wrapper {
+    grid-column: 2;
+    justify-self: center;
+    width: 80%; 
+}
+
+.collection-toolbar-container > .view-mode-wrapper {
+    grid-column: 3;
+    justify-self: right;
+    display: flex;
+    gap: 1vw;
+}
+
+.collection-search-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.2vh 15px;
+    background-color: var(--grey);
+    border-radius: 100vh;
+    width: 100%;
+    cursor: text;
+}
+
+.collection-search-bar:hover {
+    background-color: var(--dark-grey);
+}
+
+.collection-search-bar input {
+    border: none;
+    background: transparent;
+    width: 100%;
+    outline: none;
+    line-height: 1vw;
+    font-size: 1vw;
+    font-family: "roboto regular";
+}
+
+
+
+
+
 
 
 /* ===== UTILITIES ===== */

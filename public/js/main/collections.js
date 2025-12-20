@@ -35,7 +35,7 @@ export function setupCollectionsNav(options = {}) {
   const secondBar = document.getElementById("second_bar");
   const myCollectionsBar = document.getElementById("my_collections_second_bar");
   const filtersBtn = document.getElementById("filters_btn");
-  const searchBar = document.getElementById("search_bar");
+  const searchBar = document.getElementById("search_bar"); 
   const backToCollection = document.getElementById("backToCollection");
   const viewModeSection = secondBar?.querySelector("section");
   const viewModeBtns = viewModeSection ? Array.from(viewModeSection.querySelectorAll("a")) : [];
@@ -114,22 +114,22 @@ export function setupCollectionsNav(options = {}) {
       onSelectCollection: (id) => {
         openedCollectionId = String(id);
         isInCollectionsDetail = true;
-        showCollectionsListBar();
+        
+        showCollectionsListBar(); 
+        
         attachCollectionsViewModeInterceptors();
         
-        // ============================================================
-        // ALTERAÇÃO 1: Forçar Grid View ao abrir um álbum
-        // ============================================================
         setCollectionsViewMode("grid"); 
 
         collectionsReact?.update?.({
           view: "collection",
           openedCollectionId,
-          collectionViewMode: "grid", // Força Grid no React também
+          collectionViewMode: "grid", 
         });
         window.scrollTo(0, 0);
       },
       onOpenFont: (font) => onOpenFont?.(font),
+      onSetViewMode: (mode) => setCollectionsViewMode(mode)
     });
 
     return collectionsReact;
@@ -186,15 +186,12 @@ export function setupCollectionsNav(options = {}) {
   }
 
   function showCollectionsListBar() {
-    // ============================================================
-    // ALTERAÇÃO 2: Mostrar a Search Bar
-    // ============================================================
-    // Removemos searchBar do hide()
-    hide(myCollectionsBar, filtersBtn); 
+    hide(myCollectionsBar);   
+    hide(filtersBtn);      
+    hide(searchBar);
+    hide(viewModeSection);   
     
-    // Adicionamos searchBar ao showFlex (porque é display: flex no CSS)
-    show(backToCollection, viewModeSection);
-    showFlex(searchBar); 
+    show(backToCollection); 
   }
 
   function showCollectionsTabsBar() {
