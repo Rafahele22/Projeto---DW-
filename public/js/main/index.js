@@ -65,6 +65,11 @@ async function main() {
     getAllFonts,
   });
 
+  const openFontFromDiscover = (font) => {
+    singleFont.setOnClose(null);
+    singleFont.showSingleFont(font);
+  };
+
   hide(filtersPanel);
 
   const closeFiltersPanel = () => {
@@ -167,7 +172,7 @@ async function main() {
       generateListItems({
         gridEl: listUniverse,
         fonts,
-        onOpenFont: singleFont.showSingleFont,
+        onOpenFont: openFontFromDiscover,
         getGlobalSampleText,
         setGlobalSampleText,
       });
@@ -175,7 +180,7 @@ async function main() {
       generateGridArticles({
         gridEl: gridUniverse,
         fonts,
-        onOpenFont: singleFont.showSingleFont,
+        onOpenFont: openFontFromDiscover,
       });
 
       const gridViewBtn = document.querySelector("#view_mode_selected");
