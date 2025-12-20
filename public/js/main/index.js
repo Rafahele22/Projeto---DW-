@@ -131,6 +131,7 @@ async function main() {
 
     collectionsNav = setupCollectionsNav({
       onOpenFont: singleFont.showSingleFont,
+      singleFontController: singleFont,
     });
 
     window.__collectionsNav = collectionsNav;

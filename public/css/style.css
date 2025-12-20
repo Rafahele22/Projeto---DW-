@@ -718,6 +718,10 @@ body.single-font-open #second_bar section {
     visibility: hidden; 
 }
 
+body.single-font-open #collections-universe {
+  display: none !important;
+}
+
 
 .grid.is-hidden {
   display: none !important;

@@ -46,6 +46,7 @@ function updateIcon(imgEl, iconKey, isSelected) {
 
 export function setupCollectionsNav(options = {}) {
   const onOpenFont = typeof options.onOpenFont === "function" ? options.onOpenFont : null;
+  const singleFontController = options.singleFontController || null;
   let onEnterDiscover = typeof options.onEnterDiscover === "function" ? options.onEnterDiscover : null;
 
   const nav = document.querySelector("header nav");
@@ -134,7 +135,17 @@ export function setupCollectionsNav(options = {}) {
         });
         window.scrollTo(0, 0);
       },
-      onOpenFont: (font) => onOpenFont?.(font),
+      onOpenFont: (font) => {
+        if (isInCollectionsDetail && singleFontController?.setOnClose) {
+          singleFontController.setOnClose(() => {
+            openedCollectionId = null;
+            isInCollectionsDetail = false;
+            setCollectionsTabSelected(getActiveTab() || albumsTab);
+            renderCollectionsHome(activeCollectionsTab);
+          });
+        }
+        onOpenFont?.(font);
+      },
       onSetViewMode: (mode) => setCollectionsViewMode(mode)
     });
 

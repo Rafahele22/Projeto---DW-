@@ -517,7 +517,11 @@ export function createSingleFontView({ gridEl, listEl, discoverUniverseEl, filte
   }
 
   async function showSingleFont(font) {
-    openSingleFontView();
+    const isAlreadyOpen = singleFontView.style.display === "block";
+    
+    if (!isAlreadyOpen) {
+      openSingleFontView();
+    }
 
     const numStyles = font.weights.length;
     const hasAllCaps = font.tags && font.tags.includes("All Caps");
@@ -614,6 +618,9 @@ export function createSingleFontView({ gridEl, listEl, discoverUniverseEl, filte
       fontsAll: getAllFonts(),
       onOpenFont: showSingleFont,
     });
+
+    teardownController?.abort();
+    teardownController = new AbortController();
 
     singleFontView.innerHTML = "";
     singleFontView.appendChild(controlsDiv);
