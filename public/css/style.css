@@ -1282,7 +1282,7 @@ body.is-electron.is-windows #titlebar {
 }
 
   h2, h3 {
-    font-size: 2vw;
+    font-size: 1.5vw;
 }
 
 h4, h5, .rangeLabel span, #search_bar input[type="text"] {

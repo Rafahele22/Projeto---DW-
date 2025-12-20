@@ -131,11 +131,28 @@ async function buildSimilarSection({ currentFont, fontsAll, onOpenFont }) {
 
   const currentTags = Array.isArray(currentFont?.tags) ? currentFont.tags : [];
 
-  const candidates = allFonts
-    .filter((f) => f && f._id !== currentFont._id)
-    .filter((f) => sameTags(f.tags, currentTags));
+const tagOverlapScore = (a, b) => {
+  const A = Array.isArray(a) ? a : [];
+  const B = new Set(Array.isArray(b) ? b : []);
+  let score = 0;
+  for (const t of A) if (B.has(t)) score++;
+  return score;
+};
 
-  const chosen = pickRandom(candidates, 4);
+let ranked = allFonts
+  .filter((f) => f && f._id !== currentFont._id)
+  .map((f) => ({ font: f, score: tagOverlapScore(f.tags, currentTags) }))
+  .filter((x) => x.score > 0);
+
+ranked.sort((a, b) => b.score - a.score);
+
+const pool = ranked.slice(0, 20).map((x) => x.font);
+let chosen = pickRandom(pool, 4);
+
+if (chosen.length === 0) {
+  const fallback = allFonts.filter((f) => f && f._id !== currentFont._id);
+  chosen = pickRandom(fallback, 4);
+}
 
   chosen.forEach((font) => {
     ensureFontFace(font);
