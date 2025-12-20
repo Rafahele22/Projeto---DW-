@@ -298,6 +298,18 @@ export function createSingleFontView({ gridEl, filtersPanelEl, filtersBtnEl, get
     if (searchBarEl) searchBarEl.style.display = uiStash.searchBarDisplay ?? "";
     if (viewModeSectionEl) viewModeSectionEl.style.display = uiStash.viewModeSectionDisplay ?? "";
 
+    const isGridView = gridEl?.classList.contains("grid_view");
+    const listItems = document.querySelectorAll(".list");
+    const articleItems = document.querySelectorAll("article");
+    
+    if (isGridView) {
+      listItems.forEach((li) => (li.style.display = "none"));
+      articleItems.forEach((a) => (a.style.display = "block"));
+    } else {
+      articleItems.forEach((a) => (a.style.display = "none"));
+      listItems.forEach((li) => (li.style.display = "block"));
+    }
+
     window.scrollTo(0, lastScrollY);
   }
 
