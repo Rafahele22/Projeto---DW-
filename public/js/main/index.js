@@ -5,6 +5,7 @@ import {
   getAllFonts,
   getGlobalSampleText,
   setGlobalSampleText,
+  setFavoriteFontIds,
 } from "./state.js";
 import { setupViewModeToggle } from "./viewMode.js";
 import { generateGridArticles } from "./views/gridView.js";
@@ -108,6 +109,12 @@ async function main() {
       const collectionsData = await collectionsRes.json().catch(() => []);
       if (collectionsRes.ok) {
         setUserCollections(collectionsData);
+        
+        const favCollection = collectionsData.find(c => c.name === 'Favourites' && c.type === 'fonts');
+        if (favCollection && Array.isArray(favCollection.items)) {
+          const favIds = favCollection.items.map(item => String(item.fontId)).filter(Boolean);
+          setFavoriteFontIds(favIds);
+        }
       }
     } catch (_) {}
 

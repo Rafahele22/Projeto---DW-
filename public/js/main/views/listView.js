@@ -59,12 +59,12 @@ export function generateListItems({ gridEl, fonts, onOpenFont, getGlobalSampleTe
     });
 
     gridEl.appendChild(listDiv);
-    setupListItemEvents({ listItem: listDiv, getGlobalSampleText, setGlobalSampleText });
+    setupListItemEvents({ listItem: listDiv, font, getGlobalSampleText, setGlobalSampleText });
   });
 }
 
-function setupListItemEvents({ listItem, getGlobalSampleText, setGlobalSampleText }) {
-  setupFavButton(listItem.querySelector(".fav-btn img"));
+function setupListItemEvents({ listItem, font, getGlobalSampleText, setGlobalSampleText }) {
+  setupFavButton(listItem.querySelector(".fav-btn img"), font._id);
 
   const saveMenu = listItem.querySelector(".save_list");
   const saveBtn = listItem.querySelector(".save-btn");

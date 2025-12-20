@@ -49,10 +49,15 @@ export function pickRandom(arr, n) {
 export const FAV_ICON = "../assets/imgs/fav.svg";
 export const FAV_SELECTED_ICON = "../assets/imgs/fav_selected.svg";
 
+export function setFavIconState(imgEl, isFavorite) {
+  if (!imgEl) return;
+  imgEl.src = isFavorite ? FAV_SELECTED_ICON : FAV_ICON;
+}
+
 export function toggleFavIcon(imgEl) {
   if (!imgEl) return;
   const isSelected = imgEl.src.endsWith("fav_selected.svg");
-  imgEl.src = isSelected ? FAV_ICON : FAV_SELECTED_ICON;
+  setFavIconState(imgEl, !isSelected);
 }
 
 let isCapsLockOn = false;
@@ -109,11 +114,17 @@ export function setupSaveOptions(container) {
   });
 }
 
-export function setupFavButton(favImg) {
+export function setupFavButton(favImg, fontId) {
   if (!favImg) return;
-  favImg.addEventListener("click", (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    toggleFavIcon(favImg);
+  
+  import("../state.js").then(({ isFavorite, toggleFavorite }) => {
+    setFavIconState(favImg, isFavorite(fontId));
+    
+    favImg.addEventListener("click", async (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const newState = await toggleFavorite(fontId);
+      setFavIconState(favImg, newState);
+    });
   });
 }

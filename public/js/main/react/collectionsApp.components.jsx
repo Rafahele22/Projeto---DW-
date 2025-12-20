@@ -30,13 +30,23 @@ function useFontsFromCollection(collection, fontsById) {
   }, [collection, fontsById]);
 }
 
-function useFavorite() {
+function useFavorite(fontId) {
   const [favSelected, setFavSelected] = React.useState(false);
-  const toggle = (e) => {
+  
+  React.useEffect(() => {
+    import("../state.js").then(({ isFavorite }) => {
+      setFavSelected(isFavorite(fontId));
+    });
+  }, [fontId]);
+  
+  const toggle = async (e) => {
     e?.preventDefault();
     e?.stopPropagation();
-    setFavSelected((v) => !v);
+    const { toggleFavorite } = await import("../state.js");
+    const newState = await toggleFavorite(fontId);
+    setFavSelected(newState);
   };
+  
   return { favSelected, toggle };
 }
 
@@ -227,7 +237,7 @@ function AlbumsGrid({ collections, fontsById, onSelectCollection }) {
 }
 
 function ListItem({ font, globalText, setGlobalText, onOpenFont, openSaveId, setOpenSaveId }) {
-  const { favSelected, toggle: toggleFav } = useFavorite();
+  const { favSelected, toggle: toggleFav } = useFavorite(font?._id);
   const { isOpen: isSaveOpen, toggle: toggleSave } = useSaveMenu(font?._id, openSaveId, setOpenSaveId);
   const hasAllCaps = Array.isArray(font?.tags) && font.tags.includes("All Caps");
   const editableRef = React.useRef(null);
@@ -283,7 +293,7 @@ function ListItem({ font, globalText, setGlobalText, onOpenFont, openSaveId, set
 }
 
 function GridItem({ font, onOpenFont }) {
-  const { favSelected, toggle: toggleFav } = useFavorite();
+  const { favSelected, toggle: toggleFav } = useFavorite(font?._id);
   const [saveOpen, setSaveOpen] = React.useState(false);
   React.useEffect(() => { ensureFontFaceInline(font); }, [font?._id]);
   const numStyles = Array.isArray(font?.weights) ? font.weights.length : 0;
@@ -415,7 +425,7 @@ function CollectionGrid({ collection, fontsById, onOpenFont, currentViewMode, on
 }
 
 function PairsCard({ headingFont, bodyFont, onOpenFont }) {
-  const { favSelected, toggle: toggleFav } = useFavorite();
+  const { favSelected, toggle: toggleFav } = useFavorite(bodyFont?._id);
   React.useEffect(() => { ensureFontFaceInline(headingFont); ensureFontFaceInline(bodyFont); }, [headingFont?._id, bodyFont?._id]);
 
   const numStyles = Array.isArray(bodyFont?.weights) ? bodyFont.weights.length : 0;

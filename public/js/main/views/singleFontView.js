@@ -1,5 +1,5 @@
-import { escapeHtml, ensureFontFace, pickRandom, sameTags, toggleFavIcon } from "../utils.js";
-import { getGlobalSampleText } from "../state.js";
+import { escapeHtml, ensureFontFace, pickRandom, sameTags, setFavIconState } from "../shared/fontUtils.js";
+import { getGlobalSampleText, isFavorite, toggleFavorite } from "../state.js";
 
 function renderFontTags(font) {
   const tags = Array.isArray(font?.tags) ? font.tags : [];
@@ -96,11 +96,15 @@ async function buildSimilarSection({ currentFont, fontsAll, onOpenFont }) {
     `;
 
     const favImg = article.querySelector(".fav-btn img");
-    favImg?.addEventListener("click", (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      toggleFavIcon(favImg);
-    });
+    if (favImg) {
+      setFavIconState(favImg, isFavorite(body._id));
+      favImg.addEventListener("click", async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const newState = await toggleFavorite(body._id);
+        setFavIconState(favImg, newState);
+      });
+    }
 
     article.addEventListener("click", (e) => {
       if (e.target.closest("a") || e.target.closest("button")) return;
@@ -171,11 +175,15 @@ async function buildSimilarSection({ currentFont, fontsAll, onOpenFont }) {
     `;
 
     const favImg = article.querySelector(".fav-btn img");
-    favImg?.addEventListener("click", (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      toggleFavIcon(favImg);
-    });
+    if (favImg) {
+      setFavIconState(favImg, isFavorite(font._id));
+      favImg.addEventListener("click", async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const newState = await toggleFavorite(font._id);
+        setFavIconState(favImg, newState);
+      });
+    }
 
     const saveMenu = article.querySelector(".save");
     const saveBtn = article.querySelector(".save-btn");

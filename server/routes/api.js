@@ -239,6 +239,56 @@ async function handleApiRequest(req, res) {
         return;
     }
 
+    if (url.pathname === '/api/favorites/toggle' && req.method === 'POST') {
+        try {
+            const body = await parseBody(req);
+            const { userId, fontId } = body;
+
+            if (!userId || !fontId) {
+                res.writeHead(400, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: 'userId and fontId are required' }));
+                return;
+            }
+
+            const favCollection = await db.collection('collections').findOne({
+                userId: String(userId),
+                name: 'Favourites',
+                type: 'fonts'
+            });
+
+            if (!favCollection) {
+                res.writeHead(404, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: 'Favourites collection not found' }));
+                return;
+            }
+
+            const items = Array.isArray(favCollection.items) ? favCollection.items : [];
+            const fontIdStr = String(fontId);
+            const exists = items.some(item => String(item.fontId) === fontIdStr);
+
+            if (exists) {
+                await db.collection('collections').updateOne(
+                    { _id: favCollection._id },
+                    { $pull: { items: { fontId: fontIdStr } } }
+                );
+                res.writeHead(200, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ added: false, fontId: fontIdStr }));
+            } else {
+                await db.collection('collections').updateOne(
+                    { _id: favCollection._id },
+                    { $push: { items: { fontId: fontIdStr, addedAt: new Date() } } }
+                );
+                res.writeHead(200, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ added: true, fontId: fontIdStr }));
+            }
+        } catch (error) {
+            console.error('Error toggling favorite:', error);
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Failed to toggle favorite' }));
+        }
+        return;
+    }
+
     res.writeHead(404, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ error: 'Endpoint not found' }));
 }
