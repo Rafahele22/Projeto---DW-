@@ -195,20 +195,22 @@ export function setupCollectionsNav(options = {}) {
   }
 
   function renderCollectionsHome(tab) {
-    const safeTab = tab === "pairs" ? "pairs" : "albums";
-    showCollectionsTabsBar();
+  const safeTab = tab === "pairs" ? "pairs" : "albums";
+  showCollectionsTabsBar();
 
-    openedCollectionId = null;
-    isInCollectionsDetail = false;
-    ensureCollectionsReactMounted().update({
-      view: safeTab,
-      activeTab: safeTab,
-      openedCollectionId: null,
-      collectionViewMode: "list",
-      collections: userCollections,
-      fonts: allFontsRef,
-    });
-  }
+  openedCollectionId = null;
+  isInCollectionsDetail = false;
+  ensureCollectionsReactMounted().update({
+    view: safeTab,
+    activeTab: safeTab,
+    forceFavSelected: safeTab === "pairs",
+    openedCollectionId: null,
+    collectionViewMode: "list",
+    collections: userCollections,
+    fonts: allFontsRef,
+  });
+}
+
 
   function refreshCollectionsView() {
     if (!collectionsReact) return;

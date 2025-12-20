@@ -110,8 +110,16 @@ function mountCollectionsImpl({
       }
 
       if (state.view === "pairs") {
-        return <PairsGrid collection={pairsCollection} fontsById={fontsById} onOpenFont={onOpenFont} />;
-      }
+  return (
+    <PairsGrid
+      collection={pairsCollection}
+      fontsById={fontsById}
+      onOpenFont={onOpenFont}
+      forceFavSelected={true} 
+    />
+  );
+}
+
 
       return (
         <AlbumsGrid

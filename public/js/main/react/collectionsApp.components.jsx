@@ -476,7 +476,7 @@ function CollectionGrid({ collection, fontsById, onOpenFont, currentViewMode, on
 }
 
 
-function PairsCard({ headingFont, bodyFont, onOpenFont }) {
+function PairsCard({ headingFont, bodyFont, onOpenFont, forceFavSelected = false }) {
   const { favSelected, toggle: toggleFav } = useFavorite(bodyFont?._id);
   React.useEffect(() => { ensureFontFaceInline(headingFont); ensureFontFaceInline(bodyFont); }, [headingFont?._id, bodyFont?._id]);
 
@@ -497,7 +497,7 @@ function PairsCard({ headingFont, bodyFont, onOpenFont }) {
       }}
     >
       <section className="grid_information_pairs">
-        <FavButton selected={favSelected} onToggle={toggleFav} />
+        <FavButton selected={forceFavSelected ? true : favSelected} onToggle={toggleFav} />
       </section>
 
 
@@ -514,14 +514,15 @@ function PairsCard({ headingFont, bodyFont, onOpenFont }) {
 }
 
 
-function PairsGrid({ collection, fontsById, onOpenFont }) {
+function PairsGrid({ collection, fontsById, onOpenFont, forceFavSelected = false}) {
   const items = Array.isArray(collection?.items) ? collection.items : [];
   const ids = items.map((it) => String(it?.fontId)).filter(Boolean);
   const fonts = ids.map((id) => fontsById.get(id)).filter(Boolean);
 
 
   if (fonts.length === 0) return <p style={{ fontFamily: "roboto regular", color: "var(--darker-grey)" }}>No pairs yet.</p>;
-  if (fonts.length === 1) { const only = fonts[0]; return <PairsCard headingFont={only} bodyFont={only} onOpenFont={onOpenFont} />; }
+  if (fonts.length === 1) { const only = fonts[0]; return <PairsCard headingFont={only} bodyFont={only} onOpenFont={onOpenFont} forceFavSelected={forceFavSelected}/>; }
+
 
 
   return (
@@ -534,6 +535,7 @@ function PairsGrid({ collection, fontsById, onOpenFont }) {
             headingFont={headingFont}
             bodyFont={bodyFont}
             onOpenFont={onOpenFont}
+            forceFavSelected={forceFavSelected}
           />
         );
       })}
