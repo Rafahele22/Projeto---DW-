@@ -937,6 +937,12 @@ color: var(--light_grey);
 
 .fav-btn img {
     height: 3.4vh;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.fav-btn:hover img {
+    transform: scale(1.15);
+    opacity: 0.8;
 }
 
 

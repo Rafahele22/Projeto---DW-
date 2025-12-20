@@ -12,6 +12,26 @@ export function setAllFontsReference(fonts) {
   allFontsRef = Array.isArray(fonts) ? fonts : [];
 }
 
+export function getUserCollections() {
+  return userCollections;
+}
+
+export async function refreshUserCollections(userId) {
+  if (!userId) return;
+  try {
+    const url = `http://localhost:4000/api/collections?userId=${encodeURIComponent(userId)}`;
+    const res = await fetch(url);
+    if (res.ok) {
+      const data = await res.json();
+      setUserCollections(data);
+      return data;
+    }
+  } catch (e) {
+    console.error("Failed to refresh collections:", e);
+  }
+  return null;
+}
+
 const ICONS = {
   discover: { normal: "../assets/imgs/search.svg", selected: "../assets/imgs/search_selected.svg" },
   collections: { normal: "../assets/imgs/collections.svg", selected: "../assets/imgs/collections_selected.svg" },
@@ -218,6 +238,14 @@ export function setupCollectionsNav(options = {}) {
     });
   }
 
+  function refreshCollectionsView() {
+    if (!collectionsReact) return;
+    collectionsReact.update({
+      collections: userCollections,
+      fonts: allFontsRef,
+    });
+  }
+
   function getActiveTab() {
     return activeCollectionsTab === "pairs" ? pairsTab : albumsTab;
   }
@@ -280,5 +308,6 @@ export function setupCollectionsNav(options = {}) {
     setOnEnterDiscover(fn) {
       onEnterDiscover = typeof fn === "function" ? fn : null;
     },
+    refreshCollections: refreshCollectionsView,
   };
 }

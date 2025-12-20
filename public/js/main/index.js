@@ -122,6 +122,8 @@ async function main() {
       onOpenFont: singleFont.showSingleFont,
     });
 
+    window.__collectionsNav = collectionsNav;
+
     // =========================
     // BUILD TAGS / FOUNDRIES LIST
     // =========================

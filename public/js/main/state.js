@@ -58,6 +58,17 @@ export async function toggleFavorite(fontId) {
       removeFavorite(fontId);
     }
 
+    import("./collections.js").then(({ refreshUserCollections, getUserCollections }) => {
+      refreshUserCollections(user._id).then((newCollections) => {
+        if (newCollections) {
+          const collectionsNav = window.__collectionsNav;
+          if (collectionsNav?.refreshCollections) {
+            collectionsNav.refreshCollections();
+          }
+        }
+      });
+    });
+
     return data.added;
   } catch (e) {
     console.error("Failed to toggle favorite:", e);
