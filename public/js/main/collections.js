@@ -1,4 +1,4 @@
-import { getGlobalSampleText, setGlobalSampleText } from "./state.js";
+import { getGlobalSampleText, setGlobalSampleText, getActualMode } from "./state.js";
 import { hide, show, showFlex } from "./shared/displayUtils.js";
 
 let userCollections = [];
@@ -61,10 +61,11 @@ export function setupCollectionsNav(options = {}) {
   const viewModeBtns = viewModeSection ? Array.from(viewModeSection.querySelectorAll("a")) : [];
   const [gridModeBtn, listModeBtn] = viewModeBtns;
   const filtersPanel = document.getElementById("filters");
-  const gridEl = document.querySelector(".grid.grid_view");
+  const gridUniverse = document.getElementById("grid-universe");
+  const listUniverse = document.getElementById("list-universe");
   const noResultsEl = document.getElementById("no_results");
 
-  if (!nav || !collectionsBtn || !discoverBtn || !mainEl || !myCollectionsBar || !gridEl) return;
+  if (!nav || !collectionsBtn || !discoverBtn || !mainEl || !myCollectionsBar || !gridUniverse || !listUniverse) return;
 
   function updateNavIcons() {
     updateIcon(discoverBtn?.querySelector("img"), "discover", discoverBtn.classList.contains("selected"));
@@ -128,7 +129,7 @@ export function setupCollectionsNav(options = {}) {
     }
 
     collectionsReact = mount({
-      mountEl: gridEl,
+      mountEl: gridUniverse,
       getGlobalSampleText,
       setGlobalSampleText,
       onSelectCollection: (id) => {
@@ -139,12 +140,13 @@ export function setupCollectionsNav(options = {}) {
         
         attachCollectionsViewModeInterceptors();
         
-        setCollectionsViewMode("grid"); 
+        const mode = getActualMode();
+        setCollectionsViewMode(mode); 
 
         collectionsReact?.update?.({
           view: "collection",
           openedCollectionId,
-          collectionViewMode: "grid", 
+          collectionViewMode: mode, 
         });
         window.scrollTo(0, 0);
       },

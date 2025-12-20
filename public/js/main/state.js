@@ -1,6 +1,7 @@
 let globalSampleText = "The quick brown fox jumps over the lazy dog.";
 let allFonts = [];
 let favoriteFontIds = new Set();
+let actualMode = "grid"; // "grid" or "list"
 
 export function getGlobalSampleText() {
   return globalSampleText;
@@ -77,5 +78,15 @@ export async function toggleFavorite(fontId) {
   } catch (e) {
     console.error("Failed to toggle favorite:", e);
     return false;
+  }
+}
+
+export function getActualMode() {
+  return actualMode;
+}
+
+export function setActualMode(mode) {
+  if (mode === "grid" || mode === "list") {
+    actualMode = mode;
   }
 }

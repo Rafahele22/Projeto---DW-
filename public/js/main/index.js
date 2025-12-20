@@ -45,7 +45,8 @@ async function main() {
     abaCollections.style.display = userLoggedIn ? "" : "none";
   }
 
-  const gridEl = document.querySelector(".grid.grid_view");
+  const gridUniverse = document.getElementById("grid-universe");
+  const listUniverse = document.getElementById("list-universe");
   const filtersBtn = document.querySelector("#filters_btn");
   const filtersPanel = document.querySelector("#filters");
   const closeFiltersBtn = document.querySelector("#close_filters");
@@ -54,7 +55,8 @@ async function main() {
   const filtersMountEl = document.querySelector("#filters_react_root");
 
   const singleFont = createSingleFontView({
-    gridEl,
+    gridEl: gridUniverse,
+    listEl: listUniverse,
     filtersPanelEl: filtersPanel,
     filtersBtnEl: filtersBtn,
     getAllFonts,
@@ -64,7 +66,8 @@ async function main() {
 
   const closeFiltersPanel = () => {
     hide(filtersPanel);
-    gridEl?.classList.remove("shifted");
+    gridUniverse?.classList.remove("shifted");
+    listUniverse?.classList.remove("shifted");
     filtersBtn?.classList.remove("selected");
   };
 
@@ -77,7 +80,8 @@ async function main() {
       closeFiltersPanel();
     } else {
       showFlex(filtersPanel);
-      gridEl?.classList.add("shifted");
+      gridUniverse?.classList.add("shifted");
+      listUniverse?.classList.add("shifted");
       filtersBtn.classList.add("selected");
     }
   });
@@ -155,9 +159,9 @@ async function main() {
 
     // =========================
     // BUILD UI
-    if (gridEl) {
+    if (gridUniverse && listUniverse) {
       generateListItems({
-        gridEl,
+        gridEl: listUniverse,
         fonts,
         onOpenFont: singleFont.showSingleFont,
         getGlobalSampleText,
@@ -165,25 +169,25 @@ async function main() {
       });
 
       generateGridArticles({
-        gridEl,
+        gridEl: gridUniverse,
         fonts,
         onOpenFont: singleFont.showSingleFont,
       });
 
       const gridViewBtn = document.querySelector("#view_mode_selected");
       const listViewBtn = document.querySelector("#second_bar section a:last-of-type");
-      const mainGrid = document.querySelector(".grid");
 
       let currentFilterParams = {};
 
-      const doEqualizeHeights = () => equalizeGridCardHeights(gridEl, viewMode.getIsGridView());
+      const doEqualizeHeights = () => equalizeGridCardHeights(gridUniverse, viewMode.getIsGridView());
 
       const doFilterFonts = (params = {}) => {
         currentFilterParams = { ...currentFilterParams, ...params };
+        const isGrid = viewMode.getIsGridView();
         filterFonts({
-          gridEl,
+          gridEl: isGrid ? gridUniverse : listUniverse,
           fonts,
-          isGridView: viewMode.getIsGridView(),
+          isGridView: isGrid,
           filterParams: currentFilterParams,
         });
       };
@@ -191,7 +195,8 @@ async function main() {
       const viewMode = setupViewModeToggle({
         gridViewBtn,
         listViewBtn,
-        mainGrid,
+        gridUniverse,
+        listUniverse,
         filtersPanel,
         onToggle: () => {
           doFilterFonts();
@@ -199,10 +204,14 @@ async function main() {
         },
       });
 
-      collectionsNav?.setOnEnterDiscover?.(() => viewMode.syncFromDom());
+      singleFont.setOnClose(() => {
+        viewMode.syncFromActualMode();
+        doEqualizeHeights();
+      });
 
-      document.querySelectorAll(".list").forEach((li) => (li.style.display = "none"));
-      document.querySelectorAll("article").forEach((a) => (a.style.display = "block"));
+      collectionsNav?.setOnEnterDiscover?.(() => {
+        viewMode.syncFromActualMode();
+      });
 
       doEqualizeHeights();
       window.addEventListener("resize", doEqualizeHeights);
@@ -216,9 +225,6 @@ async function main() {
         collectionsNav?.resetToHome?.();
         closeFiltersPanel();
         viewMode.setGridView();
-
-        document.querySelectorAll(".list").forEach((li) => (li.style.display = "none"));
-        document.querySelectorAll("article").forEach((a) => (a.style.display = "block"));
 
         doEqualizeHeights();
         window.scrollTo(0, 0);

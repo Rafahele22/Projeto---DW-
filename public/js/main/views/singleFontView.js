@@ -224,7 +224,7 @@ async function buildSimilarSection({ currentFont, fontsAll, onOpenFont }) {
   return root;
 }
 
-export function createSingleFontView({ gridEl, filtersPanelEl, filtersBtnEl, getAllFonts }) {
+export function createSingleFontView({ gridEl, listEl, filtersPanelEl, filtersBtnEl, getAllFonts }) {
   let singleFontView = document.getElementById("singleFontView");
   if (!singleFontView) {
     singleFontView = document.createElement("div");
@@ -237,6 +237,8 @@ export function createSingleFontView({ gridEl, filtersPanelEl, filtersBtnEl, get
 
   let lastScrollY = 0;
   let teardownController = null;
+  let onCloseCallback = null;
+  let wasGridVisible = true;
 
   const uiStash = {
     filtersPanelDisplay: null,
@@ -261,9 +263,12 @@ export function createSingleFontView({ gridEl, filtersPanelEl, filtersBtnEl, get
     uiStash.myCollectionsBarDisplay = myCollectionsBarEl ? myCollectionsBarEl.style.display : null;
     uiStash.searchBarDisplay = searchBarEl ? searchBarEl.style.display : null;
     uiStash.viewModeSectionDisplay = viewModeSectionEl ? viewModeSectionEl.style.display : null;
+    
+    wasGridVisible = gridEl?.style.display !== "none";
 
     document.body.classList.add("single-font-open");
-    gridEl?.classList.add("is-hidden");
+    if (gridEl) gridEl.style.display = "none";
+    if (listEl) listEl.style.display = "none";
 
     singleFontView.style.display = "block";
 
@@ -274,7 +279,6 @@ export function createSingleFontView({ gridEl, filtersPanelEl, filtersBtnEl, get
     if (searchBarEl) searchBarEl.style.display = "none";
     if (viewModeSectionEl) viewModeSectionEl.style.display = "none";
 
-    gridEl?.classList.remove("shifted");
     filtersBtnEl?.classList.remove("selected");
 
     teardownController?.abort();
@@ -288,7 +292,6 @@ export function createSingleFontView({ gridEl, filtersPanelEl, filtersBtnEl, get
     singleFontView.innerHTML = "";
     singleFontView.style.display = "none";
 
-    gridEl?.classList.remove("is-hidden");
     document.body.classList.remove("single-font-open");
 
     if (filtersPanelEl) filtersPanelEl.style.display = uiStash.filtersPanelDisplay ?? "";
@@ -298,19 +301,11 @@ export function createSingleFontView({ gridEl, filtersPanelEl, filtersBtnEl, get
     if (searchBarEl) searchBarEl.style.display = uiStash.searchBarDisplay ?? "";
     if (viewModeSectionEl) viewModeSectionEl.style.display = uiStash.viewModeSectionDisplay ?? "";
 
-    const isGridView = gridEl?.classList.contains("grid_view");
-    const listItems = document.querySelectorAll(".list");
-    const articleItems = document.querySelectorAll("article");
-    
-    if (isGridView) {
-      listItems.forEach((li) => (li.style.display = "none"));
-      articleItems.forEach((a) => (a.style.display = "block"));
-    } else {
-      articleItems.forEach((a) => (a.style.display = "none"));
-      listItems.forEach((li) => (li.style.display = "block"));
-    }
-
     window.scrollTo(0, lastScrollY);
+    
+    if (onCloseCallback) {
+      onCloseCallback();
+    }
   }
 
   function setupSingleViewEvents(controlsContainer, displayContainer, font) {
@@ -633,5 +628,9 @@ export function createSingleFontView({ gridEl, filtersPanelEl, filtersBtnEl, get
     }
   }
 
-  return { showSingleFont, closeSingleFontView };
+  return { 
+    showSingleFont, 
+    closeSingleFontView,
+    setOnClose: (fn) => { onCloseCallback = fn; }
+  };
 }

@@ -505,6 +505,29 @@ main {
 }
 
 /* Grid View Item */
+.grid.grid_view > .list {
+    display: none !important;
+}
+
+.grid.list_view > article {
+    display: none !important;
+}
+
+.list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1vw;
+    width: 100%;
+    padding: 1.5vw;
+    padding-top: 0;
+    padding-left: 0;
+}
+
+.list-container.shifted {
+    margin-left: 24.2vw;
+    width: calc(100% - 24.2vw);
+}
+
 .grid_view article {
     position: relative;
     border: 1px solid var(--black);

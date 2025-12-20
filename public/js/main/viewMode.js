@@ -1,5 +1,9 @@
-export function setupViewModeToggle({ gridViewBtn, listViewBtn, mainGrid, filtersPanel, onToggle }) {
-  if (!gridViewBtn || !listViewBtn || !mainGrid) return { getIsGridView: () => true };
+import { setActualMode, getActualMode } from "./state.js";
+
+export function setupViewModeToggle({ gridViewBtn, listViewBtn, gridUniverse, listUniverse, filtersPanel, onToggle }) {
+  if (!gridViewBtn || !listViewBtn || !gridUniverse || !listUniverse) {
+    return { getIsGridView: () => true, syncFromActualMode: () => {} };
+  }
 
   let isGridView = true;
 
@@ -21,17 +25,27 @@ export function setupViewModeToggle({ gridViewBtn, listViewBtn, mainGrid, filter
     }
   }
 
+  function applyViewMode() {
+    if (isGridView) {
+      gridUniverse.style.display = "";
+      listUniverse.style.display = "none";
+    } else {
+      gridUniverse.style.display = "none";
+      listUniverse.style.display = "";
+    }
+    syncIcons();
+  }
+
   function toggleViewMode() {
     const filtersOpen = filtersPanel?.style?.display === "flex";
     isGridView = !isGridView;
 
-    syncIcons();
-
-    mainGrid.classList.toggle("grid_view", isGridView);
-    mainGrid.classList.toggle("list_view", !isGridView);
+    setActualMode(isGridView ? "grid" : "list");
+    applyViewMode();
 
     if (filtersOpen) {
-      mainGrid.classList.add("shifted");
+      gridUniverse.classList.add("shifted");
+      listUniverse.classList.add("shifted");
     }
 
     onToggle?.(isGridView);
@@ -47,6 +61,8 @@ export function setupViewModeToggle({ gridViewBtn, listViewBtn, mainGrid, filter
     if (isGridView) toggleViewMode();
   });
 
+  applyViewMode();
+
   return {
     getIsGridView() {
       return isGridView;
@@ -57,9 +73,10 @@ export function setupViewModeToggle({ gridViewBtn, listViewBtn, mainGrid, filter
     setListView() {
       if (isGridView) toggleViewMode();
     },
-    syncFromDom() {
-      isGridView = mainGrid.classList.contains("grid_view") && !mainGrid.classList.contains("list_view");
-      syncIcons();
+    syncFromActualMode() {
+      const mode = getActualMode();
+      isGridView = mode === "grid";
+      applyViewMode();
     },
   };
 }

@@ -88,15 +88,31 @@ export function filterListItems(params) {
 }
 
 export function filterFonts({ gridEl, fonts, isGridView, filterParams }) {
+  if (!gridEl) return 0;
+  
   let visibleCount = 0;
 
-  if (isGridView) {
-    visibleCount = filterArticles({ ...filterParams, fonts });
-    document.querySelectorAll(".list").forEach((li) => (li.style.display = "none"));
-  } else {
-    visibleCount = filterListItems({ ...filterParams, fonts });
-    document.querySelectorAll("article").forEach((a) => (a.style.display = "none"));
-  }
+  const elements = isGridView 
+    ? gridEl.querySelectorAll(":scope > article")
+    : gridEl.querySelectorAll(":scope > .list");
+
+  elements.forEach((el, index) => {
+    const font = fonts[index];
+    if (!font) {
+      el.style.display = "none";
+      return;
+    }
+    const show = checkFontAgainstFilters(
+      font,
+      filterParams.selectedTags || [],
+      filterParams.selectedFoundries || [],
+      filterParams.selectedFamilySizes || [],
+      filterParams.selectedVariables || [],
+      filterParams.searchQuery || ""
+    );
+    el.style.display = show ? "block" : "none";
+    if (show) visibleCount++;
+  });
 
   const noResults = document.getElementById("no_results");
   if (noResults) {
