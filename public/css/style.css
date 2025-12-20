@@ -998,6 +998,36 @@ form button:hover img {
     content: url("../../assets/imgs/login_selected.svg");
 }
 
+/* ===== ALBUM ===== */
+.album_information {
+    width: 100%;
+    padding: 3vh 0 7vh 1vw;
+    grid-column: 1 / -1; 
+}
+
+.album_title {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    gap: 0.5vw;
+    margin-bottom: 1vh;
+    width: 100%;
+}
+
+.album_title h2, .suggestions > h2 {
+    font-size: 2.3vw;
+    line-height: 1.1;
+    color: var(--black);
+}
+
+.collection-count {
+    font-family: "roboto regular";
+    font-size: 1.2vw;
+    color: var(--darker-grey);
+    margin: 0;
+}
+
+
 /* ===== UTILITIES ===== */
 .selected {
     background-color: var(--purple);

@@ -82,6 +82,27 @@ function SaveMenu({ isOpen }) {
   );
 }
 
+function CollectionHeader({ collectionName, count }) {
+  return (
+    <div className="album_information">
+      <div className="album_title">
+        <h2>
+          {collectionName || "Untitled Album"}
+        </h2>
+        
+        <a href="#" className="button" onClick={(e) => { e.preventDefault(); console.log("Edit clicked"); }}>
+          <img src="../assets/imgs/edit.svg" alt="edit icon" />
+          <h4>Edit</h4>
+        </a>
+      </div>
+      
+      <h2 className="collection-count">
+        {count} font{count !== 1 ? "s" : ""}
+      </h2>
+    </div>
+  );
+}
+
 function AlbumsGrid({ collections, fontsById, onSelectCollection }) {
   const list = Array.isArray(collections) ? collections : [];
 
@@ -334,27 +355,27 @@ function CollectionList({ collection, fontsById, globalText, setGlobalText, onOp
   const fonts = useFontsFromCollection(collection, fontsById);
   const [openSaveId, setOpenSaveId] = React.useState(null);
 
-  if (fonts.length === 0) {
-    return (
-      <p style={{ fontFamily: "roboto regular", color: "var(--darker-grey)" }}>
-        No fonts in this collection yet.
-      </p>
-    );
-  }
-
   return (
     <>
-      {fonts.map((font) => (
-        <ListItem
-          key={String(font._id)}
-          font={font}
-          globalText={globalText}
-          setGlobalText={setGlobalText}
-          onOpenFont={onOpenFont}
-          openSaveId={openSaveId}
-          setOpenSaveId={setOpenSaveId}
-        />
-      ))}
+      <CollectionHeader collectionName={collection?.name} count={fonts.length} />
+      
+      {fonts.length === 0 ? (
+        <p style={{ fontFamily: "roboto regular", color: "var(--darker-grey)" }}>
+          No fonts in this collection yet.
+        </p>
+      ) : (
+        fonts.map((font) => (
+          <ListItem
+            key={String(font._id)}
+            font={font}
+            globalText={globalText}
+            setGlobalText={setGlobalText}
+            onOpenFont={onOpenFont}
+            openSaveId={openSaveId}
+            setOpenSaveId={setOpenSaveId}
+          />
+        ))
+      )}
     </>
   );
 }
@@ -362,19 +383,19 @@ function CollectionList({ collection, fontsById, globalText, setGlobalText, onOp
 function CollectionGrid({ collection, fontsById, onOpenFont }) {
   const fonts = useFontsFromCollection(collection, fontsById);
 
-  if (fonts.length === 0) {
-    return (
-      <p style={{ fontFamily: "roboto regular", color: "var(--darker-grey)" }}>
-        No fonts in this collection yet.
-      </p>
-    );
-  }
-
   return (
     <>
-      {fonts.map((font) => (
-        <GridItem key={String(font._id)} font={font} onOpenFont={onOpenFont} />
-      ))}
+      <CollectionHeader collectionName={collection?.name} count={fonts.length} />
+
+      {fonts.length === 0 ? (
+        <p style={{ fontFamily: "roboto regular", color: "var(--darker-grey)", gridColumn: "1 / -1" }}>
+          No fonts in this collection yet.
+        </p>
+      ) : (
+        fonts.map((font) => (
+          <GridItem key={String(font._id)} font={font} onOpenFont={onOpenFont} />
+        ))
+      )}
     </>
   );
 }
@@ -441,8 +462,6 @@ function PairsGrid({ collection, fontsById, onOpenFont }) {
     return <PairsCard headingFont={only} bodyFont={only} onOpenFont={onOpenFont} />;
   }
 
-  // If the data doesn't store explicit pairs, use a simple deterministic rule:
-  // each item becomes a card where the heading is that font and the body is the next font.
   return (
     <>
       {fonts.map((headingFont, idx) => {

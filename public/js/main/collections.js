@@ -116,11 +116,16 @@ export function setupCollectionsNav(options = {}) {
         isInCollectionsDetail = true;
         showCollectionsListBar();
         attachCollectionsViewModeInterceptors();
-        setCollectionsViewMode("list");
+        
+        // ============================================================
+        // ALTERAÇÃO 1: Forçar Grid View ao abrir um álbum
+        // ============================================================
+        setCollectionsViewMode("grid"); 
+
         collectionsReact?.update?.({
           view: "collection",
           openedCollectionId,
-          collectionViewMode: "list",
+          collectionViewMode: "grid", // Força Grid no React também
         });
         window.scrollTo(0, 0);
       },
@@ -181,8 +186,15 @@ export function setupCollectionsNav(options = {}) {
   }
 
   function showCollectionsListBar() {
-    hide(myCollectionsBar, filtersBtn, searchBar);
+    // ============================================================
+    // ALTERAÇÃO 2: Mostrar a Search Bar
+    // ============================================================
+    // Removemos searchBar do hide()
+    hide(myCollectionsBar, filtersBtn); 
+    
+    // Adicionamos searchBar ao showFlex (porque é display: flex no CSS)
     show(backToCollection, viewModeSection);
+    showFlex(searchBar); 
   }
 
   function showCollectionsTabsBar() {
