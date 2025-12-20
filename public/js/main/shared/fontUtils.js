@@ -1,3 +1,5 @@
+import { isFavorite as checkIsFavorite, toggleFavorite as toggleFav } from "../state.js";
+
 export function ensureFontFace(font) {
   const weights = Array.isArray(font?.weights) ? font.weights : [];
   const defaultWeight = weights.find((w) => w?.default) || weights[0];
@@ -117,14 +119,21 @@ export function setupSaveOptions(container) {
 export function setupFavButton(favImg, fontId) {
   if (!favImg) return;
   
-  import("../state.js").then(({ isFavorite, toggleFavorite }) => {
-    setFavIconState(favImg, isFavorite(fontId));
-    
+  setFavIconState(favImg, checkIsFavorite(fontId));
+  
+  if (!favImg.__favListenerAttached) {
     favImg.addEventListener("click", async (e) => {
       e.preventDefault();
       e.stopPropagation();
-      const newState = await toggleFavorite(fontId);
+      const newState = await toggleFav(fontId);
       setFavIconState(favImg, newState);
+      updateAllFavIcons(fontId, newState);
     });
-  });
+    favImg.__favListenerAttached = true;
+  }
+}
+
+export function updateAllFavIcons(fontId, isFavorite) {
+  const allFavButtons = document.querySelectorAll(`[data-font-id="${fontId}"] .fav-btn img`);
+  allFavButtons.forEach(img => setFavIconState(img, isFavorite));
 }
