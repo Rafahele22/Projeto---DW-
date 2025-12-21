@@ -418,7 +418,8 @@ export function createSingleFontView({ gridEl, listEl, discoverUniverseEl, filte
           closeSingleFontView();
 
           if (filtersPanelEl) filtersPanelEl.style.display = "block";
-          gridEl?.classList.add("shifted");
+          if (gridEl) gridEl.classList.add("shifted");
+          if (listEl) listEl.classList.add("shifted");
           filtersBtnEl?.classList.add("selected");
 
           requestAnimationFrame(() => {
