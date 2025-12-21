@@ -38,7 +38,7 @@ async function buildSimilarSection({ currentFont, fontsAll, onOpenFont }) {
   pairsWrapper.appendChild(pairsGrid);
 
   let pairsToShow = [];
-  
+
   try {
     const res = await fetch("http://web-dev-grupo05.dei.uc.pt/api/top-pairs?limit=4");
     if (res.ok) {
@@ -131,28 +131,28 @@ async function buildSimilarSection({ currentFont, fontsAll, onOpenFont }) {
 
   const currentTags = Array.isArray(currentFont?.tags) ? currentFont.tags : [];
 
-const tagOverlapScore = (a, b) => {
-  const A = Array.isArray(a) ? a : [];
-  const B = new Set(Array.isArray(b) ? b : []);
-  let score = 0;
-  for (const t of A) if (B.has(t)) score++;
-  return score;
-};
+  const tagOverlapScore = (a, b) => {
+    const A = Array.isArray(a) ? a : [];
+    const B = new Set(Array.isArray(b) ? b : []);
+    let score = 0;
+    for (const t of A) if (B.has(t)) score++;
+    return score;
+  };
 
-let ranked = allFonts
-  .filter((f) => f && f._id !== currentFont._id)
-  .map((f) => ({ font: f, score: tagOverlapScore(f.tags, currentTags) }))
-  .filter((x) => x.score > 0);
+  let ranked = allFonts
+    .filter((f) => f && f._id !== currentFont._id)
+    .map((f) => ({ font: f, score: tagOverlapScore(f.tags, currentTags) }))
+    .filter((x) => x.score > 0);
 
-ranked.sort((a, b) => b.score - a.score);
+  ranked.sort((a, b) => b.score - a.score);
 
-const pool = ranked.slice(0, 20).map((x) => x.font);
-let chosen = pickRandom(pool, 4);
+  const pool = ranked.slice(0, 20).map((x) => x.font);
+  let chosen = pickRandom(pool, 4);
 
-if (chosen.length === 0) {
-  const fallback = allFonts.filter((f) => f && f._id !== currentFont._id);
-  chosen = pickRandom(fallback, 4);
-}
+  if (chosen.length === 0) {
+    const fallback = allFonts.filter((f) => f && f._id !== currentFont._id);
+    chosen = pickRandom(fallback, 4);
+  }
 
   chosen.forEach((font) => {
     ensureFontFace(font);
@@ -241,7 +241,14 @@ if (chosen.length === 0) {
   return root;
 }
 
-export function createSingleFontView({ gridEl, listEl, discoverUniverseEl, filtersPanelEl, filtersBtnEl, getAllFonts }) {
+export function createSingleFontView({
+  gridEl,
+  listEl,
+  discoverUniverseEl,
+  filtersPanelEl,
+  filtersBtnEl,
+  getAllFonts,
+}) {
   let singleFontView = document.getElementById("singleFontView");
   if (!singleFontView) {
     singleFontView = document.createElement("div");
@@ -255,7 +262,7 @@ export function createSingleFontView({ gridEl, listEl, discoverUniverseEl, filte
   let lastScrollY = 0;
   let teardownController = null;
   let onCloseCallback = null;
-  
+
   const uiStash = {
     filtersPanelDisplay: null,
     filtersBtnDisplay: null,
@@ -287,7 +294,7 @@ export function createSingleFontView({ gridEl, listEl, discoverUniverseEl, filte
     uiStash.listDisplay = listEl ? listEl.style.display : null;
 
     document.body.classList.add("single-font-open");
-    
+
     if (discoverUniverseEl) discoverUniverseEl.style.display = "none";
 
     singleFontView.style.display = "block";
@@ -325,14 +332,71 @@ export function createSingleFontView({ gridEl, listEl, discoverUniverseEl, filte
     if (listEl) listEl.style.display = uiStash.listDisplay ?? "none";
 
     window.scrollTo(0, lastScrollY);
-    
+
     if (onCloseCallback) {
       onCloseCallback();
     }
   }
 
-  function setupSingleViewEvents(controlsContainer, displayContainer, font) {
+  function setupSingleViewEvents(controlsContainer, displayContainer, pairContainer, font) {
     const signal = teardownController?.signal;
+
+    // =========================
+    // ADD PAIR
+    // =========================
+    const addPairBtn = pairContainer?.querySelector("#add_pair_btn");
+    const pairMenu = pairContainer?.querySelector("#pair_menu");
+
+    if (pairMenu) pairMenu.style.display = "none";
+
+    addPairBtn?.addEventListener(
+      "click",
+      (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (!pairMenu) return;
+
+        const isOpening = pairMenu.style.display === "none";
+        pairMenu.style.display = isOpening ? "block" : "none";
+        addPairBtn.classList.toggle("selected", isOpening);
+      },
+      { signal }
+    );
+
+    pairContainer?.querySelectorAll(".pair-category").forEach((cat) => {
+      cat.addEventListener(
+        "click",
+        (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+
+          const type = cat.dataset.type;
+          const options = pairContainer.querySelector(`.pair-options[data-type="${type}"]`);
+          if (!options) return;
+
+          const isOpening = options.style.display === "none";
+
+          pairContainer.querySelectorAll(".pair-options").forEach((sec) => (sec.style.display = "none"));
+          pairContainer.querySelectorAll(".pair-category").forEach((c) => c.classList.remove("selected-option"));
+
+          options.style.display = isOpening ? "block" : "none";
+          cat.classList.toggle("selected-option", isOpening);
+        },
+        { signal }
+      );
+    });
+
+    pairContainer?.querySelectorAll(".pair-option-btn").forEach((btn) => {
+      btn.addEventListener(
+        "click",
+        (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          btn.classList.toggle("selected-option");
+        },
+        { signal }
+      );
+    });
 
     // FAVOURITE
     const favBtn = displayContainer.querySelector(".fav-btn img");
@@ -525,9 +589,17 @@ export function createSingleFontView({ gridEl, listEl, discoverUniverseEl, filte
           chooseBtn.classList.remove("selected");
           displayContainer.classList.remove("shifted");
         }
+
         if (saveMenu && saveBtn && !saveMenu.contains(e.target) && !saveBtn.contains(e.target)) {
           saveMenu.style.display = "none";
           saveBtn.classList.remove("selected");
+        }
+
+        if (pairMenu && addPairBtn && !pairMenu.contains(e.target) && !addPairBtn.contains(e.target)) {
+          pairMenu.style.display = "none";
+          addPairBtn.classList.remove("selected");
+          pairContainer?.querySelectorAll(".pair-options").forEach((sec) => (sec.style.display = "none"));
+          pairContainer?.querySelectorAll(".pair-category").forEach((c) => c.classList.remove("selected-option"));
         }
       },
       { signal }
@@ -536,7 +608,7 @@ export function createSingleFontView({ gridEl, listEl, discoverUniverseEl, filte
 
   async function showSingleFont(font) {
     const isAlreadyOpen = singleFontView.style.display === "block";
-    
+
     if (!isAlreadyOpen) {
       openSingleFontView();
     }
@@ -597,6 +669,7 @@ export function createSingleFontView({ gridEl, listEl, discoverUniverseEl, filte
     const listDiv = document.createElement("div");
     listDiv.className = "list_individual";
     listDiv.dataset.allCaps = hasAllCaps ? "1" : "0";
+
     const tagsHTML = renderFontTags(font);
     const designers = Array.isArray(font?.design) ? font.design : [];
     const designersText = designers.length ? designers.map(escapeHtml).join(", ") : "";
@@ -631,6 +704,55 @@ export function createSingleFontView({ gridEl, listEl, discoverUniverseEl, filte
       ${tagsHTML}
     `;
 
+    // =========================
+    // PAIR WRAPPER 
+    // =========================
+    const pairDiv = document.createElement("div");
+    pairDiv.className = "pair-wrapper";
+
+    pairDiv.innerHTML = `
+      <a href="#" class="button" id="add_pair_btn">
+        <h4>Add Pair</h4>
+        <img src="../assets/imgs/add.svg" alt="icon albuns"/>
+      </a>
+
+      <section class="save" id="pair_menu" style="display:none;">
+        <h4>Choose a font to pair</h4>
+
+        <a href="#" class="save-option pair-category" data-type="web">
+          <div><h4>Aa</h4><h4>Web</h4></div>
+        </a>
+        <section class="pair-options" data-type="web" style="display:none;">
+          <a href="#" class="pair-option-btn" data-type="web">
+            <div><h4>Aa</h4><h4>21 Display</h4></div>
+            <h5 class="add-text">add</h5>
+            <img src="../assets/imgs/check.svg" class="check-icon" alt="check icon">
+          </a>
+          <a href="#" class="pair-option-btn" data-type="web">
+            <div><h4>Aa</h4><h4>Anek Latin</h4></div>
+            <h5 class="add-text">add</h5>
+            <img src="../assets/imgs/check.svg" class="check-icon" alt="check icon">
+          </a>
+        </section>
+
+        <a href="#" class="save-option pair-category" data-type="print">
+          <div><h4>Aa</h4><h4>Print</h4></div>
+        </a>
+        <section class="pair-options" data-type="print" style="display:none;">
+          <a href="#" class="pair-option-btn" data-type="print">
+            <div><h4>Aa</h4><h4>21 Display</h4></div>
+            <h5 class="add-text">add</h5>
+            <img src="../assets/imgs/check.svg" class="check-icon" alt="check icon">
+          </a>
+          <a href="#" class="pair-option-btn" data-type="print">
+            <div><h4>Aa</h4><h4>Anek Latin</h4></div>
+            <h5 class="add-text">add</h5>
+            <img src="../assets/imgs/check.svg" class="check-icon" alt="check icon">
+          </a>
+        </section>
+      </section>
+    `;
+
     const similarSection = await buildSimilarSection({
       currentFont: font,
       fontsAll: getAllFonts(),
@@ -643,9 +765,10 @@ export function createSingleFontView({ gridEl, listEl, discoverUniverseEl, filte
     singleFontView.innerHTML = "";
     singleFontView.appendChild(controlsDiv);
     singleFontView.appendChild(listDiv);
+    singleFontView.appendChild(pairDiv); 
     singleFontView.appendChild(similarSection);
 
-    setupSingleViewEvents(controlsDiv, listDiv, font);
+    setupSingleViewEvents(controlsDiv, listDiv, pairDiv, font);
 
     if (headerBackBtn && teardownController?.signal) {
       headerBackBtn.addEventListener(
@@ -659,9 +782,11 @@ export function createSingleFontView({ gridEl, listEl, discoverUniverseEl, filte
     }
   }
 
-  return { 
-    showSingleFont, 
+  return {
+    showSingleFont,
     closeSingleFontView,
-    setOnClose: (fn) => { onCloseCallback = fn; }
+    setOnClose: (fn) => {
+      onCloseCallback = fn;
+    },
   };
 }
