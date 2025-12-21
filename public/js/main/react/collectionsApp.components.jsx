@@ -321,7 +321,6 @@ function AlbumsGrid({ collections, fontsById, onSelectCollection, onCreateCollec
                 <img src="../assets/imgs/check.svg" alt="confirm" />
               </button>
             </div>
-            <h3>0 fonts</h3>
           </section>
         </div>
       )}
