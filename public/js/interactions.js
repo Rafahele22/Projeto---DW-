@@ -37,3 +37,49 @@
       e.stopPropagation();
     });
   }
+
+function openLoginContainer() {
+  const loginContainer = document.querySelector(".loginContentor");
+  const loginForm = document.getElementById("login");
+  const registerForm = document.getElementById("register");
+
+  if (!loginContainer) return;
+
+  loginContainer.style.display = "block";
+
+  if (loginForm) loginForm.style.display = "block";
+  if (registerForm) registerForm.style.display = "none";
+}
+
+document.addEventListener(
+  "click",
+  (e) => {
+    const favBtn = e.target.closest?.(".fav-btn");
+    if (!favBtn) return;
+
+    const userLoggedIn = localStorage.getItem("user") !== null;
+
+    if (!userLoggedIn) {
+      e.preventDefault();
+      e.stopPropagation();
+      openLoginContainer();
+    }
+  },
+  true
+);
+
+document.addEventListener(
+  "click",
+  (e) => {
+    const saveBtn = e.target.closest?.(".save-btn");
+    if (!saveBtn) return;
+
+    const userLoggedIn = localStorage.getItem("user") !== null;
+    if (!userLoggedIn) {
+      e.preventDefault();
+      e.stopPropagation();
+      openLoginContainer();
+    }
+  },
+  true
+);
