@@ -906,6 +906,7 @@ color: var(--light_grey);
     align-items: center;
     justify-content: space-between;
     padding: 10px 10px;
+    min-height: 2.3vh;
     background-color: var(--light_grey);
     gap: 0.5vw;
     border-radius: 1vh;
