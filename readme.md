@@ -1,4 +1,4 @@
-### Abou Fontscope
+### About Fontscope
 Fontscope is an application designed to discover, filter, search, collect, and experiment with free typefaces. The platform offers two viewing modes, grid and list, and allows filtering by tags, foundries, number of styles, and variable fonts.
 
 Each typeface can be customized in real time by adjusting its style, sample text, font size, leading, and tracking, enabling users to test and compare fonts directly within the interface. Fontscope also allows users to create a personal profile, where they can save favorite fonts and font pairs, create albums, and build their own pairings.
@@ -26,6 +26,7 @@ Fontscope is intended for both designers and non-designers, offering clear and u
 — “Similar” feature
 — Login state handling (UI changes based on authentication)
 — Electron navigation bar
+— Loading screen
 
 # Rafael
 — File and codebase organization

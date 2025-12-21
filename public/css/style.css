@@ -42,6 +42,30 @@ a {
     cursor: pointer;
 }
 
+/* ===== LOADING SCREEN ===== */
+#loading-screen {
+  position: fixed;
+  inset: 0;
+  background: var(--light_grey);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+}
+
+#loading-screen img {
+  width: 12vw;
+  max-width: 180px;
+  height: auto;
+}
+
+#loading-screen.is-hidden {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 250ms ease;
+}
+
+
 /* ===== TYPOGRAPHY ===== */
 h1 {
     color: var(--black);
