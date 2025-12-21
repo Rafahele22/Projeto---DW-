@@ -873,6 +873,32 @@ body.single-font-open #second_bar section {
   margin-top: 1vh;
 }
 
+.pair-wrapper{
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+.pair-wrapper > #add_pair_btn{
+  margin-top: 1vh;
+  display: flex;
+  width: 100%;
+  justify-content: space-between
+}
+
+.pair-wrapper > .save{
+  top: calc(100% + 1vh);
+  left: 0;
+  margin-left: 0;
+}
+
+.pair-options{
+  display: flex;
+  flex-direction: column;
+  gap: 0.6vh;
+  margin-top: 0.8vh;
+}
+
 /* =========================
    SAVE MENU
 ========================= */
@@ -940,8 +966,6 @@ body.single-font-open #second_bar section {
 .save-btn:hover h4 {
   color: var(--light_grey) !important;
 }
-
-
 
 .fav-btn img {
   height: 3.4vh;
