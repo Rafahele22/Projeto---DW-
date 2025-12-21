@@ -203,8 +203,13 @@ function CollectionToolbar({ searchTerm, setSearchTerm, currentMode, onSetMode }
 }
 
 
-function AlbumsGrid({ collections, fontsById, onSelectCollection }) {
+function AlbumsGrid({ collections, fontsById, onSelectCollection, onCreateCollection }) {
   const list = Array.isArray(collections) ? collections : [];
+  const [pendingAlbum, setPendingAlbum] = React.useState(null);
+  const [albumName, setAlbumName] = React.useState("New Album");
+  const inputRef = React.useRef(null);
+  const pendingAlbumRef = React.useRef(null);
+
   const getFamiliesForCollection = (collection, max = 3) => {
     const items = Array.isArray(collection?.items) ? collection.items : [];
     const families = [];
@@ -217,31 +222,68 @@ function AlbumsGrid({ collections, fontsById, onSelectCollection }) {
     return families;
   };
 
+  const handleCreateClick = (e) => {
+    e.preventDefault();
+    setPendingAlbum({ tempId: Date.now() });
+    setAlbumName("New Album");
+  };
+
+  const handleConfirm = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const user = JSON.parse(localStorage.getItem("user") || "null");
+    if (!user || !user._id) return;
+    
+    try {
+      const res = await fetch("http://web-dev-grupo05.dei.uc.pt/api/collections", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: user._id, name: albumName.trim() || "New Album", type: "fonts" })
+      });
+      if (res.ok) {
+        setPendingAlbum(null);
+        setAlbumName("New Album");
+        if (typeof onCreateCollection === "function") onCreateCollection();
+      }
+    } catch (err) {
+      console.error("Failed to create album:", err);
+    }
+  };
+
+  React.useEffect(() => {
+    if (pendingAlbum && inputRef.current) {
+      inputRef.current.focus();
+      inputRef.current.select();
+    }
+  }, [pendingAlbum]);
+
+  React.useEffect(() => {
+    if (!pendingAlbum) return;
+    const handleClickOutside = (e) => {
+      if (pendingAlbumRef.current && !pendingAlbumRef.current.contains(e.target)) {
+        setPendingAlbum(null);
+        setAlbumName("New Album");
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [pendingAlbum]);
+
+  const favIndex = list.findIndex((c) => c?.name === "Favourites");
+  const beforeFav = favIndex >= 0 ? list.slice(0, favIndex + 1) : list;
+  const afterFav = favIndex >= 0 ? list.slice(favIndex + 1) : [];
+
   return (
     <div className="grid grid_view">
-      
-      {}
-      <div
-        className="create_album"
-        onClick={(e) => {
-          e.preventDefault();
-          console.log("Create new album clicked");
-        }}
-      >
-        <img 
-          src="../assets/imgs/create.svg" 
-          alt="create album icon" 
-        />
+      <div className="create_album" onClick={handleCreateClick}>
+        <img src="../assets/imgs/create.svg" alt="create album icon" />
         <h4>Create New Album</h4>
       </div>
-      {}
 
-      {list.map((collection) => {
+      {beforeFav.map((collection) => {
         const families = getFamiliesForCollection(collection, 3);
         const itemsCount = Array.isArray(collection?.items) ? collection.items.length : 0;
         const isFavourites = collection?.name === "Favourites";
-
-
         return (
           <div
             key={String(collection._id)}
@@ -255,6 +297,48 @@ function AlbumsGrid({ collections, fontsById, onSelectCollection }) {
                 {isFavourites ? <img src="../assets/imgs/fav_selected.svg" className="check-icon" alt="favourite icon" /> : null}
                 <h2>{collection?.name}</h2>
               </div>
+              <h3>{itemsCount} font{itemsCount !== 1 ? "s" : ""}</h3>
+            </section>
+          </div>
+        );
+      })}
+
+      {pendingAlbum && (
+        <div className="album pending-album" ref={pendingAlbumRef}>
+          <article className="exemples_album"><AlbumPreview families={[]} /></article>
+          <section>
+            <div className="pending-album-input-row">
+              <input
+                ref={inputRef}
+                type="text"
+                className="pending-album-input"
+                value={albumName}
+                onChange={(e) => setAlbumName(e.target.value)}
+                onKeyDown={(e) => { if (e.key === "Enter") handleConfirm(e); }}
+                onClick={(e) => e.stopPropagation()}
+              />
+              <button className="pending-album-confirm" onClick={handleConfirm}>
+                <img src="../assets/imgs/check.svg" alt="confirm" />
+              </button>
+            </div>
+            <h3>0 fonts</h3>
+          </section>
+        </div>
+      )}
+
+      {afterFav.map((collection) => {
+        const families = getFamiliesForCollection(collection, 3);
+        const itemsCount = Array.isArray(collection?.items) ? collection.items.length : 0;
+        return (
+          <div
+            key={String(collection._id)}
+            className="album"
+            data-collection-id={String(collection._id)}
+            onClick={(e) => { e.preventDefault(); onSelectCollection?.(String(collection._id)); }}
+          >
+            <article className="exemples_album"><AlbumPreview families={families} /></article>
+            <section>
+              <div><h2>{collection?.name}</h2></div>
               <h3>{itemsCount} font{itemsCount !== 1 ? "s" : ""}</h3>
             </section>
           </div>

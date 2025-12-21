@@ -137,11 +137,26 @@ function mountCollectionsImpl({
 }
 
 
+      const refreshCollections = async () => {
+        const user = JSON.parse(localStorage.getItem("user") || "null");
+        if (!user || !user._id) return;
+        try {
+          const res = await fetch(`http://web-dev-grupo05.dei.uc.pt/api/collections?userId=${encodeURIComponent(user._id)}`);
+          if (res.ok) {
+            const data = await res.json();
+            setState((prev) => ({ ...prev, collections: data }));
+          }
+        } catch (e) {
+          console.error("Failed to refresh collections:", e);
+        }
+      };
+
       return (
         <AlbumsGrid
           collections={visibleCollections}
           fontsById={fontsById}
           onSelectCollection={(id) => onSelectCollection?.(id)}
+          onCreateCollection={refreshCollections}
         />
       );
     })();
