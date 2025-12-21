@@ -1,7 +1,7 @@
 let globalSampleText = "The quick brown fox jumps over the lazy dog.";
 let allFonts = [];
 let favoriteFontIds = new Set();
-let actualMode = "grid"; // "grid" or "list"
+let actualMode = "grid"; 
 
 export function getGlobalSampleText() {
   return globalSampleText;

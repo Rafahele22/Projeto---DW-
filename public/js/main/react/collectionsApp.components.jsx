@@ -140,7 +140,19 @@ function CollectionToolbar({ searchTerm, setSearchTerm, currentMode, onSetMode }
 
 
   return (
-    <div className="collection-toolbar-container">
+    <div 
+      id="second_bar" 
+      style={{ 
+        position: 'relative',    
+        top: 'auto',             
+        paddingTop: 0,           
+        paddingBottom: '2vh',
+        width: '100%',           
+        gridColumn: '1 / -1',    
+        backgroundColor: 'transparent', 
+        marginBottom: '2vh'
+      }}
+    >
         
       {}
       <div></div>
