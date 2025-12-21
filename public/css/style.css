@@ -1119,30 +1119,6 @@ form button:hover img { content: url("../../assets/imgs/login_selected.svg"); }
   font-family: "roboto regular";
 }
 
-.pair-wrapper{
-  position: relative;
-  display: inline-block;
-}
-
-.pair-wrapper > #add_pair_btn{
-  margin-top: 1vh;
-}
-
-/* Reposicionar o .save (menu) para abrir abaixo do Add Pair, não no top:9vh global */
-.pair-wrapper > .save{
-  top: calc(100% + 1vh);
-  left: 0;
-  margin-left: 0;
-}
-
-.pair-options{
-  display: flex;
-  flex-direction: column;
-  gap: 0.6vh;
-  margin-top: 0.8vh;
-}
-
-
 /* =========================
    RESPONSIVE
 ========================= */

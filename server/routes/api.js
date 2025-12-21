@@ -239,6 +239,38 @@ async function handleApiRequest(req, res) {
         return;
     }
 
+    if (url.pathname === '/api/collections' && req.method === 'POST') {
+        try {
+            const body = await parseBody(req);
+            const { userId, name, type } = body;
+
+            if (!userId || !name) {
+                res.writeHead(400, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: 'userId and name are required' }));
+                return;
+            }
+
+            const newCollection = {
+                userId: String(userId),
+                name: String(name),
+                type: type || 'fonts',
+                items: [],
+                createdAt: new Date()
+            };
+
+            const result = await db.collection('collections').insertOne(newCollection);
+            newCollection._id = result.insertedId;
+
+            res.writeHead(201, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify(newCollection));
+        } catch (error) {
+            console.error('Error creating collection:', error);
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Failed to create collection' }));
+        }
+        return;
+    }
+
     if (url.pathname === '/api/favorites/toggle' && req.method === 'POST') {
         try {
             const body = await parseBody(req);
