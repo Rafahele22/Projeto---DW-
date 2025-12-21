@@ -73,8 +73,10 @@ async function main() {
   }
 
   function isFiltersPanelOpen() {
-    return filtersPanel?.style?.display === "flex";
-  }
+  if (!filtersPanel) return false;
+  return getComputedStyle(filtersPanel).display !== "none";
+}
+
 
   function updateFiltersCounter() {
     if (!filtersCountBubble) return;
@@ -264,8 +266,10 @@ async function main() {
       });
 
       singleFont.setOnClose(() => {
-        doEqualizeHeights();
-      });
+  doEqualizeHeights();
+  updateFiltersCounter();
+});
+
 
       collectionsNav?.setOnEnterDiscover?.(() => {
         viewMode.syncFromActualMode();
