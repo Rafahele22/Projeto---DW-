@@ -4,7 +4,7 @@ const path = require('path');
 const { connectToDb } = require('./config/db');
 const { handleApiRequest } = require('./routes/api');
 
-const PORT = 4000;
+const PORT = 80;
 const PUBLIC_DIR = path.join(__dirname, '../public');
 
 const CONTENT_TYPES = new Map([

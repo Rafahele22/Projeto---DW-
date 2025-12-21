@@ -40,7 +40,7 @@ async function buildSimilarSection({ currentFont, fontsAll, onOpenFont }) {
   let pairsToShow = [];
   
   try {
-    const res = await fetch("http://localhost:4000/api/top-pairs?limit=4");
+    const res = await fetch("http://web-dev-grupo05.dei.uc.pt/api/top-pairs?limit=4");
     if (res.ok) {
       const topPairs = await res.json();
       pairsToShow = topPairs

@@ -163,7 +163,7 @@ async function main() {
     try {
       const userId = user?._id ?? user?.userId ?? user?.id;
       if (userId) {
-        const collectionsUrl = `http://localhost:4000/api/collections?userId=${encodeURIComponent(
+        const collectionsUrl = `http://web-dev-grupo05.dei.uc.pt/api/collections?userId=${encodeURIComponent(
           userId
         )}`;
         const collectionsRes = await fetch(collectionsUrl);

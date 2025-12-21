@@ -48,7 +48,7 @@ export async function toggleFavorite(fontId) {
   if (!user || !user._id) return false;
 
   try {
-    const res = await fetch("http://localhost:4000/api/favorites/toggle", {
+    const res = await fetch("http://web-dev-grupo05.dei.uc.pt/api/favorites/toggle", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ userId: user._id, fontId: String(fontId) }),

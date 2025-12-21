@@ -19,7 +19,7 @@ export function getUserCollections() {
 export async function refreshUserCollections(userId) {
   if (!userId) return;
   try {
-    const url = `http://localhost:4000/api/collections?userId=${encodeURIComponent(userId)}`;
+    const url = `http://web-dev-grupo05.dei.uc.pt/api/collections?userId=${encodeURIComponent(userId)}`;
     const res = await fetch(url);
     if (res.ok) {
       const data = await res.json();
