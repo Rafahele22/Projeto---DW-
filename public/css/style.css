@@ -709,6 +709,29 @@ button[type="submit"]:hover h4,
 
 .list_individual.shifted { margin-right: 24.2vw; }
 
+#pair-box-wrapper {
+  display: flex;
+  flex-direction: column;
+  margin-top: 2vh;
+  margin-bottom: 2vh;
+}
+
+#pair-box-wrapper .bar_individual_font {
+  background-color: transparent;
+}
+
+#pair-box-wrapper .list_individual {
+  background-color: var(--dark-grey);
+}
+
+#pair-box-wrapper .remove-pair-btn {
+  background-color: var(--grey);
+}
+
+#pair-box-wrapper .remove-pair-btn:hover {
+  background-color: var(--darker-grey);
+}
+
 .list_individual h1 {
   font-size: 3.5vw;
   line-height: 3.5vw;
@@ -901,7 +924,7 @@ body.single-font-open #second_bar section {
   left: 0;
   margin-left: 0;
   width: 22.15%;
-  background-color: var(--grey);
+  background-color: var(--light_grey);
 }
 
 .pair-wrapper > .save > .pair-category {

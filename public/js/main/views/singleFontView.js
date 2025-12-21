@@ -18,7 +18,313 @@ function renderFontTags(font) {
   `;
 }
 
-async function buildSimilarSection({ currentFont, fontsAll, onOpenFont }) {
+function createPairControlsBox(pairFont, signal) {
+  const numStyles = pairFont.weights?.length || 0;
+  const hasAllCaps = pairFont.tags && pairFont.tags.includes("All Caps");
+  const globalText = getGlobalSampleText() || "The quick brown fox jumps over the lazy dog.";
+  const displayText = hasAllCaps ? globalText.toUpperCase() : globalText;
+
+  ensureFontFace(pairFont);
+
+  const pairBoxWrapper = document.createElement("div");
+  pairBoxWrapper.id = "pair-box-wrapper";
+  pairBoxWrapper.className = "pair-box-wrapper";
+
+  const controlsDiv = document.createElement("div");
+  controlsDiv.className = "bar_individual_font pair-controls";
+  controlsDiv.classList.add("force-visible-controls");
+
+  controlsDiv.innerHTML = `
+    <div class="sliders">
+      <div class="divLabel">
+        <label class="rangeLabel" for="pairFontSize">
+          <span>font size</span>
+          <span class="range-value" id="pairFontSizeValue">48pt</span>
+        </label>
+        <div class="range-container">
+          <input type="range" id="pairFontSize" min="12" max="150" value="48">
+        </div>
+      </div>
+
+      <div class="divLabel">
+        <label class="rangeLabel" for="pairLetterSpacing">
+          <span>tracking</span>
+          <span class="range-value" id="pairLetterSpacingValue">0pt</span>
+        </label>
+        <div class="range-container">
+          <input type="range" id="pairLetterSpacing" min="-5" max="50" value="0" step="0.5">
+        </div>
+      </div>
+
+      <div class="divLabel">
+        <label class="rangeLabel" for="pairLineHeight">
+          <span>leading</span>
+          <span class="range-value" id="pairLineHeightValue">100%</span>
+        </label>
+        <div class="range-container">
+          <input type="range" id="pairLineHeight" min="80" max="300" value="100" step="1">
+        </div>
+      </div>
+    </div>
+
+    <div class="choose-style-wrapper">
+      <a href="#" class="button" id="pair_choose_style_btn">
+        <h4>Choose style</h4>
+        <img src="../assets/imgs/arrow.svg" alt="icon arrow down"/>
+      </a>
+      <div id="pair_styles_menu" class="styles_menu" style="display:none;">
+        <div class="styles_menu_scroll"></div>
+      </div>
+    </div>
+  `;
+
+  const listDiv = document.createElement("div");
+  listDiv.className = "list_individual pair-list";
+  listDiv.dataset.allCaps = hasAllCaps ? "1" : "0";
+
+  const tagsHTML = renderFontTags(pairFont);
+  const designers = Array.isArray(pairFont?.design) ? pairFont.design : [];
+  const designersText = designers.length ? designers.map(escapeHtml).join(", ") : "";
+
+  listDiv.innerHTML = `
+    <div class="list_information_bar">
+      <section class="list_information">
+        <h3>${pairFont.name}</h3>
+        ${pairFont.foundry !== "Unknown" ? `<h3>${pairFont.foundry}</h3>` : ""}
+        ${designersText ? `<h3>${designersText}</h3>` : ""}
+        <h3>${numStyles} ${numStyles === 1 ? "style" : "styles"}</h3>
+        ${pairFont.variable ? "<h3>Variable</h3>" : ""}
+      </section>
+
+      <section class="list_information">
+        <a href="#" class="button remove-pair-btn"><h4>Remove Pair</h4></a>
+      </section>
+    </div>
+
+    <h1 class="sampleText" contenteditable="true"
+      style="font-family:'${pairFont._id}-font'; line-height: 4.5vw; word-wrap: break-word; overflow-wrap: break-word; white-space: normal; outline: none;">
+      ${displayText}
+    </h1>
+
+    ${tagsHTML}
+  `;
+
+  pairBoxWrapper.appendChild(controlsDiv);
+  pairBoxWrapper.appendChild(listDiv);
+
+  setupPairBoxEvents(controlsDiv, listDiv, pairFont, signal);
+
+  return pairBoxWrapper;
+}
+
+function setupPairBoxEvents(controlsContainer, displayContainer, font, signal) {
+  const h1 = displayContainer.querySelector("h1");
+  const fontSize = controlsContainer.querySelector("#pairFontSize");
+  const letterSpacing = controlsContainer.querySelector("#pairLetterSpacing");
+  const lineHeight = controlsContainer.querySelector("#pairLineHeight");
+
+  const fontSizeValue = controlsContainer.querySelector("#pairFontSizeValue");
+  const letterSpacingValue = controlsContainer.querySelector("#pairLetterSpacingValue");
+  const lineHeightValue = controlsContainer.querySelector("#pairLineHeightValue");
+  
+  if (lineHeightValue && lineHeight) lineHeightValue.textContent = lineHeight.value + "%";
+  if (h1 && lineHeight) h1.style.lineHeight = lineHeight.value + "%";
+
+  fontSize?.addEventListener(
+    "input",
+    function () {
+      if (fontSizeValue) fontSizeValue.textContent = this.value + "pt";
+      if (h1) h1.style.fontSize = this.value + "pt";
+    },
+    { signal }
+  );
+
+  letterSpacing?.addEventListener(
+    "input",
+    function () {
+      if (letterSpacingValue) letterSpacingValue.textContent = this.value + "pt";
+      if (h1) h1.style.letterSpacing = this.value + "pt";
+    },
+    { signal }
+  );
+
+  lineHeight?.addEventListener(
+    "input",
+    function () {
+      if (lineHeightValue) lineHeightValue.textContent = this.value + "%";
+      if (h1) h1.style.lineHeight = this.value + "%";
+    },
+    { signal }
+  );
+
+  const chooseBtn = controlsContainer.querySelector("#pair_choose_style_btn");
+  const menu = controlsContainer.querySelector("#pair_styles_menu");
+  const menuScroll = menu?.querySelector(".styles_menu_scroll");
+
+  const pairFamily = `${font._id}-font-pair-single`;
+
+  let pairFace = document.getElementById("pair-font-face");
+  if (!pairFace) {
+    pairFace = document.createElement("style");
+    pairFace.id = "pair-font-face";
+    document.head.appendChild(pairFace);
+  } else {
+    pairFace.textContent = "";
+  }
+
+  function applyWeight(weight) {
+    pairFace.textContent = `
+      @font-face {
+        font-family: '${pairFamily}';
+        src: url('../assets/fonts/${weight.file}');
+      }
+    `;
+    if (h1) h1.style.fontFamily = `'${pairFamily}'`;
+  }
+
+  function buildStylesMenu() {
+    if (!menuScroll) return;
+    menuScroll.innerHTML = "";
+
+    const defaultWeight = font.weights.find((w) => w.default) || font.weights[0];
+
+    font.weights.forEach((w) => {
+      const optionLink = document.createElement("a");
+      optionLink.href = "#";
+      optionLink.className = "option style-option";
+
+      const optionSelected = document.createElement("div");
+      optionSelected.className = "option_selected";
+      if (w === defaultWeight) optionSelected.classList.add("selected");
+
+      const optionText = document.createElement("h5");
+      optionText.textContent = w.style;
+
+      optionLink.appendChild(optionSelected);
+      optionLink.appendChild(optionText);
+      menuScroll.appendChild(optionLink);
+
+      optionLink.addEventListener(
+        "click",
+        (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+
+          menuScroll?.querySelectorAll(".option_selected").forEach((sel) => sel.classList.remove("selected"));
+          optionSelected.classList.add("selected");
+
+          applyWeight(w);
+        },
+        { signal }
+      );
+    });
+
+    applyWeight(defaultWeight);
+  }
+
+  buildStylesMenu();
+
+  chooseBtn?.addEventListener(
+    "click",
+    (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (!menu) return;
+
+      const isOpening = menu.style.display === "none";
+      menu.style.display = isOpening ? "block" : "none";
+      chooseBtn.classList.toggle("selected", isOpening);
+
+      displayContainer.classList.toggle("shifted", isOpening);
+    },
+    { signal }
+  );
+
+  document.addEventListener(
+    "click",
+    (e) => {
+      if (menu && chooseBtn && !menu.contains(e.target) && !chooseBtn.contains(e.target)) {
+        menu.style.display = "none";
+        chooseBtn.classList.remove("selected");
+        displayContainer.classList.remove("shifted");
+      }
+    },
+    { signal }
+  );
+}
+
+async function populatePairCollections(pairDiv, currentFont, allFonts) {
+  const pairCollectionsList = pairDiv.querySelector("#pair_collections_list");
+  if (!pairCollectionsList) return;
+
+  pairCollectionsList.innerHTML = "";
+
+  let userCollections = [];
+  try {
+    const { getUserCollections } = await import("../collections.js");
+    userCollections = getUserCollections() || [];
+  } catch (e) {
+    console.error("Failed to get user collections:", e);
+    pairCollectionsList.innerHTML = '<p style="color: var(--darker-grey); padding: 1rem;">Please login to see your collections.</p>';
+    return;
+  }
+
+  const fontsCollections = userCollections.filter(c => c.type === "fonts");
+
+  if (fontsCollections.length === 0) {
+    pairCollectionsList.innerHTML = '<p style="color: var(--darker-grey); padding: 1rem;">No collections available. Create one first!</p>';
+    return;
+  }
+
+  const fontsById = new Map(allFonts.map(f => [String(f._id), f]));
+
+  fontsCollections.forEach(collection => {
+    const collectionCategory = document.createElement("a");
+    collectionCategory.href = "#";
+    collectionCategory.className = "save-option pair-category";
+    collectionCategory.dataset.collectionId = String(collection._id);
+
+    const sampleLetter = "Aa";
+    collectionCategory.innerHTML = `
+      <div><h4>${sampleLetter}</h4><h4>${escapeHtml(collection.name)}</h4></div>
+    `;
+
+    const optionsSection = document.createElement("section");
+    optionsSection.className = "pair-options";
+    optionsSection.dataset.collectionId = String(collection._id);
+    optionsSection.style.display = "none";
+
+    const items = Array.isArray(collection.items) ? collection.items : [];
+    const fontIds = items.map(item => String(item.fontId)).filter(Boolean);
+    const fonts = fontIds.map(id => fontsById.get(id)).filter(Boolean);
+
+    const fontsToShow = fonts.filter(f => String(f._id) !== String(currentFont._id));
+
+    if (fontsToShow.length === 0) {
+      optionsSection.innerHTML = '<p style="color: var(--darker-grey); padding: 0.5rem;">No other fonts in this collection.</p>';
+    } else {
+      fontsToShow.forEach(font => {
+        const optionBtn = document.createElement("a");
+        optionBtn.href = "#";
+        optionBtn.className = "pair-option-btn";
+        optionBtn.dataset.fontId = String(font._id);
+
+        optionBtn.innerHTML = `
+          <div><h4>Aa</h4><h4>${escapeHtml(font.name)}</h4></div>
+          <h5 class="add-text">add</h5>
+          <img src="../assets/imgs/check.svg" class="check-icon" alt="check icon">
+        `;
+
+        optionsSection.appendChild(optionBtn);
+      });
+    }
+
+    pairCollectionsList.appendChild(collectionCategory);
+    pairCollectionsList.appendChild(optionsSection);
+  });
+}
+
+async function buildSimilarSection({ currentFont, fontsAll, onOpenFont, onOpenPairSuggestion }) {
   const root = document.createElement("div");
   root.className = "similar-wrapper";
 
@@ -108,7 +414,11 @@ async function buildSimilarSection({ currentFont, fontsAll, onOpenFont }) {
 
     article.addEventListener("click", (e) => {
       if (e.target.closest("a") || e.target.closest("button")) return;
-      onOpenFont(body);
+      if (typeof onOpenPairSuggestion === "function") {
+        onOpenPairSuggestion(heading, body);
+      } else {
+        onOpenFont(body);
+      }
     });
 
     pairsGrid.appendChild(article);
@@ -363,40 +673,84 @@ export function createSingleFontView({
       { signal }
     );
 
-    pairContainer?.querySelectorAll(".pair-category").forEach((cat) => {
-      cat.addEventListener(
+    const handlePairCategoryClick = (e) => {
+      const cat = e.target.closest(".pair-category");
+      if (!cat) return;
+      
+      e.preventDefault();
+      e.stopPropagation();
+
+      const collectionId = cat.dataset.collectionId;
+      const options = pairContainer.querySelector(`.pair-options[data-collection-id="${collectionId}"]`);
+      if (!options) return;
+
+      const isOpening = options.style.display === "none";
+
+      pairContainer.querySelectorAll(".pair-options").forEach((sec) => (sec.style.display = "none"));
+      pairContainer.querySelectorAll(".pair-category").forEach((c) => c.classList.remove("selected-option"));
+
+      options.style.display = isOpening ? "block" : "none";
+      cat.classList.toggle("selected-option", isOpening);
+    };
+
+    const handlePairOptionClick = (e) => {
+      const btn = e.target.closest(".pair-option-btn");
+      if (!btn) return;
+      
+      e.preventDefault();
+      e.stopPropagation();
+
+      const fontId = btn.dataset.fontId;
+      if (!fontId) return;
+
+      const allFonts = getAllFonts();
+      const pairFont = allFonts.find(f => String(f._id) === fontId);
+      if (!pairFont) return;
+
+      removePairBox();
+
+      const pairBox = createPairControlsBox(pairFont, signal);
+      
+      const firstListIndividual = singleFontView.querySelector(".list_individual:not(.pair-list)");
+      if (firstListIndividual && firstListIndividual.nextSibling) {
+        singleFontView.insertBefore(pairBox, firstListIndividual.nextSibling);
+      } else {
+        singleFontView.appendChild(pairBox);
+      }
+
+      const removePairBtn = pairBox.querySelector(".remove-pair-btn");
+      removePairBtn?.addEventListener(
         "click",
-        (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-
-          const type = cat.dataset.type;
-          const options = pairContainer.querySelector(`.pair-options[data-type="${type}"]`);
-          if (!options) return;
-
-          const isOpening = options.style.display === "none";
-
-          pairContainer.querySelectorAll(".pair-options").forEach((sec) => (sec.style.display = "none"));
-          pairContainer.querySelectorAll(".pair-category").forEach((c) => c.classList.remove("selected-option"));
-
-          options.style.display = isOpening ? "block" : "none";
-          cat.classList.toggle("selected-option", isOpening);
+        (evt) => {
+          evt.preventDefault();
+          evt.stopPropagation();
+          removePairBox();
         },
         { signal }
       );
-    });
 
-    pairContainer?.querySelectorAll(".pair-option-btn").forEach((btn) => {
-      btn.addEventListener(
-        "click",
-        (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          btn.classList.toggle("selected-option");
-        },
-        { signal }
-      );
-    });
+      pairMenu.style.display = "none";
+      addPairBtn.classList.remove("selected");
+      pairContainer?.querySelectorAll(".pair-options").forEach((sec) => (sec.style.display = "none"));
+      pairContainer?.querySelectorAll(".pair-category").forEach((c) => c.classList.remove("selected-option"));
+
+      btn.classList.add("selected-option");
+    };
+
+    const removePairBox = () => {
+      const existingPairBox = singleFontView.querySelector("#pair-box-wrapper");
+      if (existingPairBox) {
+        existingPairBox.remove();
+      }
+      const pairFace = document.getElementById("pair-font-face");
+      if (pairFace) {
+        pairFace.textContent = "";
+      }
+      pairContainer?.querySelectorAll(".pair-option-btn").forEach((b) => b.classList.remove("selected-option"));
+    };
+
+    pairContainer?.addEventListener("click", handlePairCategoryClick, { signal });
+    pairContainer?.addEventListener("click", handlePairOptionClick, { signal });
 
     // FAVOURITE
     const favBtn = displayContainer.querySelector(".fav-btn img");
@@ -717,46 +1071,20 @@ export function createSingleFontView({
       </a>
 
       <section class="save" id="pair_menu" style="display:none;">
-        <h4>Choose a font to pair</h4>
-
-        <a href="#" class="save-option pair-category" data-type="web">
-          <div><h4>Aa</h4><h4>Web</h4></div>
-        </a>
-        <section class="pair-options" data-type="web" style="display:none;">
-          <a href="#" class="pair-option-btn" data-type="web">
-            <div><h4>Aa</h4><h4>21 Display</h4></div>
-            <h5 class="add-text">add</h5>
-            <img src="../assets/imgs/check.svg" class="check-icon" alt="check icon">
-          </a>
-          <a href="#" class="pair-option-btn" data-type="web">
-            <div><h4>Aa</h4><h4>Anek Latin</h4></div>
-            <h5 class="add-text">add</h5>
-            <img src="../assets/imgs/check.svg" class="check-icon" alt="check icon">
-          </a>
-        </section>
-
-        <a href="#" class="save-option pair-category" data-type="print">
-          <div><h4>Aa</h4><h4>Print</h4></div>
-        </a>
-        <section class="pair-options" data-type="print" style="display:none;">
-          <a href="#" class="pair-option-btn" data-type="print">
-            <div><h4>Aa</h4><h4>21 Display</h4></div>
-            <h5 class="add-text">add</h5>
-            <img src="../assets/imgs/check.svg" class="check-icon" alt="check icon">
-          </a>
-          <a href="#" class="pair-option-btn" data-type="print">
-            <div><h4>Aa</h4><h4>Anek Latin</h4></div>
-            <h5 class="add-text">add</h5>
-            <img src="../assets/imgs/check.svg" class="check-icon" alt="check icon">
-          </a>
-        </section>
+        <h4>Choose a collection to pair</h4>
+        <div id="pair_collections_list"></div>
       </section>
     `;
+
+    await populatePairCollections(pairDiv, font, getAllFonts());
 
     const similarSection = await buildSimilarSection({
       currentFont: font,
       fontsAll: getAllFonts(),
       onOpenFont: showSingleFont,
+      onOpenPairSuggestion: (headingFont, bodyFont) => {
+        showSingleFontWithPair(headingFont, bodyFont);
+      },
     });
 
     teardownController?.abort();
@@ -775,9 +1103,194 @@ export function createSingleFontView({
         "click",
         (e) => {
           e.preventDefault();
+          const existingPairBox = singleFontView.querySelector("#pair-box-wrapper");
+          if (existingPairBox) {
+            existingPairBox.remove();
+          }
+          const pairFace = document.getElementById("pair-font-face");
+          if (pairFace) {
+            pairFace.textContent = "";
+          }
           closeSingleFontView();
         },
         { signal: teardownController.signal }
+      );
+    }
+  }
+
+  async function showSingleFontWithPair(headingFont, bodyFont) {
+    const isAlreadyOpen = singleFontView.style.display === "block";
+
+    if (!isAlreadyOpen) {
+      openSingleFontView();
+    }
+
+    ensureFontFace(headingFont);
+    ensureFontFace(bodyFont);
+
+    const numStyles = headingFont.weights.length;
+    const hasAllCaps = headingFont.tags && headingFont.tags.includes("All Caps");
+    const globalText = getGlobalSampleText() || "The quick brown fox jumps over the lazy dog.";
+    const displayText = hasAllCaps ? globalText.toUpperCase() : globalText;
+
+    const controlsDiv = document.createElement("div");
+    controlsDiv.className = "bar_individual_font";
+    controlsDiv.classList.add("force-visible-controls");
+
+    controlsDiv.innerHTML = `
+      <div class="sliders">
+        <div class="divLabel">
+          <label class="rangeLabel" for="fontSize">
+            <span>font size</span>
+            <span class="range-value" id="fontSizeValue">48pt</span>
+          </label>
+          <div class="range-container">
+            <input type="range" id="fontSize" min="12" max="150" value="48">
+          </div>
+        </div>
+
+        <div class="divLabel">
+          <label class="rangeLabel" for="letterSpacing">
+            <span>tracking</span>
+            <span class="range-value" id="letterSpacingValue">0pt</span>
+          </label>
+          <div class="range-container">
+            <input type="range" id="letterSpacing" min="-5" max="50" value="0" step="0.5">
+          </div>
+        </div>
+
+        <div class="divLabel">
+          <label class="rangeLabel" for="lineHeight">
+            <span>leading</span>
+            <span class="range-value" id="lineHeightValue">100%</span>
+          </label>
+          <div class="range-container">
+            <input type="range" id="lineHeight" min="80" max="300" value="100" step="1">
+          </div>
+        </div>
+      </div>
+
+      <div class="choose-style-wrapper">
+        <a href="#" class="button" id="choose_style_btn">
+          <h4>Choose style</h4>
+          <img src="../assets/imgs/arrow.svg" alt="icon arrow down"/>
+        </a>
+        <div id="styles_menu" class="styles_menu" style="display:none;">
+          <div class="styles_menu_scroll"></div>
+        </div>
+      </div>
+    `;
+
+    const listDiv = document.createElement("div");
+    listDiv.className = "list_individual";
+    listDiv.dataset.allCaps = hasAllCaps ? "1" : "0";
+
+    const tagsHTML = renderFontTags(headingFont);
+    const designers = Array.isArray(headingFont?.design) ? headingFont.design : [];
+    const designersText = designers.length ? designers.map(escapeHtml).join(", ") : "";
+
+    listDiv.innerHTML = `
+      <div class="list_information_bar">
+        <section class="list_information">
+          <h3>${headingFont.name}</h3>
+          ${headingFont.foundry !== "Unknown" ? `<h3>${headingFont.foundry}</h3>` : ""}
+          ${designersText ? `<h3>${designersText}</h3>` : ""}
+          <h3>${numStyles} ${numStyles === 1 ? "style" : "styles"}</h3>
+          ${headingFont.variable ? "<h3>Variable</h3>" : ""}
+        </section>
+
+        <section class="list_information">
+          <a href="#" class="fav-btn"><img src="../assets/imgs/fav.svg" alt="favourite"/></a>
+          <a href="#" class="button save-btn"><h4>Save</h4></a>
+        </section>
+
+        <section class="save_list">
+          <h4>Save font on...</h4>
+          <a href="#"><div><h4>Aa</h4><h4>Web</h4></div><h5 class="add-text">add</h5><img src="../assets/imgs/check.svg" class="check-icon" alt="check icon"></a>
+          <a href="#"><div><h4>Aa</h4><h4>Print</h4></div><h5 class="add-text">add</h5><img src="../assets/imgs/check.svg" class="check-icon" alt="check icon"></a>
+        </section>
+      </div>
+
+      <h1 class="sampleText" contenteditable="true"
+        style="font-family:'${headingFont._id}-font'; line-height: 4.5vw; word-wrap: break-word; overflow-wrap: break-word; white-space: normal; outline: none;">
+        ${displayText}
+      </h1>
+
+      ${tagsHTML}
+    `;
+
+    teardownController?.abort();
+    teardownController = new AbortController();
+    const signal = teardownController.signal;
+
+    const pairBox = createPairControlsBox(bodyFont, signal);
+
+    const pairDiv = document.createElement("div");
+    pairDiv.className = "pair-wrapper";
+
+    pairDiv.innerHTML = `
+      <a href="#" class="button" id="add_pair_btn">
+        <h4>Add Pair</h4>
+        <img src="../assets/imgs/add.svg" alt="icon albuns"/>
+      </a>
+
+      <section class="save" id="pair_menu" style="display:none;">
+        <h4>Choose a collection to pair</h4>
+        <div id="pair_collections_list"></div>
+      </section>
+    `;
+
+    await populatePairCollections(pairDiv, headingFont, getAllFonts());
+
+    const similarSection = await buildSimilarSection({
+      currentFont: headingFont,
+      fontsAll: getAllFonts(),
+      onOpenFont: showSingleFont,
+      onOpenPairSuggestion: (newHeadingFont, newBodyFont) => {
+        showSingleFontWithPair(newHeadingFont, newBodyFont);
+      },
+    });
+
+    singleFontView.innerHTML = "";
+    singleFontView.appendChild(controlsDiv);
+    singleFontView.appendChild(listDiv);
+    singleFontView.appendChild(pairBox);
+    singleFontView.appendChild(pairDiv);
+    singleFontView.appendChild(similarSection);
+
+    setupSingleViewEvents(controlsDiv, listDiv, pairDiv, headingFont);
+
+    const removePairBtn = pairBox.querySelector(".remove-pair-btn");
+    removePairBtn?.addEventListener(
+      "click",
+      (evt) => {
+        evt.preventDefault();
+        evt.stopPropagation();
+        pairBox.remove();
+        const pairFace = document.getElementById("pair-font-face");
+        if (pairFace) {
+          pairFace.textContent = "";
+        }
+      },
+      { signal }
+    );
+
+    if (headerBackBtn) {
+      headerBackBtn.addEventListener(
+        "click",
+        (e) => {
+          e.preventDefault();
+          const existingPairBox = singleFontView.querySelector("#pair-box-wrapper");
+          if (existingPairBox) {
+            existingPairBox.remove();
+          }
+          const pairFace = document.getElementById("pair-font-face");
+          if (pairFace) {
+            pairFace.textContent = "";
+          }
+          closeSingleFontView();
+        },
+        { signal }
       );
     }
   }
