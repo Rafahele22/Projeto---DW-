@@ -106,12 +106,62 @@ export function setupSaveMenuToggle(saveBtn, saveMenu) {
   });
 }
 
-export function setupSaveOptions(container) {
+export async function toggleFontInCollection(fontId, collectionName) {
+  const user = JSON.parse(localStorage.getItem("user") || "null");
+  if (!user || !user._id) {
+    console.warn("User not logged in");
+    return null;
+  }
+
+  try {
+    const res = await fetch("http://web-dev-grupo05.dei.uc.pt/api/collections/toggle-font", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ 
+        userId: user._id, 
+        collectionName: collectionName,
+        fontId: String(fontId) 
+      }),
+    });
+
+    if (!res.ok) return null;
+
+    const data = await res.json();
+    
+    import("../collections.js").then(({ refreshUserCollections }) => {
+      refreshUserCollections(user._id);
+    });
+
+    return data;
+  } catch (e) {
+    console.error("Failed to toggle font in collection:", e);
+    return null;
+  }
+}
+
+export function setupSaveOptions(container, fontId) {
   container.querySelectorAll(".save-option").forEach((option) => {
-    option.addEventListener("click", (e) => {
+    option.addEventListener("click", async (e) => {
       e.preventDefault();
       e.stopPropagation();
-      option.classList.toggle("selected-option");
+      
+      const collectionType = option.dataset.type;
+      if (!collectionType || !fontId) {
+        option.classList.toggle("selected-option");
+        return;
+      }
+
+      const collectionName = collectionType.charAt(0).toUpperCase() + collectionType.slice(1);
+      
+      const result = await toggleFontInCollection(fontId, collectionName);
+      
+      if (result) {
+        if (result.added) {
+          option.classList.add("selected-option");
+        } else {
+          option.classList.remove("selected-option");
+        }
+      }
     });
   });
 }

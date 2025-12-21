@@ -271,6 +271,62 @@ async function handleApiRequest(req, res) {
         return;
     }
 
+    if (url.pathname === '/api/collections/toggle-font' && req.method === 'POST') {
+        try {
+            const body = await parseBody(req);
+            const { userId, collectionName, fontId } = body;
+
+            if (!userId || !collectionName || !fontId) {
+                res.writeHead(400, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: 'userId, collectionName and fontId are required' }));
+                return;
+            }
+
+            let collection = await db.collection('collections').findOne({
+                userId: String(userId),
+                name: collectionName,
+                type: 'fonts'
+            });
+
+            if (!collection) {
+                const newCollection = {
+                    userId: String(userId),
+                    name: collectionName,
+                    type: 'fonts',
+                    items: [],
+                    createdAt: new Date()
+                };
+                const result = await db.collection('collections').insertOne(newCollection);
+                collection = { ...newCollection, _id: result.insertedId };
+            }
+
+            const items = Array.isArray(collection.items) ? collection.items : [];
+            const fontIdStr = String(fontId);
+            const exists = items.some(item => String(item.fontId) === fontIdStr);
+
+            if (exists) {
+                await db.collection('collections').updateOne(
+                    { _id: collection._id },
+                    { $pull: { items: { fontId: fontIdStr } } }
+                );
+                res.writeHead(200, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ added: false, fontId: fontIdStr, collectionName }));
+            } else {
+                await db.collection('collections').updateOne(
+                    { _id: collection._id },
+                    { $push: { items: { fontId: fontIdStr, addedAt: new Date() } } }
+                );
+                res.writeHead(200, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ added: true, fontId: fontIdStr, collectionName }));
+            }
+        } catch (error) {
+            console.error('Error toggling font in collection:', error);
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Failed to toggle font in collection' }));
+        }
+        return;
+    }
+
     if (url.pathname === '/api/favorites/toggle' && req.method === 'POST') {
         try {
             const body = await parseBody(req);

@@ -63,7 +63,7 @@ export function generateGridArticles({ gridEl, fonts, onOpenFont }) {
     const saveBtn = article.querySelector(".save-btn");
 
     setupFavButton(article.querySelector(".fav-btn img"), font._id);
-    setupSaveOptions(article);
+    setupSaveOptions(article, font._id);
 
     hide(saveMenu);
 

@@ -4,6 +4,7 @@ import {
   closeSaveMenusExcept,
   ensureCapsLockTracking,
   getIsCapsLockOn,
+  toggleFontInCollection,
 } from "../shared/fontUtils.js";
 import { hide } from "../shared/displayUtils.js";
 
@@ -38,8 +39,8 @@ export function generateListItems({ gridEl, fonts, onOpenFont, getGlobalSampleTe
         </section>
         <section class="save_list">
           <h4>Save font on...</h4>
-          <a href="#"><div><h4>Aa</h4><h4>Web</h4></div><h5 class="add-text">add</h5><img src="../assets/imgs/check.svg" class="check-icon" alt="check icon"></a>
-          <a href="#"><div><h4>Aa</h4><h4>Print</h4></div><h5 class="add-text">add</h5><img src="../assets/imgs/check.svg" class="check-icon" alt="check icon"></a>
+          <a href="#" class="save-option" data-type="web"><div><h4>Aa</h4><h4>Web</h4></div><h5 class="add-text">add</h5><img src="../assets/imgs/check.svg" class="check-icon" alt="check icon"></a>
+          <a href="#" class="save-option" data-type="print"><div><h4>Aa</h4><h4>Print</h4></div><h5 class="add-text">add</h5><img src="../assets/imgs/check.svg" class="check-icon" alt="check icon"></a>
         </section>
       </div>
       <h1 class="sampleText" contenteditable="true" style="font-family:'${font._id}-font'; line-height: 4.5vw; word-wrap: break-word; overflow-wrap: break-word; white-space: normal; outline: none;">${displayText}</h1>
@@ -79,11 +80,16 @@ function setupListItemEvents({ listItem, font, getGlobalSampleText, setGlobalSam
     saveBtn?.classList.toggle("selected", isOpening);
   });
 
-  listItem.querySelectorAll(".save_list a").forEach((option) => {
-    option.addEventListener("click", (e) => {
+  listItem.querySelectorAll(".save-option").forEach((option) => {
+    option.addEventListener("click", async (e) => {
       e.preventDefault();
       e.stopPropagation();
-      option.classList.toggle("selected-option");
+      const collectionType = option.dataset.type;
+      if (collectionType && font._id) {
+        const collectionName = collectionType === "web" ? "Web" : "Print";
+        const result = await toggleFontInCollection(font._id, collectionName);
+        option.classList.toggle("selected-option", result?.added);
+      }
     });
   });
 

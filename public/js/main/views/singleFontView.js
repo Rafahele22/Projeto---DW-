@@ -1,4 +1,4 @@
-import { escapeHtml, ensureFontFace, pickRandom, sameTags, setFavIconState } from "../shared/fontUtils.js";
+import { escapeHtml, ensureFontFace, pickRandom, sameTags, setFavIconState, toggleFontInCollection, setupSaveOptions } from "../shared/fontUtils.js";
 import { getGlobalSampleText, isFavorite, toggleFavorite } from "../state.js";
 
 function renderFontTags(font) {
@@ -533,10 +533,15 @@ async function buildSimilarSection({ currentFont, fontsAll, onOpenFont, onOpenPa
     });
 
     article.querySelectorAll(".save-option").forEach((option) => {
-      option.addEventListener("click", (e) => {
+      option.addEventListener("click", async (e) => {
         e.preventDefault();
         e.stopPropagation();
-        option.classList.toggle("selected-option");
+        const collectionType = option.dataset.type; // "web" or "print"
+        if (collectionType && font._id) {
+          const collectionName = collectionType === "web" ? "Web" : "Print";
+          const result = await toggleFontInCollection(font._id, collectionName);
+          option.classList.toggle("selected-option", result?.added);
+        }
       });
     });
 
@@ -782,6 +787,24 @@ export function createSingleFontView({
       },
       { signal }
     );
+
+    // SAVE OPTIONS (Web/Print)
+    displayContainer.querySelectorAll(".save-option").forEach((option) => {
+      option.addEventListener(
+        "click",
+        async (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const collectionType = option.dataset.type;
+          if (collectionType && font._id) {
+            const collectionName = collectionType === "web" ? "Web" : "Print";
+            const result = await toggleFontInCollection(font._id, collectionName);
+            option.classList.toggle("selected-option", result?.added);
+          }
+        },
+        { signal }
+      );
+    });
 
     // SLIDERS
     const h1 = displayContainer.querySelector("h1");
@@ -1045,8 +1068,8 @@ export function createSingleFontView({
 
         <section class="save_list">
           <h4>Save font on...</h4>
-          <a href="#"><div><h4>Aa</h4><h4>Web</h4></div><h5 class="add-text">add</h5><img src="../assets/imgs/check.svg" class="check-icon" alt="check icon"></a>
-          <a href="#"><div><h4>Aa</h4><h4>Print</h4></div><h5 class="add-text">add</h5><img src="../assets/imgs/check.svg" class="check-icon" alt="check icon"></a>
+          <a href="#" class="save-option" data-type="web"><div><h4>Aa</h4><h4>Web</h4></div><h5 class="add-text">add</h5><img src="../assets/imgs/check.svg" class="check-icon" alt="check icon"></a>
+          <a href="#" class="save-option" data-type="print"><div><h4>Aa</h4><h4>Print</h4></div><h5 class="add-text">add</h5><img src="../assets/imgs/check.svg" class="check-icon" alt="check icon"></a>
         </section>
       </div>
 
@@ -1206,8 +1229,8 @@ export function createSingleFontView({
 
         <section class="save_list">
           <h4>Save font on...</h4>
-          <a href="#"><div><h4>Aa</h4><h4>Web</h4></div><h5 class="add-text">add</h5><img src="../assets/imgs/check.svg" class="check-icon" alt="check icon"></a>
-          <a href="#"><div><h4>Aa</h4><h4>Print</h4></div><h5 class="add-text">add</h5><img src="../assets/imgs/check.svg" class="check-icon" alt="check icon"></a>
+          <a href="#" class="save-option" data-type="web"><div><h4>Aa</h4><h4>Web</h4></div><h5 class="add-text">add</h5><img src="../assets/imgs/check.svg" class="check-icon" alt="check icon"></a>
+          <a href="#" class="save-option" data-type="print"><div><h4>Aa</h4><h4>Print</h4></div><h5 class="add-text">add</h5><img src="../assets/imgs/check.svg" class="check-icon" alt="check icon"></a>
         </section>
       </div>
 
