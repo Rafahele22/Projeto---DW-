@@ -485,7 +485,7 @@ function PairsCard({ headingFont, bodyFont, onOpenFont, forceFavSelected = false
   const headingBase = "Sample Heading";
   const isAllCaps = Array.isArray(headingFont?.tags) && headingFont.tags.includes("All Caps");
   const headingText = isAllCaps ? headingBase.toUpperCase() : headingBase;
-  const bodyText = "This is sample text used to demonstrate how typefaces work together. It allows designers to focus on form, spacing, hierarchy, and contrast.";
+  const bodyText = "This is sample text used to demonstrate how typefaces work together in a layout. It allows you to focus on form, spacing, hierarchy, rhythm, and contrast, helping evaluate how different fonts interact, complement each other, and perform across various sizes and contexts.";
 
 
   return (
