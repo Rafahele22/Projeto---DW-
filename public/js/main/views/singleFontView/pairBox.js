@@ -1,0 +1,205 @@
+import { ensureFontFace } from "../../shared/fontUtils.js";
+import { getGlobalSampleText } from "../../state.js";
+import { renderFontTags, renderControlsBar, renderPairBox } from "./templates.js";
+
+// =========================
+// CREATE PAIR CONTROLS BOX
+// =========================
+export function createPairControlsBox(pairFont, signal) {
+  const hasAllCaps = pairFont.tags?.includes("All Caps");
+  const globalText = getGlobalSampleText() || "The quick brown fox jumps over the lazy dog.";
+  const displayText = hasAllCaps ? globalText.toUpperCase() : globalText;
+
+  ensureFontFace(pairFont);
+
+  const pairBoxWrapper = document.createElement("div");
+  pairBoxWrapper.id = "pair-box-wrapper";
+  pairBoxWrapper.className = "pair-box-wrapper";
+
+  const controlsDiv = document.createElement("div");
+  controlsDiv.className = "bar_individual_font pair-controls force-visible-controls";
+  controlsDiv.innerHTML = renderControlsBar({ isPair: true });
+
+  const listDiv = document.createElement("div");
+  listDiv.className = "list_individual pair-list";
+  listDiv.dataset.allCaps = hasAllCaps ? "1" : "0";
+
+  const tagsHTML = renderFontTags(pairFont);
+  listDiv.innerHTML = renderPairBox(pairFont, displayText, tagsHTML);
+
+  setupPairButtonEvents(listDiv, signal);
+
+  pairBoxWrapper.appendChild(controlsDiv);
+  pairBoxWrapper.appendChild(listDiv);
+
+  setupPairBoxEvents(controlsDiv, listDiv, pairFont, signal);
+
+  return pairBoxWrapper;
+}
+
+// ===================
+// PAIR BUTTON EVENTS 
+// ===================
+function setupPairButtonEvents(listDiv, signal) {
+  const savePairBtn = listDiv.querySelector(".save-pair-btn");
+  const removePairBtn = listDiv.querySelector(".remove-pair-btn");
+
+  const savePairImg = savePairBtn?.querySelector("img");
+  const removePairImg = removePairBtn?.querySelector("img");
+
+  const SAVE_DEFAULT = "../assets/imgs/fav.svg";
+  const SAVE_HOVER_SELECTED = "../assets/imgs/fav_pairs_selected.svg";
+  const REMOVE_DEFAULT = "../assets/imgs/trash.svg";
+  const REMOVE_HOVER = "../assets/imgs/trash_selected.svg";
+
+  const syncSavePairIcon = () => {
+    if (!savePairImg) return;
+    const isSelected = savePairBtn?.classList.contains("selected-option");
+    savePairImg.src = isSelected ? SAVE_HOVER_SELECTED : SAVE_DEFAULT;
+  };
+
+  removePairBtn?.addEventListener("mouseenter", () => {
+    if (removePairImg) removePairImg.src = REMOVE_HOVER;
+  }, { signal });
+
+  removePairBtn?.addEventListener("mouseleave", () => {
+    if (removePairImg) removePairImg.src = REMOVE_DEFAULT;
+  }, { signal });
+
+  savePairBtn?.addEventListener("mouseenter", () => {
+    if (savePairImg) savePairImg.src = SAVE_HOVER_SELECTED;
+  }, { signal });
+
+  savePairBtn?.addEventListener("mouseleave", () => {
+    syncSavePairIcon();
+  }, { signal });
+
+  savePairBtn?.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    savePairBtn.classList.toggle("selected-option");
+    syncSavePairIcon();
+  }, { signal });
+
+  syncSavePairIcon();
+}
+
+// ================
+// PAIR BOX EVENTS 
+// ================
+function setupPairBoxEvents(controlsContainer, displayContainer, font, signal) {
+  const h1 = displayContainer.querySelector("h1");
+  const fontSize = controlsContainer.querySelector("#pairFontSize");
+  const letterSpacing = controlsContainer.querySelector("#pairLetterSpacing");
+  const lineHeight = controlsContainer.querySelector("#pairLineHeight");
+
+  const fontSizeValue = controlsContainer.querySelector("#pairFontSizeValue");
+  const letterSpacingValue = controlsContainer.querySelector("#pairLetterSpacingValue");
+  const lineHeightValue = controlsContainer.querySelector("#pairLineHeightValue");
+
+  if (lineHeightValue && lineHeight) lineHeightValue.textContent = lineHeight.value + "%";
+  if (h1 && lineHeight) h1.style.lineHeight = lineHeight.value + "%";
+
+  fontSize?.addEventListener("input", function () {
+    if (fontSizeValue) fontSizeValue.textContent = this.value + "pt";
+    if (h1) h1.style.fontSize = this.value + "pt";
+  }, { signal });
+
+  letterSpacing?.addEventListener("input", function () {
+    if (letterSpacingValue) letterSpacingValue.textContent = this.value + "pt";
+    if (h1) h1.style.letterSpacing = this.value + "pt";
+  }, { signal });
+
+  lineHeight?.addEventListener("input", function () {
+    if (lineHeightValue) lineHeightValue.textContent = this.value + "%";
+    if (h1) h1.style.lineHeight = this.value + "%";
+  }, { signal });
+
+  setupPairStylesMenu(controlsContainer, displayContainer, font, signal);
+}
+
+// ================
+// PAIR STYLES MENU
+// ================
+function setupPairStylesMenu(controlsContainer, displayContainer, font, signal) {
+  const chooseBtn = controlsContainer.querySelector(".choose_style_btn");
+  const menu = controlsContainer.querySelector("#pair_styles_menu");
+  const menuScroll = menu?.querySelector(".styles_menu_scroll");
+  const h1 = displayContainer.querySelector("h1");
+
+  const pairFamily = `${font._id}-font-pair-single`;
+
+  let pairFace = document.getElementById("pair-font-face");
+  if (!pairFace) {
+    pairFace = document.createElement("style");
+    pairFace.id = "pair-font-face";
+    document.head.appendChild(pairFace);
+  } else {
+    pairFace.textContent = "";
+  }
+
+  function applyWeight(weight) {
+    pairFace.textContent = `
+      @font-face {
+        font-family: '${pairFamily}';
+        src: url('../assets/fonts/${weight.file}');
+      }
+    `;
+    if (h1) h1.style.fontFamily = `'${pairFamily}'`;
+  }
+
+  function buildStylesMenu() {
+    if (!menuScroll) return;
+    menuScroll.innerHTML = "";
+
+    const defaultWeight = font.weights.find((w) => w.default) || font.weights[0];
+
+    font.weights.forEach((w) => {
+      const optionLink = document.createElement("a");
+      optionLink.href = "#";
+      optionLink.className = "option style-option";
+
+      const optionSelected = document.createElement("div");
+      optionSelected.className = "option_selected";
+      if (w === defaultWeight) optionSelected.classList.add("selected");
+
+      const optionText = document.createElement("h5");
+      optionText.textContent = w.style;
+
+      optionLink.appendChild(optionSelected);
+      optionLink.appendChild(optionText);
+      menuScroll.appendChild(optionLink);
+
+      optionLink.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        menuScroll?.querySelectorAll(".option_selected").forEach((sel) => sel.classList.remove("selected"));
+        optionSelected.classList.add("selected");
+        applyWeight(w);
+      }, { signal });
+    });
+
+    applyWeight(defaultWeight);
+  }
+
+  buildStylesMenu();
+
+  chooseBtn?.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!menu) return;
+
+    const isOpening = menu.style.display === "none";
+    menu.style.display = isOpening ? "block" : "none";
+    chooseBtn.classList.toggle("selected", isOpening);
+    displayContainer.classList.toggle("shifted", isOpening);
+  }, { signal });
+
+  document.addEventListener("click", (e) => {
+    if (menu && chooseBtn && !menu.contains(e.target) && !chooseBtn.contains(e.target)) {
+      menu.style.display = "none";
+      chooseBtn.classList.remove("selected");
+      displayContainer.classList.remove("shifted");
+    }
+  }, { signal });
+}

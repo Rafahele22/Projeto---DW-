@@ -10,7 +10,8 @@ import {
 import { setupViewModeToggle } from "./viewMode.js";
 import { generateGridArticles } from "./views/gridView.js";
 import { generateListItems } from "./views/listView.js";
-import { createSingleFontView } from "./views/singleFontView.js";
+import { createSingleFontView } from "./views/singleFontView/index.js";
+
 import {
   setupCollectionsNav,
   setUserCollections,
