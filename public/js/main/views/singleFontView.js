@@ -21,6 +21,7 @@ function renderFontTags(font) {
 function createPairControlsBox(pairFont, signal) {
   const numStyles = pairFont.weights?.length || 0;
   const hasAllCaps = pairFont.tags && pairFont.tags.includes("All Caps");
+
   const globalText = getGlobalSampleText() || "The quick brown fox jumps over the lazy dog.";
   const displayText = hasAllCaps ? globalText.toUpperCase() : globalText;
 
@@ -36,33 +37,39 @@ function createPairControlsBox(pairFont, signal) {
 
   controlsDiv.innerHTML = `
     <div class="sliders">
-      <div class="divLabel">
-        <label class="rangeLabel" for="pairFontSize">
-          <span>font size</span>
-          <span class="range-value" id="pairFontSizeValue">48pt</span>
-        </label>
+      <div>
+        <div class="divLabel">
+          <label class="rangeLabel" for="pairFontSize">
+            <span>font size</span>
+            <span class="range-value" id="pairFontSizeValue">48pt</span>
+          </label>
+        </div>
         <div class="range-container">
-          <input type="range" id="pairFontSize" min="12" max="150" value="48">
+          <input type="range" id="pairFontSize" min="12" max="150" value="48" />
         </div>
       </div>
 
-      <div class="divLabel">
-        <label class="rangeLabel" for="pairLetterSpacing">
-          <span>tracking</span>
-          <span class="range-value" id="pairLetterSpacingValue">0pt</span>
-        </label>
+      <div>
+        <div class="divLabel">
+          <label class="rangeLabel" for="pairLetterSpacing">
+            <span>tracking</span>
+            <span class="range-value" id="pairLetterSpacingValue">0pt</span>
+          </label>
+        </div>
         <div class="range-container">
-          <input type="range" id="pairLetterSpacing" min="-5" max="50" value="0" step="0.5">
+          <input type="range" id="pairLetterSpacing" min="-5" max="50" value="0" step="0.5" />
         </div>
       </div>
 
-      <div class="divLabel">
-        <label class="rangeLabel" for="pairLineHeight">
-          <span>leading</span>
-          <span class="range-value" id="pairLineHeightValue">100%</span>
-        </label>
+      <div>
+        <div class="divLabel">
+          <label class="rangeLabel" for="pairLineHeight">
+            <span>leading</span>
+            <span class="range-value" id="pairLineHeightValue">100</span>
+          </label>
+        </div>
         <div class="range-container">
-          <input type="range" id="pairLineHeight" min="80" max="300" value="100" step="1">
+          <input type="range" id="pairLineHeight" min="80" max="300" value="100" step="1" />
         </div>
       </div>
     </div>
@@ -70,9 +77,10 @@ function createPairControlsBox(pairFont, signal) {
     <div class="choose-style-wrapper">
       <a href="#" class="button choose_style_btn">
         <h4>Choose style</h4>
-        <img src="../assets/imgs/arrow.svg" alt="icon arrow down"/>
+        <img src="../assets/imgs/arrow.svg" alt="icon arrow down" />
       </a>
-      <div id="pair_styles_menu" class="styles_menu" style="display:none;">
+
+      <div id="pair_styles_menu" class="styles_menu" style="display:none">
         <div class="styles_menu_scroll"></div>
       </div>
     </div>
@@ -83,22 +91,29 @@ function createPairControlsBox(pairFont, signal) {
   listDiv.dataset.allCaps = hasAllCaps ? "1" : "0";
 
   const tagsHTML = renderFontTags(pairFont);
+
   const designers = Array.isArray(pairFont?.design) ? pairFont.design : [];
   const designersText = designers.length ? designers.map(escapeHtml).join(", ") : "";
 
   listDiv.innerHTML = `
     <div class="list_information_bar">
       <section class="list_information">
-        <h3>${pairFont.name}</h3>
-        ${pairFont.foundry !== "Unknown" ? `<h3>${pairFont.foundry}</h3>` : ""}
+        <h3>${escapeHtml(pairFont.name)}</h3>
+        ${pairFont.foundry !== "Unknown" ? `<h3>${escapeHtml(pairFont.foundry)}</h3>` : ""}
         ${designersText ? `<h3>${designersText}</h3>` : ""}
         <h3>${numStyles} ${numStyles === 1 ? "style" : "styles"}</h3>
         ${pairFont.variable ? "<h3>Variable</h3>" : ""}
       </section>
 
       <section class="list_information">
-        <a href="#" class="button save-pair-btn"><img src="../assets/imgs/fav.svg" alt="favourite"/><h4>Save to Pairs</h4></a>
-        <a href="#" class="button remove-pair-btn"><img src="../assets/imgs/trash.svg" alt="trash"/><h4>Remove Pair</h4></a>
+        <a href="#" class="button save-pair-btn">
+          <img src="../assets/imgs/fav.svg" alt="favourite"/>
+          <h4>Save Pair</h4>
+        </a>
+        <a href="#" class="button remove-pair-btn">
+          <img src="../assets/imgs/trash.svg" alt="trash"/>
+          <h4>Remove</h4>
+        </a>
       </section>
     </div>
 
@@ -110,6 +125,77 @@ function createPairControlsBox(pairFont, signal) {
     ${tagsHTML}
   `;
 
+  // --- ICON SWAP (hover/selected) ---
+  const savePairBtn = listDiv.querySelector(".save-pair-btn");
+  const removePairBtn = listDiv.querySelector(".remove-pair-btn");
+
+  const savePairImg = savePairBtn?.querySelector("img");
+  const removePairImg = removePairBtn?.querySelector("img");
+
+  const SAVE_DEFAULT = "../assets/imgs/fav.svg";
+  const SAVE_HOVER_SELECTED = "../assets/imgs/fav_pairs_selected.svg";
+
+  const REMOVE_DEFAULT = "../assets/imgs/trash.svg";
+  const REMOVE_HOVER = "../assets/imgs/trash_selected.svg";
+
+  const syncSavePairIcon = () => {
+    if (!savePairImg) return;
+    const isSelected = savePairBtn?.classList.contains("selected-option");
+    savePairImg.src = isSelected ? SAVE_HOVER_SELECTED : SAVE_DEFAULT;
+  };
+
+  // Remove Pair: hover troca icon
+  removePairBtn?.addEventListener(
+    "mouseenter",
+    (e) => {
+      e.preventDefault();
+      if (removePairImg) removePairImg.src = REMOVE_HOVER;
+    },
+    { signal }
+  );
+
+  removePairBtn?.addEventListener(
+    "mouseleave",
+    (e) => {
+      e.preventDefault();
+      if (removePairImg) removePairImg.src = REMOVE_DEFAULT;
+    },
+    { signal }
+  );
+
+  savePairBtn?.addEventListener(
+    "mouseenter",
+    (e) => {
+      e.preventDefault();
+      if (savePairImg) savePairImg.src = SAVE_HOVER_SELECTED;
+    },
+    { signal }
+  );
+
+  savePairBtn?.addEventListener(
+    "mouseleave",
+    (e) => {
+      e.preventDefault();
+      syncSavePairIcon();
+    },
+    { signal }
+  );
+
+  // Se queres mesmo "selected" (fica guardado visualmente)
+  savePairBtn?.addEventListener(
+    "click",
+    (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      savePairBtn.classList.toggle("selected-option");
+      syncSavePairIcon();
+    },
+    { signal }
+  );
+
+  syncSavePairIcon();
+  // --- /ICON SWAP ---
+
   pairBoxWrapper.appendChild(controlsDiv);
   pairBoxWrapper.appendChild(listDiv);
 
@@ -117,6 +203,7 @@ function createPairControlsBox(pairFont, signal) {
 
   return pairBoxWrapper;
 }
+
 
 function setupPairBoxEvents(controlsContainer, displayContainer, font, signal) {
   const h1 = displayContainer.querySelector("h1");
@@ -736,6 +823,8 @@ const handlePairOptionClick = (e) => {
   removePairBox();
 
   const pairBox = createPairControlsBox(pairFont, signal);
+
+
 
   const firstListIndividual = singleFontView.querySelector(".list_individual:not(.pair-list)");
   if (firstListIndividual && firstListIndividual.nextSibling) {

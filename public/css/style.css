@@ -95,14 +95,14 @@ h1 {
 h2 {
   color: var(--black);
   font-family: "roboto medium";
-  font-size: 1.25vw;
+  font-size: 1.15vw;
   margin: 0;
 }
 
 h3 {
   color: var(--black);
   font-family: "roboto regular";
-  font-size: 1.25vw;
+  font-size: 1.15vw;
   margin: 0;
 }
 
@@ -719,11 +719,11 @@ button[type="submit"]:hover h4,
   background-color: var(--light_grey);
 }
 
-.remove-pair-btn:hover, .save-pair-btn:hover {
+.remove-pair-btn:hover, .save-pair-btn:hover, .save-pair-btn.selected-option {
   background-color: var(--purple);
 }
 
-.remove-pair-btn:hover h4, .save-pair-btn:hover h4 {
+.remove-pair-btn:hover h4, .save-pair-btn:hover h4, .save-pair-btn.selected-option h4 {
   color: var(--light_grey);
 }
 
@@ -1258,7 +1258,7 @@ form button:hover img { content: url("../../assets/imgs/login_selected.svg"); }
 
   main { margin-top: 20vh; }
 
-  h2, h3 { font-size: 1.5vw; }
+  h2, h3 { font-size: 1.35vw; }
 
   h4, h5, .rangeLabel span, #search_bar input[type="text"] {
     font-size: 1.5vw;
