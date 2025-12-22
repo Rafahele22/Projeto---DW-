@@ -494,7 +494,7 @@ button[type="submit"]:hover,
 #search_bar:hover, 
 .grid_view article:hover, 
 .list:hover, 
-#choose_style_btn.selected, 
+.choose_style_btn.selected, 
 .save a:hover,
 .save_list a:hover  { 
     background-color: var(--grey); 
@@ -712,20 +712,11 @@ button[type="submit"]:hover h4,
 #pair-box-wrapper {
   display: flex;
   flex-direction: column;
-  margin-top: 2vh;
-  margin-bottom: 2vh;
-}
-
-#pair-box-wrapper .bar_individual_font {
-  background-color: transparent;
-}
-
-#pair-box-wrapper .list_individual {
-  background-color: var(--dark-grey);
+  margin-top: 4vh;
 }
 
 #pair-box-wrapper .remove-pair-btn {
-  background-color: var(--grey);
+  background-color: var(--light_grey);
 }
 
 #pair-box-wrapper .remove-pair-btn:hover {
@@ -838,7 +829,7 @@ body.single-font-open #second_bar section {
   overflow-y: auto;
 }
 
-#choose_style_btn {
+.choose_style_btn {
   z-index: 3;
   position: relative;
   width: 21vw;
@@ -847,11 +838,11 @@ body.single-font-open #second_bar section {
   justify-self: right;
 }
 
-#choose_style_btn.selected h4 { color: var(--black); }
-#choose_style_btn.selected:hover { background-color: var(--dark-grey); }
+.choose_style_btn.selected h4 { color: var(--black); }
+.choose_style_btn.selected:hover { background-color: var(--dark-grey); }
 
-#choose_style_btn img { transition: transform 200ms ease; }
-#choose_style_btn.selected img { transform: rotate(-180deg); }
+.choose_style_btn img { transition: transform 200ms ease; }
+.choose_style_btn.selected img { transform: rotate(-180deg); }
 
 .bar_individual_font .divLabel {
   opacity: 1 !important;
@@ -1306,7 +1297,7 @@ form button:hover img { content: url("../../assets/imgs/login_selected.svg"); }
 
   .list_individual.shifted { margin-right: 24vw; }
 
-  #choose_style_btn { width: 19vw; }
+  .choose_style_btn { width: 19vw; }
 
   .list { padding: 2.2vw; }
 }

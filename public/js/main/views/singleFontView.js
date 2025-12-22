@@ -68,7 +68,7 @@ function createPairControlsBox(pairFont, signal) {
     </div>
 
     <div class="choose-style-wrapper">
-      <a href="#" class="button" id="pair_choose_style_btn">
+      <a href="#" class="button choose_style_btn">
         <h4>Choose style</h4>
         <img src="../assets/imgs/arrow.svg" alt="icon arrow down"/>
       </a>
@@ -157,7 +157,7 @@ function setupPairBoxEvents(controlsContainer, displayContainer, font, signal) {
     { signal }
   );
 
-  const chooseBtn = controlsContainer.querySelector("#pair_choose_style_btn");
+  const chooseBtn = controlsContainer.querySelector(".choose_style_btn");
   const menu = controlsContainer.querySelector("#pair_styles_menu");
   const menuScroll = menu?.querySelector(".styles_menu_scroll");
 
@@ -885,7 +885,7 @@ export function createSingleFontView({
     });
 
     // CHOOSE STYLE
-    const chooseBtn = controlsContainer.querySelector("#choose_style_btn");
+    const chooseBtn = controlsContainer.querySelector(".choose_style_btn");
     const menu = controlsContainer.querySelector("#styles_menu");
     const menuScroll = menu?.querySelector(".styles_menu_scroll");
 
@@ -1040,7 +1040,7 @@ export function createSingleFontView({
       </div>
 
       <div class="choose-style-wrapper">
-        <a href="#" class="button" id="choose_style_btn">
+        <a href="#" class="button choose_style_btn">
           <h4>Choose style</h4>
           <img src="../assets/imgs/arrow.svg" alt="icon arrow down"/>
         </a>
@@ -1201,7 +1201,7 @@ export function createSingleFontView({
       </div>
 
       <div class="choose-style-wrapper">
-        <a href="#" class="button" id="choose_style_btn">
+        <a href="#" class="button choose_style_btn">
           <h4>Choose style</h4>
           <img src="../assets/imgs/arrow.svg" alt="icon arrow down"/>
         </a>
