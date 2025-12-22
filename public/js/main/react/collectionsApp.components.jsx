@@ -726,9 +726,11 @@ function ListItem({
 
   const handleFavToggle = async (e) => {
     const wasSelected = favSelected || forceFavSelected;
-    await toggleFav(e);
     if (collectionName === "Favourites" && wasSelected) {
+      await toggleFav(e);
       onFontRemovedFromCollection?.(font._id);
+    } else {
+      await toggleFav(e);
     }
   };
 
@@ -854,9 +856,11 @@ function GridItem({
 
   const handleFavToggle = async (e) => {
     const wasSelected = favSelected || forceFavSelected;
-    await toggleFav(e);
     if (collectionName === "Favourites" && wasSelected) {
+      await toggleFav(e);
       onFontRemovedFromCollection?.(font._id);
+    } else {
+      await toggleFav(e);
     }
   };
 

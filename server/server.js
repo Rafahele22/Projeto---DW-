@@ -90,7 +90,7 @@ const server = http.createServer(async (req, res) => {
     if (pathname === '/main.html') {
         try {
             const html = fs.readFileSync(path.join(PUBLIC_DIR, 'main.html'), 'utf8');
-            sendHtml(res, 200, inlineJsxScriptsInHtml(html));
+            sendHtml(res, 200, html);
         } catch (e) {
             console.error('Error serving main.html:', e);
             sendError(res, 500, 'Server Error');
