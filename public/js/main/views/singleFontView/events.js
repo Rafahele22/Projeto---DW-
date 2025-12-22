@@ -18,7 +18,7 @@ export function setupSingleViewEvents({
   closeSingleFontView
 }) {
   setupAddPairEvents(pairContainer, font, signal, singleFontView, getAllFonts);
-  setupFavouriteEvent(displayContainer, signal);
+  setupFavouriteEvent(displayContainer, font?._id, signal);
   setupSaveMenuEvent(displayContainer, signal);
   setupSlidersEvents(controlsContainer, displayContainer, signal);
   setupTagsEvents(displayContainer, signal, closeSingleFontView, filtersPanelEl, filtersBtnEl, gridEl, listEl);
@@ -147,20 +147,20 @@ function showLoginPrompt() {
 // =========================
 // FAVOURITE 
 // =========================
-function setupFavouriteEvent(displayContainer, signal) {
-  const favBtn = displayContainer.querySelector(".fav-btn img");
-  favBtn?.addEventListener("click", (e) => {
+import { setupFavButton } from "../../shared/fontUtils.js";
+
+function setupFavouriteEvent(displayContainer, fontId, signal) {
+  const img = displayContainer?.querySelector(".fav-btn img");
+  if (!img || !fontId) return;
+
+  setupFavButton(img, fontId);
+
+  img.closest("a")?.addEventListener("click", (e) => {
     e.preventDefault();
     e.stopPropagation();
-    toggleFavIcon(favBtn);
   }, { signal });
 }
 
-function toggleFavIcon(img) {
-  if (!img) return;
-  const isFav = img.src.includes("fav_selected");
-  img.src = isFav ? "../assets/imgs/fav.svg" : "../assets/imgs/fav_selected.svg";
-}
 
 // =========================
 // SAVE MENU
