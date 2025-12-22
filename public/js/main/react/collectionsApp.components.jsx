@@ -168,11 +168,8 @@ function SaveMenu({ isOpen, fontId, onClose }) {
         const data = await res.json();
         setSelectedIds((prev) => {
           const next = new Set(prev);
-          if (data.added) {
-            next.add(String(col._id));
-          } else {
-            next.delete(String(col._id));
-          }
+          if (data.added) next.add(String(col._id));
+          else next.delete(String(col._id));
           return next;
         });
       }
@@ -261,11 +258,8 @@ function GridSaveMenu({ isOpen, fontId }) {
         const data = await res.json();
         setSelectedIds((prev) => {
           const next = new Set(prev);
-          if (data.added) {
-            next.add(String(col._id));
-          } else {
-            next.delete(String(col._id));
-          }
+          if (data.added) next.add(String(col._id));
+          else next.delete(String(col._id));
           return next;
         });
       }
@@ -1246,12 +1240,15 @@ function PairsCard({ headingFont, bodyFont, onOpenFont, forceFavSelected = false
   }, [headingFont?._id, bodyFont?._id]);
 
   const numStyles = Array.isArray(bodyFont?.weights) ? bodyFont.weights.length : 0;
+
   const headingBase = "Sample Heading";
   const isAllCaps = Array.isArray(headingFont?.tags) && headingFont.tags.includes("All Caps");
   const headingText = isAllCaps ? headingBase.toUpperCase() : headingBase;
 
   const bodyText =
     "This is sample text used to demonstrate how typefaces work together in a layout. It allows you to focus on form, spacing, hierarchy, rhythm, and contrast, helping evaluate how different fonts interact, complement each other, and perform across various sizes and contexts.";
+
+  const headingNumStyles = Array.isArray(headingFont?.weights) ? headingFont.weights.length : 0;
 
   return (
     <article
@@ -1268,7 +1265,17 @@ function PairsCard({ headingFont, bodyFont, onOpenFont, forceFavSelected = false
       <h1 className="pairs_title" style={{ fontFamily: `'${headingFont?._id}-font'` }}>
         {headingText}
       </h1>
+
+
+      
+
       <p style={{ fontFamily: `'${bodyFont?._id}-font'` }}>{bodyText}</p>
+      <section className="grid_information_font_title">
+        <h2>{headingFont?.name}</h2>
+        <h3>
+          {headingNumStyles} {headingNumStyles === 1 ? "style" : "styles"}
+        </h3>
+      </section>
 
       <section className="grid_information">
         <h2>{bodyFont?.name}</h2>
