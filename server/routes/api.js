@@ -71,6 +71,7 @@ async function handleApiRequest(req, res) {
     if (url.pathname === '/api/top-pairs' && req.method === 'GET') {
         try {
             const limit = parseInt(url.searchParams.get('limit') || '4', 10);
+            const withFont = url.searchParams.get('withFont') || '';
             
             const pairsCollections = await db.collection('collections').find({ type: 'pairs' }).toArray();
             
@@ -78,10 +79,16 @@ async function handleApiRequest(req, res) {
             
             for (const col of pairsCollections) {
                 const items = Array.isArray(col.items) ? col.items : [];
-                for (let i = 0; i < items.length; i++) {
-                    const headingId = String(items[i]?.fontId || '');
-                    const bodyId = String(items[(i + 1) % items.length]?.fontId || '');
+                for (let i = 0; i < items.length - 1; i += 2) {
+                    const headingItem = items[i];
+                    const bodyItem = items[i + 1];
+                    if (!headingItem || !bodyItem) continue;
+                    
+                    const headingId = String(headingItem.fontId || '');
+                    const bodyId = String(bodyItem.fontId || '');
                     if (!headingId || !bodyId || headingId === bodyId) continue;
+                    
+                    if (withFont && headingId !== withFont && bodyId !== withFont) continue;
                     
                     const key = `${headingId}|${bodyId}`;
                     pairCounts.set(key, (pairCounts.get(key) || 0) + 1);
@@ -445,6 +452,127 @@ async function handleApiRequest(req, res) {
             console.error('Error toggling font in collection:', error);
             res.writeHead(500, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({ error: 'Failed to toggle font in collection' }));
+        }
+        return;
+    }
+
+    if (url.pathname === '/api/pairs/save' && req.method === 'POST') {
+        try {
+            const body = await parseBody(req);
+            const { userId, headingFontId, bodyFontId } = body;
+
+            if (!userId || !headingFontId || !bodyFontId) {
+                res.writeHead(400, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: 'userId, headingFontId and bodyFontId are required' }));
+                return;
+            }
+
+            let pairsCollection = await db.collection('collections').findOne({
+                userId: String(userId),
+                type: 'pairs'
+            });
+
+            if (!pairsCollection) {
+                const newCollection = {
+                    userId: String(userId),
+                    name: 'pairs',
+                    type: 'pairs',
+                    items: [],
+                    createdAt: new Date()
+                };
+                const result = await db.collection('collections').insertOne(newCollection);
+                pairsCollection = { ...newCollection, _id: result.insertedId };
+            }
+
+            const items = Array.isArray(pairsCollection.items) ? pairsCollection.items : [];
+            const headingStr = String(headingFontId);
+            const bodyStr = String(bodyFontId);
+            
+            const pairExists = items.some((item, idx) => {
+                if (String(item.fontId) !== headingStr) return false;
+                const nextItem = items[idx + 1];
+                return nextItem && String(nextItem.fontId) === bodyStr;
+            });
+
+            if (pairExists) {
+                res.writeHead(200, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ added: false, message: 'Pair already exists' }));
+            } else {
+                await db.collection('collections').updateOne(
+                    { _id: pairsCollection._id },
+                    { 
+                        $push: { 
+                            items: { 
+                                $each: [
+                                    { fontId: headingStr, role: 'heading', addedAt: new Date() },
+                                    { fontId: bodyStr, role: 'body', addedAt: new Date() }
+                                ]
+                            } 
+                        } 
+                    }
+                );
+                res.writeHead(200, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ added: true, headingFontId: headingStr, bodyFontId: bodyStr }));
+            }
+        } catch (error) {
+            console.error('Error saving pair:', error);
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Failed to save pair' }));
+        }
+        return;
+    }
+
+    if (url.pathname === '/api/pairs/remove' && req.method === 'POST') {
+        try {
+            const body = await parseBody(req);
+            const { userId, headingFontId, bodyFontId } = body;
+
+            if (!userId || !headingFontId || !bodyFontId) {
+                res.writeHead(400, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: 'userId, headingFontId and bodyFontId are required' }));
+                return;
+            }
+
+            const pairsCollection = await db.collection('collections').findOne({
+                userId: String(userId),
+                type: 'pairs'
+            });
+
+            if (!pairsCollection) {
+                res.writeHead(404, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: 'Pairs collection not found' }));
+                return;
+            }
+
+            const items = Array.isArray(pairsCollection.items) ? pairsCollection.items : [];
+            const headingStr = String(headingFontId);
+            const bodyStr = String(bodyFontId);
+            
+            const newItems = [];
+            let i = 0;
+            while (i < items.length) {
+                const current = items[i];
+                const next = items[i + 1];
+                
+                if (String(current.fontId) === headingStr && next && String(next.fontId) === bodyStr) {
+                    i += 2;
+                } else {
+                    newItems.push(current);
+                    i += 1;
+                }
+            }
+
+            await db.collection('collections').updateOne(
+                { _id: pairsCollection._id },
+                { $set: { items: newItems } }
+            );
+
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ removed: true, headingFontId: headingStr, bodyFontId: bodyStr }));
+        } catch (error) {
+            console.error('Error removing pair:', error);
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Failed to remove pair' }));
         }
         return;
     }

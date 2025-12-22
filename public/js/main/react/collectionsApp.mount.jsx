@@ -4,6 +4,7 @@ function mountCollectionsImpl({
   setGlobalSampleText,
   onSelectCollection,
   onOpenFont,
+  onOpenPair,
 }) {
   if (!mountEl) throw new Error("Missing mountEl");
   if (typeof React === "undefined" || typeof ReactDOM === "undefined") {
@@ -153,6 +154,8 @@ function mountCollectionsImpl({
       collection={pairsCollection}
       fontsById={fontsById}
       onOpenFont={onOpenFont}
+      onOpenPair={onOpenPair}
+      onRefreshCollections={refreshCollections}
       forceFavSelected={true} 
     />
   );

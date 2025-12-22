@@ -725,8 +725,9 @@ function ListItem({
   };
 
   const handleFavToggle = async (e) => {
+    const wasSelected = favSelected || forceFavSelected;
     await toggleFav(e);
-    if (collectionName === "Favourites" && favSelected) {
+    if (collectionName === "Favourites" && wasSelected) {
       onFontRemovedFromCollection?.(font._id);
     }
   };
@@ -852,8 +853,9 @@ function GridItem({
   };
 
   const handleFavToggle = async (e) => {
+    const wasSelected = favSelected || forceFavSelected;
     await toggleFav(e);
-    if (collectionName === "Favourites" && favSelected) {
+    if (collectionName === "Favourites" && wasSelected) {
       onFontRemovedFromCollection?.(font._id);
     }
   };
@@ -934,11 +936,13 @@ function CollectionList({
   const [isEditingName, setIsEditingName] = React.useState(false);
   const [editName, setEditName] = React.useState(collection?.name || "");
 
+  const itemsLength = collection?.items?.length ?? 0;
+
   React.useEffect(() => {
     setIsEditingName(false);
     setEditName(collection?.name || "");
     setRemovedFontIds(new Set());
-  }, [collection?._id, collection?.name]);
+  }, [collection?._id, collection?.name, itemsLength]);
 
   const displayedFonts = React.useMemo(() => {
     let fonts = allFonts.filter((f) => !removedFontIds.has(String(f._id)));
@@ -1091,11 +1095,13 @@ function CollectionGrid({
   const [isEditingName, setIsEditingName] = React.useState(false);
   const [editName, setEditName] = React.useState(collection?.name || "");
 
+  const itemsLength = collection?.items?.length ?? 0;
+
   React.useEffect(() => {
     setIsEditingName(false);
     setEditName(collection?.name || "");
     setRemovedFontIds(new Set());
-  }, [collection?._id, collection?.name]);
+  }, [collection?._id, collection?.name, itemsLength]);
 
   const displayedFonts = React.useMemo(() => {
     let fonts = allFonts.filter((f) => !removedFontIds.has(String(f._id)));
@@ -1231,8 +1237,8 @@ function CollectionGrid({
   );
 }
 
-function PairsCard({ headingFont, bodyFont, onOpenFont, forceFavSelected = false }) {
-  const { favSelected, toggle: toggleFav } = useFavorite(bodyFont?._id);
+function PairsCard({ headingFont, bodyFont, onOpenFont, onOpenPair, onRemovePair, forceFavSelected = false }) {
+  const [isRemoved, setIsRemoved] = React.useState(false);
 
   React.useEffect(() => {
     ensureFontFaceInline(headingFont);
@@ -1250,16 +1256,46 @@ function PairsCard({ headingFont, bodyFont, onOpenFont, forceFavSelected = false
 
   const headingNumStyles = Array.isArray(headingFont?.weights) ? headingFont.weights.length : 0;
 
+  const handleFavToggle = async (e) => {
+    e?.preventDefault();
+    e?.stopPropagation();
+    
+    const user = JSON.parse(localStorage.getItem("user") || "null");
+    if (!user || !user._id) return;
+
+    try {
+      const res = await fetch(`${API_BASE}/pairs/remove`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: user._id,
+          headingFontId: String(headingFont?._id),
+          bodyFontId: String(bodyFont?._id),
+        }),
+      });
+      if (res.ok) {
+        setIsRemoved(true);
+        onRemovePair?.(headingFont?._id, bodyFont?._id);
+      }
+    } catch (err) {}
+  };
+
+  if (isRemoved) return null;
+
   return (
     <article
       data-font-id={String(bodyFont?._id)}
       onClick={(e) => {
         if (e.target.closest("a") || e.target.closest("button")) return;
-        onOpenFont?.(bodyFont);
+        if (typeof onOpenPair === "function") {
+          onOpenPair(headingFont, bodyFont);
+        } else {
+          onOpenFont?.(bodyFont);
+        }
       }}
     >
       <section className="grid_information_pairs">
-        <FavButton selected={forceFavSelected ? true : favSelected} onToggle={toggleFav} />
+        <FavButton selected={true} onToggle={handleFavToggle} />
       </section>
 
       <h1 className="pairs_title" style={{ fontFamily: `'${headingFont?._id}-font'` }}>
@@ -1287,44 +1323,55 @@ function PairsCard({ headingFont, bodyFont, onOpenFont, forceFavSelected = false
   );
 }
 
-function PairsGrid({ collection, fontsById, onOpenFont, forceFavSelected = false }) {
+function PairsGrid({ collection, fontsById, onOpenFont, onOpenPair, onRefreshCollections, forceFavSelected = false }) {
   const items = Array.isArray(collection?.items) ? collection.items : [];
-  const ids = items.map((it) => String(it?.fontId)).filter(Boolean);
-  const fonts = ids.map((id) => fontsById.get(id)).filter(Boolean);
+  const [removedPairs, setRemovedPairs] = React.useState(new Set());
+  
+  const pairs = React.useMemo(() => {
+    const result = [];
+    for (let i = 0; i < items.length - 1; i += 2) {
+      const headingItem = items[i];
+      const bodyItem = items[i + 1];
+      if (!headingItem || !bodyItem) continue;
+      
+      const headingFont = fontsById.get(String(headingItem.fontId));
+      const bodyFont = fontsById.get(String(bodyItem.fontId));
+      if (!headingFont || !bodyFont) continue;
+      
+      const pairKey = `${headingFont._id}|${bodyFont._id}`;
+      if (!removedPairs.has(pairKey)) {
+        result.push({ heading: headingFont, body: bodyFont, key: pairKey });
+      }
+    }
+    return result;
+  }, [items, fontsById, removedPairs]);
 
-  if (fonts.length === 0)
+  const handleRemovePair = (headingId, bodyId) => {
+    const pairKey = `${headingId}|${bodyId}`;
+    setRemovedPairs(prev => new Set([...prev, pairKey]));
+    onRefreshCollections?.();
+  };
+
+  if (pairs.length === 0)
     return (
       <p style={{ fontFamily: "roboto regular", color: "var(--darker-grey)" }}>
         No pairs yet.
       </p>
     );
 
-  if (fonts.length === 1) {
-    const only = fonts[0];
-    return (
-      <PairsCard
-        headingFont={only}
-        bodyFont={only}
-        onOpenFont={onOpenFont}
-        forceFavSelected={forceFavSelected}
-      />
-    );
-  }
-
   return (
     <div className="grid grid_view">
-      {fonts.map((headingFont, idx) => {
-        const bodyFont = fonts[(idx + 1) % fonts.length];
-        return (
-          <PairsCard
-            key={String(headingFont._id) + "-" + String(bodyFont?._id)}
-            headingFont={headingFont}
-            bodyFont={bodyFont}
-            onOpenFont={onOpenFont}
-            forceFavSelected={forceFavSelected}
-          />
-        );
-      })}
+      {pairs.map(({ heading, body, key }) => (
+        <PairsCard
+          key={key}
+          headingFont={heading}
+          bodyFont={body}
+          onOpenFont={onOpenFont}
+          onOpenPair={onOpenPair}
+          onRemovePair={handleRemovePair}
+          forceFavSelected={forceFavSelected}
+        />
+      ))}
     </div>
   );
 }

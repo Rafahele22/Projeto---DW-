@@ -230,7 +230,7 @@ export function createSingleFontView({
     teardownController = new AbortController();
     const signal = teardownController.signal;
 
-    const pairBox = createPairControlsBox(bodyFont, signal);
+    const pairBox = createPairControlsBox(bodyFont, signal, headingFont);
 
     const pairDiv = document.createElement("div");
     pairDiv.className = "pair-wrapper";
@@ -287,6 +287,7 @@ export function createSingleFontView({
 
   return {
     showSingleFont,
+    showSingleFontWithPair,
     closeSingleFontView,
     setOnClose: (fn) => {
       onCloseCallback = fn;

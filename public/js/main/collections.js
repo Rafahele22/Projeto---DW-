@@ -137,14 +137,40 @@ export function setupCollectionsNav(options = {}) {
       },
       onOpenFont: (font) => {
         if (isInCollectionsDetail && singleFontController?.setOnClose) {
+          const savedCollectionId = openedCollectionId;
+          const savedTab = activeCollectionsTab;
           singleFontController.setOnClose(() => {
-            openedCollectionId = null;
-            isInCollectionsDetail = false;
-            setCollectionsTabSelected(getActiveTab() || albumsTab);
-            renderCollectionsHome(activeCollectionsTab);
+            hide(discoverUniverse);
+            collectionsUniverse.style.display = "block";
+            openedCollectionId = savedCollectionId;
+            isInCollectionsDetail = true;
+            activeCollectionsTab = savedTab;
+            showCollectionsListBar();
+            attachCollectionsViewModeInterceptors();
+            const mode = getActualMode();
+            setCollectionsViewMode(mode);
+            collectionsReact?.update?.({
+              view: "collection",
+              openedCollectionId: savedCollectionId,
+              collectionViewMode: mode,
+            });
+            window.scrollTo(0, 0);
           });
         }
         onOpenFont?.(font);
+      },
+      onOpenPair: (headingFont, bodyFont) => {
+        if (singleFontController?.setOnClose) {
+          singleFontController.setOnClose(() => {
+            hide(discoverUniverse);
+            collectionsUniverse.style.display = "block";
+            openedCollectionId = null;
+            isInCollectionsDetail = false;
+            setCollectionsTabSelected(pairsTab || albumsTab);
+            renderCollectionsHome("pairs");
+          });
+        }
+        singleFontController?.showSingleFontWithPair?.(headingFont, bodyFont);
       },
       onSetViewMode: (mode) => setCollectionsViewMode(mode)
     });
