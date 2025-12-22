@@ -226,6 +226,8 @@ export function setupCollectionsNav(options = {}) {
   }
 
   function renderCollectionsHome(tab) {
+    hide(discoverUniverse);
+  collectionsUniverse.style.display = "block";
   const safeTab = tab === "pairs" ? "pairs" : "albums";
   showCollectionsTabsBar();
 
@@ -319,12 +321,22 @@ export function setupCollectionsNav(options = {}) {
   pairsTab?.addEventListener("click", handleTabClick("pairs"));
 
   backToCollection?.addEventListener("click", (e) => {
-    e.preventDefault();
-    openedCollectionId = null;
-    isInCollectionsDetail = false;
-    setCollectionsTabSelected(getActiveTab() || myCollectionsBar);
-    renderCollectionsHome(activeCollectionsTab);
-  });
+  e.preventDefault();
+  e.stopPropagation();
+
+  hide(discoverUniverse);
+  collectionsUniverse.style.display = "block";
+
+  openedCollectionId = null;
+  isInCollectionsDetail = false;
+
+  setCollectionsTabSelected(getActiveTab() || albumsTab);
+
+  renderCollectionsHome(activeCollectionsTab);
+
+  window.scrollTo(0, 0);
+});
+
 
   updateNavIcons();
   setCollectionsTabSelected(albumsTab || myCollectionsBar);
