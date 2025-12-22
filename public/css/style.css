@@ -1146,6 +1146,10 @@ form button:hover img { content: url("../../assets/imgs/login_selected.svg"); }
 
 .album > section > div > img { padding-right: 0.5vw; }
 
+.exemples_album h1.is-empty {
+  color: transparent;
+}
+
 /* =========================
    COLLECTION TOOLBAR
 ========================= */
