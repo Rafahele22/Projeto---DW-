@@ -25,10 +25,64 @@ Fontscope also allows users to create a personal profile, where they can save fa
 Fontscope is intended for both designers and non-designers, offering clear and useful information about each typeface, an intuitive and efficient search experience, and hands-on customization tools that support faster and more informed typographic decisions for any project.
 
 
-## Instrutions for running the electron app
+## Instructions for running the electron app
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
+2. Start Electron:
+   ```bash
+   npm run electron
+   ```
 
-## Instrutions for starting the mongodb and server locally
+### How to start MongoDB and the local server
+1. Make sure MongoDB is running locally (port 3000)
+2. Start the server:
+   ```bash
+   cd server
+   node server.js
+   ```
+3. Access the application:
+   - Open Electron, or
+   - Open `public/main.html` in your browser for the web version
 
+### Project structure
+```
+Projeto---DW-
+├── public/
+│   ├── main.html
+│   ├── css/
+│   ├── js/
+│   │   └── main/
+│   │       ├── index.js
+│   │       ├── filtering.js
+│   │       ├── react/
+│   │       └── ...
+│   └── assets/
+├── server/
+│   ├── server.js
+│   └── config/
+├── data/
+├── C-react/
+├── electron/
+├── readme.md
+└── instructions.md
+```
+
+### Technologies used
+- HTML5
+- CSS3 (Grid, Flexbox, media queries)
+- JavaScript
+- React (Babel standalone)
+- Node.js
+- Electron
+- MongoDB
+
+### Documentation
+- See code comments and folder structure for module details
+
+### License
+This project is open source and available for educational purposes.
 
 ## List of tasks performed
 
@@ -85,3 +139,9 @@ Fontscope is intended for both designers and non-designers, offering clear and u
 -> Manage favorites
 
 — Connection to the server
+
+-> Refactoring and modularization of React components
+-> Implementation and debugging of filtering, search, and lazy loading logic
+-> Asset loading and server path troubleshooting
+-> Improvements to project documentation and onboarding
+-> Technical planning and architectural decisions

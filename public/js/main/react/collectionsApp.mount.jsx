@@ -1,3 +1,5 @@
+const { AlbumsGrid, CollectionList, CollectionGrid, PairsGrid } = window.CollectionsViews || {};
+
 function mountCollectionsImpl({
   mountEl,
   getGlobalSampleText,
