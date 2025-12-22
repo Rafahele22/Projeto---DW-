@@ -304,13 +304,20 @@ async function populatePairCollections(pairDiv, currentFont, allFonts) {
       optionsSection.innerHTML = '<p style="color: var(--darker-grey); padding: 0.5rem;">No other fonts in this collection.</p>';
     } else {
       fontsToShow.forEach(font => {
+        ensureFontFace(font);
+        const isAllCaps = Array.isArray(font?.tags) && font.tags.includes("All Caps");
+        const sampleLetter = isAllCaps ? "AA" : "Aa";
+
         const optionBtn = document.createElement("a");
         optionBtn.href = "#";
         optionBtn.className = "pair-option-btn";
         optionBtn.dataset.fontId = String(font._id);
 
         optionBtn.innerHTML = `
-          <div><h4>Aa</h4><h4>${escapeHtml(font.name)}</h4></div>
+          <div>
+        <h4 style="font-family:'${String(font._id)}-font'">${sampleLetter}</h4>
+           <h4>${escapeHtml(font.name)}</h4>
+         </div>
           <h5 class="add-text">add</h5>
           <img src="../assets/imgs/check.svg" class="check-icon" alt="check icon">
         `;
