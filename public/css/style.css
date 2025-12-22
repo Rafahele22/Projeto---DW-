@@ -753,7 +753,7 @@ button[type="submit"]:hover h4,
 }
 
 .list_information_bar .list_information:first-of-type { gap: 2vw; }
-.list_information_bar .list_information { gap: 0.5vw; }
+.list_information_bar .list_information { gap: 0.7vw; }
 
 .list[data-all-caps="1"] h1.sampleText,
 .list_individual[data-all-caps="1"] h1.sampleText {
@@ -1017,6 +1017,10 @@ body.single-font-open #second_bar section {
   transition: transform 0.2s ease, opacity 0.2s ease;
 }
 
+.trash-btn img {
+  height: 2.8vh;
+}
+
 .fav-btn:hover img {
   transform: scale(1.15);
   opacity: 0.8;
@@ -1150,6 +1154,15 @@ form button:hover img { content: url("../../assets/imgs/login_selected.svg"); }
   color: transparent;
 }
 
+.album_icons_grid {
+  display: flex;
+  align-items: center;
+}
+
+.album_icons_grid a {
+  padding-left: 0.5vw;
+}
+
 /* =========================
    COLLECTION TOOLBAR
 ========================= */
@@ -1222,7 +1235,20 @@ form button:hover img { content: url("../../assets/imgs/login_selected.svg"); }
     outline: none;
     width: 100%;
     padding: 0.5vh 0;
-    border-bottom: 2px solid var(--black);
+    border-bottom: 1px solid var(--black);
+}
+
+.edit-album-input {
+    border: none;
+    background: transparent;
+    font-family: "roboto medium";
+    font-size: 2.3vw;
+    color: var(--black);
+    outline: none;
+    margin: 0;
+    padding: 0;
+    width: 20vw;
+    border-bottom: 1px solid var(--black);
 }
 
 .pending-album-confirm {
@@ -1284,9 +1310,14 @@ form button:hover img { content: url("../../assets/imgs/login_selected.svg"); }
   }
 
   .fav-btn img,
-  #second_bar section a img {
+  #second_bar section a img  {
     height: 3vh;
   }
+
+  .trash-btn img  {
+    height: 2.6vh;
+  }
+
 
   .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 

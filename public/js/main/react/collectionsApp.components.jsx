@@ -28,10 +28,14 @@ function AlbumPreview({ fonts }) {
     const sampleLetter = hasAllCaps ? "AA" : "Aa";
 
     const style = hasFont
-  ? { fontFamily: `'${fontToUse._id}-font'` }
-  : { color: "transparent" };
+      ? { fontFamily: `'${fontToUse._id}-font'` }
+      : { color: "transparent" };
 
-    return <h1 className={hasFont ? "" : "is-empty"} style={style}>{sampleLetter}</h1>;
+    return (
+      <h1 className={hasFont ? "" : "is-empty"} style={style}>
+        {sampleLetter}
+      </h1>
+    );
   };
 
   const f0 = getFont(0);
@@ -187,6 +191,11 @@ function CollectionHeader({
   onEdit,
   showDelete = true,
   onDelete,
+  isEditing = false,
+  editValue = "",
+  onChangeEditValue,
+  onSaveEdit,
+  onCancelEdit,
 }) {
   const isFavourites = collectionName === "Favourites";
   const canManage = !isFavourites;
@@ -194,9 +203,23 @@ function CollectionHeader({
   return (
     <div className="album_information">
       <div className="album_title">
-        <h2>{collectionName || "Untitled Album"}</h2>
+        {isEditing ? (
+          <input
+            type="text"
+            className="edit-album-input"
+            value={editValue}
+            onChange={(e) => onChangeEditValue?.(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") onSaveEdit?.();
+              if (e.key === "Escape") onCancelEdit?.();
+            }}
+            autoFocus
+          />
+        ) : (
+          <h2>{collectionName || "Untitled Album"}</h2>
+        )}
 
-        {canManage && showEdit && (
+        {canManage && !isEditing && showEdit && (
           <a
             href="#"
             className="button"
@@ -211,7 +234,7 @@ function CollectionHeader({
           </a>
         )}
 
-        {canManage && showDelete && (
+        {canManage && !isEditing && showDelete && (
           <a
             href="#"
             className="button"
@@ -225,6 +248,33 @@ function CollectionHeader({
             <h4>Delete</h4>
           </a>
         )}
+
+        {canManage && isEditing && (
+          <>
+            <a
+              href="#"
+              className="button"
+              onClick={(e) => {
+                e.preventDefault();
+                onSaveEdit?.();
+              }}
+            >
+              <img src="../assets/imgs/check.svg" alt="save icon" />
+              <h4>Save</h4>
+            </a>
+            <a
+              href="#"
+              className="button"
+              onClick={(e) => {
+                e.preventDefault();
+                onCancelEdit?.();
+              }}
+            >
+              <img src="../assets/imgs/close.svg" alt="cancel icon" />
+              <h4>Cancel</h4>
+            </a>
+          </>
+        )}
       </div>
 
       <h2 className="collection-count">
@@ -233,8 +283,6 @@ function CollectionHeader({
     </div>
   );
 }
-
-
 
 function CollectionToolbar({ searchTerm, setSearchTerm, currentMode, onSetMode }) {
   const activeMode = currentMode || "grid";
@@ -346,7 +394,7 @@ function AlbumsGrid({ collections, fontsById, onSelectCollection, onCreateCollec
     if (!user || !user._id) return;
 
     try {
-      const res = await fetch("http://web-dev-grupo05.dei.uc.pt/api/collections", {
+      const res = await fetch("http://localhost:4000/api/collections", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -360,9 +408,14 @@ function AlbumsGrid({ collections, fontsById, onSelectCollection, onCreateCollec
         setPendingAlbum(null);
         setAlbumName("New Album");
         if (typeof onCreateCollection === "function") onCreateCollection();
+      } else {
+        const text = await res.text();
+        console.error("Create album error:", res.status, text);
+        alert("Failed to create album: " + res.status);
       }
     } catch (err) {
       console.error("Failed to create album:", err);
+      alert("Error creating album: " + (err?.message || ""));
     }
   };
 
@@ -549,7 +602,7 @@ function ListItem({
         onOpenFont?.(font);
       }}
     >
-      <div className="list_information_bar">
+            <div className="list_information_bar">
         <section className="list_information">
           <h3>{font?.name}</h3>
           {font?.foundry && font.foundry !== "Unknown" ? <h3>{font.foundry}</h3> : null}
@@ -560,7 +613,20 @@ function ListItem({
         </section>
 
         <section className="list_information">
+          <a
+            href="#"
+            className="trash-btn"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+            }}
+          >
+            <img src="../assets/imgs/trash.svg" alt="trash icon" />
+          </a>
           <FavButton selected={forceFavSelected ? true : favSelected} onToggle={toggleFav} />
+
+        
+
           <a
             href="#"
             className={"button save-btn" + (isSaveOpen ? " selected" : "")}
@@ -572,6 +638,7 @@ function ListItem({
 
         <SaveMenu isOpen={isSaveOpen} />
       </div>
+
 
       <h1
         className="sampleText"
@@ -630,7 +697,7 @@ function GridItem({ font, onOpenFont, forceFavSelected = false }) {
       }}
       onMouseLeave={() => setSaveOpen(false)}
     >
-      <section className="grid_information">
+            <section className="grid_information">
         <a
           href="#"
           className={"button save-btn" + (saveOpen ? " selected" : "")}
@@ -643,8 +710,21 @@ function GridItem({ font, onOpenFont, forceFavSelected = false }) {
           <h4>Save</h4>
         </a>
 
+        <div className="album_icons_grid">
+        <a
+          href="#"
+          className="trash-btn"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+          }}
+        >
+          <img src="../assets/imgs/trash.svg" alt="trash icon" />
+        </a>
         <FavButton selected={forceFavSelected ? true : favSelected} onToggle={toggleFav} />
+</div>
       </section>
+
 
       <section className="save" style={{ display: saveOpen ? "block" : "none" }}>
         <h4>Save font on...</h4>
@@ -674,12 +754,21 @@ function CollectionList({
   onOpenFont,
   currentViewMode,
   onSetViewMode,
+  onCollectionRenamed,
 }) {
   const allFonts = useFontsFromCollection(collection, fontsById);
   const [searchTerm, setSearchTerm] = React.useState("");
   const [openSaveId, setOpenSaveId] = React.useState(null);
   const isFavourites = collection?.name === "Favourites";
   const forceFavSelected = collection?.name === "Favourites";
+
+  const [isEditingName, setIsEditingName] = React.useState(false);
+  const [editName, setEditName] = React.useState(collection?.name || "");
+
+  React.useEffect(() => {
+    setIsEditingName(false);
+    setEditName(collection?.name || "");
+  }, [collection?._id, collection?.name]);
 
   const displayedFonts = React.useMemo(() => {
     if (!searchTerm) return allFonts;
@@ -691,9 +780,62 @@ function CollectionList({
     );
   }, [allFonts, searchTerm]);
 
+  const handleSaveName = async () => {
+    const newName = editName.trim();
+    if (!newName || newName === collection?.name) {
+      setIsEditingName(false);
+      setEditName(collection?.name || "");
+      return;
+    }
+
+    const id = String(collection?._id);
+    if (!id) {
+      alert("Collection id not found");
+      return;
+    }
+
+    try {
+      const res = await fetch(`http://localhost:4000/api/collections/${id}`, {
+        method: "PUT", // troca para PATCH se o backend assim exigir
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: newName }),
+      });
+
+      if (res.ok) {
+        setIsEditingName(false);
+        if (typeof onCollectionRenamed === "function") {
+          onCollectionRenamed(id, newName);
+        } else {
+          collection.name = newName;
+        }
+      } else {
+        const text = await res.text();
+        console.error("Rename error status:", res.status, text);
+        alert("Failed to rename album: " + res.status);
+      }
+    } catch (err) {
+      console.error("Failed to rename album:", err);
+      alert("Error renaming album: " + (err?.message || ""));
+    }
+  };
+
   return (
     <>
-      <CollectionHeader collectionName={collection?.name} count={allFonts.length} showEdit={!isFavourites} showDelete={!isFavourites}/>
+      <CollectionHeader
+        collectionName={collection?.name}
+        count={allFonts.length}
+        showEdit={!isFavourites}
+        showDelete={!isFavourites}
+        isEditing={isEditingName}
+        editValue={editName}
+        onChangeEditValue={setEditName}
+        onEdit={() => setIsEditingName(true)}
+        onSaveEdit={handleSaveName}
+        onCancelEdit={() => {
+          setIsEditingName(false);
+          setEditName(collection?.name || "");
+        }}
+      />
 
       {allFonts.length > 0 && (
         <CollectionToolbar
@@ -728,11 +870,26 @@ function CollectionList({
   );
 }
 
-function CollectionGrid({ collection, fontsById, onOpenFont, currentViewMode, onSetViewMode }) {
+function CollectionGrid({
+  collection,
+  fontsById,
+  onOpenFont,
+  currentViewMode,
+  onSetViewMode,
+  onCollectionRenamed,
+}) {
   const allFonts = useFontsFromCollection(collection, fontsById);
   const [searchTerm, setSearchTerm] = React.useState("");
   const isFavourites = collection?.name === "Favourites";
   const forceFavSelected = collection?.name === "Favourites";
+
+  const [isEditingName, setIsEditingName] = React.useState(false);
+  const [editName, setEditName] = React.useState(collection?.name || "");
+
+  React.useEffect(() => {
+    setIsEditingName(false);
+    setEditName(collection?.name || "");
+  }, [collection?._id, collection?.name]);
 
   const displayedFonts = React.useMemo(() => {
     if (!searchTerm) return allFonts;
@@ -744,9 +901,62 @@ function CollectionGrid({ collection, fontsById, onOpenFont, currentViewMode, on
     );
   }, [allFonts, searchTerm]);
 
+  const handleSaveName = async () => {
+    const newName = editName.trim();
+    if (!newName || newName === collection?.name) {
+      setIsEditingName(false);
+      setEditName(collection?.name || "");
+      return;
+    }
+
+    const id = String(collection?._id);
+    if (!id) {
+      alert("Collection id not found");
+      return;
+    }
+
+    try {
+      const res = await fetch(`http://localhost:4000/api/collections/${id}`, {
+        method: "PUT", // troca para PATCH se necessário
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: newName }),
+      });
+
+      if (res.ok) {
+        setIsEditingName(false);
+        if (typeof onCollectionRenamed === "function") {
+          onCollectionRenamed(id, newName);
+        } else {
+          collection.name = newName;
+        }
+      } else {
+        const text = await res.text();
+        console.error("Rename error status:", res.status, text);
+        alert("Failed to rename album: " + res.status);
+      }
+    } catch (err) {
+      console.error("Failed to rename album:", err);
+      alert("Error renaming album: " + (err?.message || ""));
+    }
+  };
+
   return (
     <>
-      <CollectionHeader collectionName={collection?.name} count={allFonts.length} showEdit={!isFavourites} showDelete={!isFavourites}/>
+      <CollectionHeader
+        collectionName={collection?.name}
+        count={allFonts.length}
+        showEdit={!isFavourites}
+        showDelete={!isFavourites}
+        isEditing={isEditingName}
+        editValue={editName}
+        onChangeEditValue={setEditName}
+        onEdit={() => setIsEditingName(true)}
+        onSaveEdit={handleSaveName}
+        onCancelEdit={() => {
+          setIsEditingName(false);
+          setEditName(collection?.name || "");
+        }}
+      />
 
       {allFonts.length > 0 && (
         <CollectionToolbar
@@ -832,7 +1042,11 @@ function PairsGrid({ collection, fontsById, onOpenFont, forceFavSelected = false
   const fonts = ids.map((id) => fontsById.get(id)).filter(Boolean);
 
   if (fonts.length === 0)
-    return <p style={{ fontFamily: "roboto regular", color: "var(--darker-grey)" }}>No pairs yet.</p>;
+    return (
+      <p style={{ fontFamily: "roboto regular", color: "var(--darker-grey)" }}>
+        No pairs yet.
+      </p>
+    );
 
   if (fonts.length === 1) {
     const only = fonts[0];
