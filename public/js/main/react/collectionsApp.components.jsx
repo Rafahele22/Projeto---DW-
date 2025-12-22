@@ -1,3 +1,5 @@
+const API_BASE = "http://web-dev-grupo05.dei.uc.pt/api";
+
 function AlbumPreview({ fonts }) {
   const safeFonts = React.useMemo(
     () => (Array.isArray(fonts) ? fonts.filter(Boolean) : []),
@@ -118,65 +120,189 @@ function FavButton({ selected, onToggle }) {
   );
 }
 
-function SaveMenu({ isOpen }) {
+function SaveMenu({ isOpen, fontId, onClose }) {
+  const [collections, setCollections] = React.useState([]);
+  const [selectedIds, setSelectedIds] = React.useState(new Set());
+
+  React.useEffect(() => {
+    if (!isOpen) return;
+    const user = JSON.parse(localStorage.getItem("user") || "null");
+    if (!user || !user._id) return;
+
+    fetch(`${API_BASE}/collections?userId=${encodeURIComponent(user._id)}`)
+      .then((res) => res.json())
+      .then((data) => {
+        const fontsCols = (Array.isArray(data) ? data : []).filter(
+          (c) => c?.type === "fonts" && c?.name !== "Favourites"
+        );
+        setCollections(fontsCols);
+
+        const selected = new Set();
+        for (const col of fontsCols) {
+          const items = Array.isArray(col.items) ? col.items : [];
+          if (items.some((it) => String(it?.fontId) === String(fontId))) {
+            selected.add(String(col._id));
+          }
+        }
+        setSelectedIds(selected);
+      })
+      .catch(() => {});
+  }, [isOpen, fontId]);
+
+  const handleToggle = async (col) => {
+    const user = JSON.parse(localStorage.getItem("user") || "null");
+    if (!user || !user._id) return;
+
+    try {
+      const res = await fetch(`${API_BASE}/collections/toggle-font`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: user._id,
+          collectionName: col.name,
+          fontId: String(fontId),
+        }),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        setSelectedIds((prev) => {
+          const next = new Set(prev);
+          if (data.added) {
+            next.add(String(col._id));
+          } else {
+            next.delete(String(col._id));
+          }
+          return next;
+        });
+      }
+    } catch (e) {}
+  };
+
   return (
     <section className="save_list" style={{ display: isOpen ? "block" : "none" }}>
       <h4>Save font on...</h4>
-
-      <a
-        href="#"
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-        }}
-      >
-        <div>
-          <h4>Aa</h4>
-          <h4>Web</h4>
-        </div>
-        <h5 className="add-text">add</h5>
-        <img src="../assets/imgs/check.svg" className="check-icon" alt="check icon" />
-      </a>
-
-      <a
-        href="#"
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-        }}
-      >
-        <div>
-          <h4>Aa</h4>
-          <h4>Print</h4>
-        </div>
-        <h5 className="add-text">add</h5>
-        <img src="../assets/imgs/check.svg" className="check-icon" alt="check icon" />
-      </a>
+      {collections.map((col) => {
+        const isSelected = selectedIds.has(String(col._id));
+        return (
+          <a
+            key={String(col._id)}
+            href="#"
+            className={isSelected ? "selected-option" : ""}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              handleToggle(col);
+            }}
+          >
+            <div>
+              <h4>Aa</h4>
+              <h4>{col.name}</h4>
+            </div>
+            <h5 className="add-text">{isSelected ? "added" : "add"}</h5>
+            <img
+              src="../assets/imgs/check.svg"
+              className="check-icon"
+              alt="check icon"
+              style={{ opacity: isSelected ? 1 : 0 }}
+            />
+          </a>
+        );
+      })}
     </section>
   );
 }
 
-function SaveOption({ label }) {
-  const [selected, setSelected] = React.useState(false);
+function GridSaveMenu({ isOpen, fontId }) {
+  const [collections, setCollections] = React.useState([]);
+  const [selectedIds, setSelectedIds] = React.useState(new Set());
+
+  React.useEffect(() => {
+    if (!isOpen) return;
+    const user = JSON.parse(localStorage.getItem("user") || "null");
+    if (!user || !user._id) return;
+
+    fetch(`${API_BASE}/collections?userId=${encodeURIComponent(user._id)}`)
+      .then((res) => res.json())
+      .then((data) => {
+        const fontsCols = (Array.isArray(data) ? data : []).filter(
+          (c) => c?.type === "fonts" && c?.name !== "Favourites"
+        );
+        setCollections(fontsCols);
+
+        const selected = new Set();
+        for (const col of fontsCols) {
+          const items = Array.isArray(col.items) ? col.items : [];
+          if (items.some((it) => String(it?.fontId) === String(fontId))) {
+            selected.add(String(col._id));
+          }
+        }
+        setSelectedIds(selected);
+      })
+      .catch(() => {});
+  }, [isOpen, fontId]);
+
+  const handleToggle = async (col) => {
+    const user = JSON.parse(localStorage.getItem("user") || "null");
+    if (!user || !user._id) return;
+
+    try {
+      const res = await fetch(`${API_BASE}/collections/toggle-font`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: user._id,
+          collectionName: col.name,
+          fontId: String(fontId),
+        }),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        setSelectedIds((prev) => {
+          const next = new Set(prev);
+          if (data.added) {
+            next.add(String(col._id));
+          } else {
+            next.delete(String(col._id));
+          }
+          return next;
+        });
+      }
+    } catch (e) {}
+  };
 
   return (
-    <a
-      href="#"
-      className={"save-option" + (selected ? " selected-option" : "")}
-      data-type={label.toLowerCase()}
-      onClick={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        setSelected((v) => !v);
-      }}
-    >
-      <div>
-        <h4>Aa</h4>
-        <h4>{label}</h4>
-      </div>
-      <h5 className="add-text">add</h5>
-      <img src="../assets/imgs/check.svg" className="check-icon" alt="check icon" />
-    </a>
+    <section className="save" style={{ display: isOpen ? "block" : "none" }}>
+      <h4>Save font on...</h4>
+      {collections.map((col) => {
+        const isSelected = selectedIds.has(String(col._id));
+        return (
+          <a
+            key={String(col._id)}
+            href="#"
+            className={"save-option" + (isSelected ? " selected-option" : "")}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              handleToggle(col);
+            }}
+          >
+            <div>
+              <h4>Aa</h4>
+              <h4>{col.name}</h4>
+            </div>
+            <h5 className="add-text">{isSelected ? "added" : "add"}</h5>
+            <img
+              src="../assets/imgs/check.svg"
+              className="check-icon"
+              alt="check icon"
+              style={{ opacity: isSelected ? 1 : 0 }}
+            />
+          </a>
+        );
+      })}
+    </section>
   );
 }
 
@@ -394,7 +520,7 @@ function AlbumsGrid({ collections, fontsById, onSelectCollection, onCreateCollec
     if (!user || !user._id) return;
 
     try {
-      const res = await fetch("http://localhost:4000/api/collections", {
+      const res = await fetch(`${API_BASE}/collections`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -558,6 +684,10 @@ function ListItem({
   onOpenFont,
   openSaveId,
   setOpenSaveId,
+  collectionId,
+  collectionName,
+  onDeleteFont,
+  onFontRemovedFromCollection,
 }) {
   const { favSelected, toggle: toggleFav } = useFavorite(font?._id);
   const { isOpen: isSaveOpen, toggle: toggleSave } = useSaveMenu(
@@ -584,6 +714,28 @@ function ListItem({
     if (document.activeElement === el) return;
     if (el.innerText !== desiredText) el.innerText = desiredText;
   }, [desiredText]);
+
+  const handleTrashClick = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!collectionId || !font?._id) return;
+
+    try {
+      const res = await fetch(`${API_BASE}/collections/${collectionId}/fonts/${font._id}`, {
+        method: "DELETE",
+      });
+      if (res.ok) {
+        onDeleteFont?.(font._id);
+      }
+    } catch (err) {}
+  };
+
+  const handleFavToggle = async (e) => {
+    await toggleFav(e);
+    if (collectionName === "Favourites" && favSelected) {
+      onFontRemovedFromCollection?.(font._id);
+    }
+  };
 
   return (
     <div
@@ -616,14 +768,11 @@ function ListItem({
           <a
             href="#"
             className="trash-btn"
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-            }}
+            onClick={handleTrashClick}
           >
             <img src="../assets/imgs/trash.svg" alt="trash icon" />
           </a>
-          <FavButton selected={forceFavSelected ? true : favSelected} onToggle={toggleFav} />
+          <FavButton selected={forceFavSelected ? true : favSelected} onToggle={handleFavToggle} />
 
         
 
@@ -636,7 +785,7 @@ function ListItem({
           </a>
         </section>
 
-        <SaveMenu isOpen={isSaveOpen} />
+        <SaveMenu isOpen={isSaveOpen} fontId={font?._id} />
       </div>
 
 
@@ -674,7 +823,15 @@ function ListItem({
   );
 }
 
-function GridItem({ font, onOpenFont, forceFavSelected = false }) {
+function GridItem({
+  font,
+  onOpenFont,
+  forceFavSelected = false,
+  collectionId,
+  collectionName,
+  onDeleteFont,
+  onFontRemovedFromCollection,
+}) {
   const { favSelected, toggle: toggleFav } = useFavorite(font?._id);
   const [saveOpen, setSaveOpen] = React.useState(false);
 
@@ -685,6 +842,28 @@ function GridItem({ font, onOpenFont, forceFavSelected = false }) {
   const numStyles = Array.isArray(font?.weights) ? font.weights.length : 0;
   const sampleLetter =
     Array.isArray(font?.tags) && font.tags.includes("All Caps") ? "AA" : "Aa";
+
+  const handleTrashClick = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!collectionId || !font?._id) return;
+
+    try {
+      const res = await fetch(`${API_BASE}/collections/${collectionId}/fonts/${font._id}`, {
+        method: "DELETE",
+      });
+      if (res.ok) {
+        onDeleteFont?.(font._id);
+      }
+    } catch (err) {}
+  };
+
+  const handleFavToggle = async (e) => {
+    await toggleFav(e);
+    if (collectionName === "Favourites" && favSelected) {
+      onFontRemovedFromCollection?.(font._id);
+    }
+  };
 
   return (
     <article
@@ -714,23 +893,16 @@ function GridItem({ font, onOpenFont, forceFavSelected = false }) {
         <a
           href="#"
           className="trash-btn"
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-          }}
+          onClick={handleTrashClick}
         >
           <img src="../assets/imgs/trash.svg" alt="trash icon" />
         </a>
-        <FavButton selected={forceFavSelected ? true : favSelected} onToggle={toggleFav} />
+        <FavButton selected={forceFavSelected ? true : favSelected} onToggle={handleFavToggle} />
 </div>
       </section>
 
 
-      <section className="save" style={{ display: saveOpen ? "block" : "none" }}>
-        <h4>Save font on...</h4>
-        <SaveOption label="Web" />
-        <SaveOption label="Print" />
-      </section>
+      <GridSaveMenu isOpen={saveOpen} fontId={font?._id} />
 
       <h1 className="title_gridview" style={{ fontFamily: `'${font?._id}-font'` }}>
         {sampleLetter}
@@ -755,12 +927,15 @@ function CollectionList({
   currentViewMode,
   onSetViewMode,
   onCollectionRenamed,
+  onDeleteCollection,
+  onRefreshCollections,
 }) {
   const allFonts = useFontsFromCollection(collection, fontsById);
   const [searchTerm, setSearchTerm] = React.useState("");
   const [openSaveId, setOpenSaveId] = React.useState(null);
   const isFavourites = collection?.name === "Favourites";
   const forceFavSelected = collection?.name === "Favourites";
+  const [removedFontIds, setRemovedFontIds] = React.useState(new Set());
 
   const [isEditingName, setIsEditingName] = React.useState(false);
   const [editName, setEditName] = React.useState(collection?.name || "");
@@ -768,17 +943,19 @@ function CollectionList({
   React.useEffect(() => {
     setIsEditingName(false);
     setEditName(collection?.name || "");
+    setRemovedFontIds(new Set());
   }, [collection?._id, collection?.name]);
 
   const displayedFonts = React.useMemo(() => {
-    if (!searchTerm) return allFonts;
+    let fonts = allFonts.filter((f) => !removedFontIds.has(String(f._id)));
+    if (!searchTerm) return fonts;
     const lower = searchTerm.toLowerCase();
-    return allFonts.filter(
+    return fonts.filter(
       (f) =>
         f.name.toLowerCase().includes(lower) ||
         (f.foundry && f.foundry.toLowerCase().includes(lower))
     );
-  }, [allFonts, searchTerm]);
+  }, [allFonts, searchTerm, removedFontIds]);
 
   const handleSaveName = async () => {
     const newName = editName.trim();
@@ -795,7 +972,7 @@ function CollectionList({
     }
 
     try {
-      const res = await fetch(`http://localhost:4000/api/collections/${id}`, {
+      const res = await fetch(`${API_BASE}/collections/${id}`, {
         method: "PUT", 
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name: newName }),
@@ -819,11 +996,37 @@ function CollectionList({
     }
   };
 
+  const handleDeleteCollection = async () => {
+    if (!confirm("Are you sure you want to delete this album?")) return;
+    const id = String(collection?._id);
+    if (!id) return;
+
+    try {
+      const res = await fetch(`${API_BASE}/collections/${id}`, {
+        method: "DELETE",
+      });
+      if (res.ok) {
+        onDeleteCollection?.();
+      } else {
+        alert("Failed to delete album");
+      }
+    } catch (err) {
+      alert("Error deleting album");
+    }
+  };
+
+  const handleDeleteFont = (fontId) => {
+    setRemovedFontIds((prev) => new Set([...prev, String(fontId)]));
+    onRefreshCollections?.();
+  };
+
+  const actualCount = allFonts.length - removedFontIds.size;
+
   return (
     <>
       <CollectionHeader
         collectionName={collection?.name}
-        count={allFonts.length}
+        count={actualCount}
         showEdit={!isFavourites}
         showDelete={!isFavourites}
         isEditing={isEditingName}
@@ -835,9 +1038,10 @@ function CollectionList({
           setIsEditingName(false);
           setEditName(collection?.name || "");
         }}
+        onDelete={handleDeleteCollection}
       />
 
-      {allFonts.length > 0 && (
+      {actualCount > 0 && (
         <CollectionToolbar
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
@@ -849,7 +1053,7 @@ function CollectionList({
       <div className="list-container">
         {displayedFonts.length === 0 ? (
           <p style={{ fontFamily: "roboto regular", color: "var(--darker-grey)" }}>
-            {allFonts.length === 0 ? "No fonts in this collection yet." : "No results found."}
+            {actualCount === 0 ? "No fonts in this collection yet." : "No results found."}
           </p>
         ) : (
           displayedFonts.map((font) => (
@@ -862,6 +1066,10 @@ function CollectionList({
               onOpenFont={onOpenFont}
               openSaveId={openSaveId}
               setOpenSaveId={setOpenSaveId}
+              collectionId={String(collection?._id)}
+              collectionName={collection?.name}
+              onDeleteFont={handleDeleteFont}
+              onFontRemovedFromCollection={handleDeleteFont}
             />
           ))
         )}
@@ -877,11 +1085,14 @@ function CollectionGrid({
   currentViewMode,
   onSetViewMode,
   onCollectionRenamed,
+  onDeleteCollection,
+  onRefreshCollections,
 }) {
   const allFonts = useFontsFromCollection(collection, fontsById);
   const [searchTerm, setSearchTerm] = React.useState("");
   const isFavourites = collection?.name === "Favourites";
   const forceFavSelected = collection?.name === "Favourites";
+  const [removedFontIds, setRemovedFontIds] = React.useState(new Set());
 
   const [isEditingName, setIsEditingName] = React.useState(false);
   const [editName, setEditName] = React.useState(collection?.name || "");
@@ -889,17 +1100,19 @@ function CollectionGrid({
   React.useEffect(() => {
     setIsEditingName(false);
     setEditName(collection?.name || "");
+    setRemovedFontIds(new Set());
   }, [collection?._id, collection?.name]);
 
   const displayedFonts = React.useMemo(() => {
-    if (!searchTerm) return allFonts;
+    let fonts = allFonts.filter((f) => !removedFontIds.has(String(f._id)));
+    if (!searchTerm) return fonts;
     const lower = searchTerm.toLowerCase();
-    return allFonts.filter(
+    return fonts.filter(
       (f) =>
         f.name.toLowerCase().includes(lower) ||
         (f.foundry && f.foundry.toLowerCase().includes(lower))
     );
-  }, [allFonts, searchTerm]);
+  }, [allFonts, searchTerm, removedFontIds]);
 
   const handleSaveName = async () => {
     const newName = editName.trim();
@@ -916,7 +1129,7 @@ function CollectionGrid({
     }
 
     try {
-      const res = await fetch(`http://localhost:4000/api/collections/${id}`, {
+      const res = await fetch(`${API_BASE}/collections/${id}`, {
         method: "PUT", 
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name: newName }),
@@ -940,11 +1153,37 @@ function CollectionGrid({
     }
   };
 
+  const handleDeleteCollection = async () => {
+    if (!confirm("Are you sure you want to delete this album?")) return;
+    const id = String(collection?._id);
+    if (!id) return;
+
+    try {
+      const res = await fetch(`${API_BASE}/collections/${id}`, {
+        method: "DELETE",
+      });
+      if (res.ok) {
+        onDeleteCollection?.();
+      } else {
+        alert("Failed to delete album");
+      }
+    } catch (err) {
+      alert("Error deleting album");
+    }
+  };
+
+  const handleDeleteFont = (fontId) => {
+    setRemovedFontIds((prev) => new Set([...prev, String(fontId)]));
+    onRefreshCollections?.();
+  };
+
+  const actualCount = allFonts.length - removedFontIds.size;
+
   return (
     <>
       <CollectionHeader
         collectionName={collection?.name}
-        count={allFonts.length}
+        count={actualCount}
         showEdit={!isFavourites}
         showDelete={!isFavourites}
         isEditing={isEditingName}
@@ -956,9 +1195,10 @@ function CollectionGrid({
           setIsEditingName(false);
           setEditName(collection?.name || "");
         }}
+        onDelete={handleDeleteCollection}
       />
 
-      {allFonts.length > 0 && (
+      {actualCount > 0 && (
         <CollectionToolbar
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
@@ -976,7 +1216,7 @@ function CollectionGrid({
               gridColumn: "1 / -1",
             }}
           >
-            {allFonts.length === 0 ? "No fonts in this collection yet." : "No results found."}
+            {actualCount === 0 ? "No fonts in this collection yet." : "No results found."}
           </p>
         ) : (
           displayedFonts.map((font) => (
@@ -985,6 +1225,10 @@ function CollectionGrid({
               font={font}
               forceFavSelected={forceFavSelected}
               onOpenFont={onOpenFont}
+              collectionId={String(collection?._id)}
+              collectionName={collection?.name}
+              onDeleteFont={handleDeleteFont}
+              onFontRemovedFromCollection={handleDeleteFont}
             />
           ))
         )}

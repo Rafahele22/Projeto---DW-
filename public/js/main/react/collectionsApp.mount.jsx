@@ -96,6 +96,24 @@ function mountCollectionsImpl({
   setState((prev) => ({ ...prev, collectionViewMode: mode }));
 };
 
+    const refreshCollections = async () => {
+      const user = JSON.parse(localStorage.getItem("user") || "null");
+      if (!user || !user._id) return;
+      try {
+        const res = await fetch(`http://web-dev-grupo05.dei.uc.pt/api/collections?userId=${encodeURIComponent(user._id)}`);
+        if (res.ok) {
+          const data = await res.json();
+          setState((prev) => ({ ...prev, collections: data }));
+        }
+      } catch (e) {
+        console.error("Failed to refresh collections:", e);
+      }
+    };
+
+    const handleDeleteCollection = () => {
+      setState((prev) => ({ ...prev, view: "albums", openedCollectionId: null }));
+      refreshCollections();
+    };
 
     const content = (() => {
       if (state.view === "collection") {
@@ -107,6 +125,8 @@ function mountCollectionsImpl({
         onOpenFont={onOpenFont}
         currentViewMode={state.collectionViewMode}
         onSetViewMode={setViewMode}
+        onDeleteCollection={handleDeleteCollection}
+        onRefreshCollections={refreshCollections}
       />
     );
   }
@@ -120,6 +140,8 @@ function mountCollectionsImpl({
       onOpenFont={onOpenFont}
       currentViewMode={state.collectionViewMode}
       onSetViewMode={setViewMode}
+      onDeleteCollection={handleDeleteCollection}
+      onRefreshCollections={refreshCollections}
     />
   );
 }
@@ -136,20 +158,6 @@ function mountCollectionsImpl({
   );
 }
 
-
-      const refreshCollections = async () => {
-        const user = JSON.parse(localStorage.getItem("user") || "null");
-        if (!user || !user._id) return;
-        try {
-          const res = await fetch(`http://web-dev-grupo05.dei.uc.pt/api/collections?userId=${encodeURIComponent(user._id)}`);
-          if (res.ok) {
-            const data = await res.json();
-            setState((prev) => ({ ...prev, collections: data }));
-          }
-        } catch (e) {
-          console.error("Failed to refresh collections:", e);
-        }
-      };
 
       return (
         <AlbumsGrid

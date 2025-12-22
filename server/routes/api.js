@@ -271,6 +271,128 @@ async function handleApiRequest(req, res) {
         return;
     }
 
+    const collectionsMatch = url.pathname.match(/^\/api\/collections\/([^\/]+)$/);
+    if (collectionsMatch && req.method === 'DELETE') {
+        try {
+            const collectionId = collectionsMatch[1];
+            const { ObjectId } = require('mongodb');
+            
+            let query;
+            try {
+                query = { _id: new ObjectId(collectionId) };
+            } catch (e) {
+                query = { _id: collectionId };
+            }
+
+            const collection = await db.collection('collections').findOne(query);
+            
+            if (!collection) {
+                res.writeHead(404, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: 'Collection not found' }));
+                return;
+            }
+
+            if (collection.name === 'Favourites' || collection.name === 'pairs') {
+                res.writeHead(403, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: 'Cannot delete system collections' }));
+                return;
+            }
+
+            await db.collection('collections').deleteOne(query);
+            
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ success: true, deletedId: collectionId }));
+        } catch (error) {
+            console.error('Error deleting collection:', error);
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Failed to delete collection' }));
+        }
+        return;
+    }
+
+    if (collectionsMatch && req.method === 'PUT') {
+        try {
+            const collectionId = collectionsMatch[1];
+            const body = await parseBody(req);
+            const { name } = body;
+            const { ObjectId } = require('mongodb');
+
+            if (!name || !name.trim()) {
+                res.writeHead(400, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: 'name is required' }));
+                return;
+            }
+
+            let query;
+            try {
+                query = { _id: new ObjectId(collectionId) };
+            } catch (e) {
+                query = { _id: collectionId };
+            }
+
+            const collection = await db.collection('collections').findOne(query);
+            
+            if (!collection) {
+                res.writeHead(404, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: 'Collection not found' }));
+                return;
+            }
+
+            if (collection.name === 'Favourites' || collection.name === 'pairs') {
+                res.writeHead(403, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: 'Cannot rename system collections' }));
+                return;
+            }
+
+            await db.collection('collections').updateOne(query, { $set: { name: name.trim() } });
+            
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ success: true, id: collectionId, name: name.trim() }));
+        } catch (error) {
+            console.error('Error renaming collection:', error);
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Failed to rename collection' }));
+        }
+        return;
+    }
+
+    const fontInCollectionMatch = url.pathname.match(/^\/api\/collections\/([^\/]+)\/fonts\/([^\/]+)$/);
+    if (fontInCollectionMatch && req.method === 'DELETE') {
+        try {
+            const collectionId = fontInCollectionMatch[1];
+            const fontId = fontInCollectionMatch[2];
+            const { ObjectId } = require('mongodb');
+
+            let query;
+            try {
+                query = { _id: new ObjectId(collectionId) };
+            } catch (e) {
+                query = { _id: collectionId };
+            }
+
+            const collection = await db.collection('collections').findOne(query);
+            
+            if (!collection) {
+                res.writeHead(404, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: 'Collection not found' }));
+                return;
+            }
+
+            await db.collection('collections').updateOne(
+                query,
+                { $pull: { items: { fontId: String(fontId) } } }
+            );
+            
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ success: true, collectionId, fontId }));
+        } catch (error) {
+            console.error('Error removing font from collection:', error);
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Failed to remove font from collection' }));
+        }
+        return;
+    }
+
     if (url.pathname === '/api/collections/toggle-font' && req.method === 'POST') {
         try {
             const body = await parseBody(req);
