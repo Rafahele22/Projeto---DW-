@@ -180,23 +180,51 @@ function SaveOption({ label }) {
    HEADER & TOOLBAR
    ========================================================================= */
 
-function CollectionHeader({ collectionName, count }) {
+function CollectionHeader({
+  collectionName,
+  count,
+  showEdit = true,
+  onEdit,
+  showDelete = true,
+  onDelete,
+}) {
+  const isFavourites = collectionName === "Favourites";
+  const canManage = !isFavourites;
+
   return (
     <div className="album_information">
       <div className="album_title">
         <h2>{collectionName || "Untitled Album"}</h2>
 
-        <a
-          href="#"
-          className="button"
-          onClick={(e) => {
-            e.preventDefault();
-            console.log("Edit clicked");
-          }}
-        >
-          <img src="../assets/imgs/edit.svg" alt="edit icon" />
-          <h4>Edit</h4>
-        </a>
+        {canManage && showEdit && (
+          <a
+            href="#"
+            className="button"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              onEdit?.();
+            }}
+          >
+            <img src="../assets/imgs/edit.svg" alt="edit icon" />
+            <h4>Edit</h4>
+          </a>
+        )}
+
+        {canManage && showDelete && (
+          <a
+            href="#"
+            className="button"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              onDelete?.();
+            }}
+          >
+            <img src="../assets/imgs/trash.svg" alt="trash icon" />
+            <h4>Delete</h4>
+          </a>
+        )}
       </div>
 
       <h2 className="collection-count">
@@ -205,6 +233,8 @@ function CollectionHeader({ collectionName, count }) {
     </div>
   );
 }
+
+
 
 function CollectionToolbar({ searchTerm, setSearchTerm, currentMode, onSetMode }) {
   const activeMode = currentMode || "grid";
@@ -648,6 +678,7 @@ function CollectionList({
   const allFonts = useFontsFromCollection(collection, fontsById);
   const [searchTerm, setSearchTerm] = React.useState("");
   const [openSaveId, setOpenSaveId] = React.useState(null);
+  const isFavourites = collection?.name === "Favourites";
   const forceFavSelected = collection?.name === "Favourites";
 
   const displayedFonts = React.useMemo(() => {
@@ -662,7 +693,7 @@ function CollectionList({
 
   return (
     <>
-      <CollectionHeader collectionName={collection?.name} count={allFonts.length} />
+      <CollectionHeader collectionName={collection?.name} count={allFonts.length} showEdit={!isFavourites} showDelete={!isFavourites}/>
 
       {allFonts.length > 0 && (
         <CollectionToolbar
@@ -700,6 +731,7 @@ function CollectionList({
 function CollectionGrid({ collection, fontsById, onOpenFont, currentViewMode, onSetViewMode }) {
   const allFonts = useFontsFromCollection(collection, fontsById);
   const [searchTerm, setSearchTerm] = React.useState("");
+  const isFavourites = collection?.name === "Favourites";
   const forceFavSelected = collection?.name === "Favourites";
 
   const displayedFonts = React.useMemo(() => {
@@ -714,7 +746,7 @@ function CollectionGrid({ collection, fontsById, onOpenFont, currentViewMode, on
 
   return (
     <>
-      <CollectionHeader collectionName={collection?.name} count={allFonts.length} />
+      <CollectionHeader collectionName={collection?.name} count={allFonts.length} showEdit={!isFavourites} showDelete={!isFavourites}/>
 
       {allFonts.length > 0 && (
         <CollectionToolbar
