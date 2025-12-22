@@ -1,8 +1,3 @@
-/**
- * HTML Templates para Single Font View
- * Funções que retornam strings HTML para manter o código organizado
- */
-
 import { escapeHtml } from "../../shared/fontUtils.js";
 
 // =========================

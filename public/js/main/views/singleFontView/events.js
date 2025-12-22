@@ -250,6 +250,54 @@ function setupTagsEvents(displayContainer, signal, closeSingleFontView, filtersP
   });
 }
 
+
+function applyWeight(styleEl, fontFamily, weight, h1El) {
+  styleEl.textContent = `
+    @font-face {
+      font-family: '${fontFamily}';
+      src: url('../assets/fonts/${weight.file}');
+    }
+  `;
+  if (h1El) h1El.style.fontFamily = `'${fontFamily}'`;
+}
+
+// =========================
+// HELPER: Build Styles Menu
+// =========================
+function buildStylesMenuOptions(menuScroll, font, fontFamily, styleEl, h1El, signal) {
+  if (!menuScroll) return;
+  menuScroll.innerHTML = "";
+
+  const defaultWeight = font.weights.find((w) => w.default) || font.weights[0];
+
+  font.weights.forEach((w) => {
+    const optionLink = document.createElement("a");
+    optionLink.href = "#";
+    optionLink.className = "option style-option";
+
+    const optionSelected = document.createElement("div");
+    optionSelected.className = "option_selected";
+    if (w === defaultWeight) optionSelected.classList.add("selected");
+
+    const optionText = document.createElement("h5");
+    optionText.textContent = w.style;
+
+    optionLink.appendChild(optionSelected);
+    optionLink.appendChild(optionText);
+    menuScroll.appendChild(optionLink);
+
+    optionLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      menuScroll?.querySelectorAll(".option_selected").forEach((sel) => sel.classList.remove("selected"));
+      optionSelected.classList.add("selected");
+      applyWeight(styleEl, fontFamily, w, h1El);
+    }, { signal });
+  });
+
+  applyWeight(styleEl, fontFamily, defaultWeight, h1El);
+}
+
 // =========================
 // STYLES MENU
 // =========================
@@ -268,50 +316,7 @@ function setupStylesMenu(controlsContainer, displayContainer, font, signal) {
     document.head.appendChild(singleFace);
   }
 
-  function applyWeight(weight) {
-    singleFace.textContent = `
-      @font-face {
-        font-family: '${singleFamily}';
-        src: url('../assets/fonts/${weight.file}');
-      }
-    `;
-    if (h1) h1.style.fontFamily = `'${singleFamily}'`;
-  }
-
-  function buildStylesMenu() {
-    if (!menuScroll) return;
-    menuScroll.innerHTML = "";
-
-    const defaultWeight = font.weights.find((w) => w.default) || font.weights[0];
-
-    font.weights.forEach((w) => {
-      const optionLink = document.createElement("a");
-      optionLink.href = "#";
-      optionLink.className = "option style-option";
-
-      const optionSelected = document.createElement("div");
-      optionSelected.className = "option_selected";
-      if (w === defaultWeight) optionSelected.classList.add("selected");
-
-      const optionText = document.createElement("h5");
-      optionText.textContent = w.style;
-
-      optionLink.appendChild(optionSelected);
-      optionLink.appendChild(optionText);
-      menuScroll.appendChild(optionLink);
-
-      optionLink.addEventListener("click", (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        menuScroll?.querySelectorAll(".option_selected").forEach((sel) => sel.classList.remove("selected"));
-        applyWeight(w);
-      }, { signal });
-    });
-
-    applyWeight(defaultWeight);
-  }
-
-  buildStylesMenu();
+  buildStylesMenuOptions(menuScroll, font, singleFamily, singleFace, h1, signal);
 
   chooseBtn?.addEventListener("click", (e) => {
     e.preventDefault();

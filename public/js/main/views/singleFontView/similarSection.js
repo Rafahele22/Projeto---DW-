@@ -1,11 +1,8 @@
-/**
- * Similar Section - Secção de fontes similares e sugestões de pares
- */
-
 import { ensureFontFace, pickRandom, setFavIconState } from "../../shared/fontUtils.js";
 import { isFavorite, toggleFavorite } from "../../state.js";
 import { renderSimilarCard, renderPairSuggestionCard } from "./templates.js";
 import { populateSaveCollections } from "./collections.js";
+import { getFontsById } from "./fontCache.js";
 
 const BODY_TEXT = "This is sample text used to demonstrate how typefaces work together. It allows designers to focus on form, spacing, hierarchy, and contrast. By removing meaning from the content, attention shifts to structure, rhythm, and the relationship between headline and body text.";
 
@@ -17,12 +14,10 @@ export async function buildSimilarSection({ currentFont, fontsAll, onOpenFont, o
   root.className = "similar-wrapper";
 
   const allFonts = Array.isArray(fontsAll) ? fontsAll : [];
-  const fontsById = new Map(allFonts.map((f) => [String(f._id), f]));
+  const fontsById = getFontsById(allFonts);
 
-  // Pair Suggestions
   await buildPairSuggestions(root, currentFont, allFonts, fontsById, onOpenFont, onOpenPairSuggestion);
 
-  // Similar Fonts
   buildSimilarFonts(root, currentFont, allFonts, onOpenFont);
 
   return root;

@@ -1,4 +1,6 @@
 import { escapeHtml, ensureFontFace, toggleFontInCollection } from "../../shared/fontUtils.js";
+import { getUserCollections } from "../../collections.js";
+import { getFontsById } from "./fontCache.js";
 
 // =========================
 // POPULATE PAIR COLLECTIONS
@@ -11,7 +13,6 @@ export async function populatePairCollections(pairDiv, currentFont, allFonts) {
 
   let userCollections = [];
   try {
-    const { getUserCollections } = await import("../../collections.js");
     userCollections = getUserCollections() || [];
   } catch (e) {
     console.error("Failed to get user collections:", e);
@@ -26,7 +27,7 @@ export async function populatePairCollections(pairDiv, currentFont, allFonts) {
     return;
   }
 
-  const fontsById = new Map(allFonts.map(f => [String(f._id), f]));
+  const fontsById = getFontsById(allFonts);
 
   fontsCollections.forEach(collection => {
     const collectionCategory = document.createElement("a");
@@ -82,12 +83,11 @@ export async function populatePairCollections(pairDiv, currentFont, allFonts) {
 // =========================
 // POPULATE SAVE COLLECTIONS
 // =========================
-export async function populateSaveCollections(saveMenu, fontId) {
+export function populateSaveCollections(saveMenu, fontId) {
   if (!saveMenu) return;
 
   let userCollections = [];
   try {
-    const { getUserCollections } = await import("../../collections.js");
     userCollections = getUserCollections() || [];
   } catch (e) {
     console.error("Failed to get user collections:", e);

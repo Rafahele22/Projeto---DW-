@@ -1,4 +1,5 @@
 import { isFavorite as checkIsFavorite, toggleFavorite as toggleFav } from "../state.js";
+import { getUserCollections } from "../collections.js";
 
 export function ensureFontFace(font) {
   const weights = Array.isArray(font?.weights) ? font.weights : [];
@@ -139,12 +140,11 @@ export async function toggleFontInCollection(fontId, collectionName) {
   }
 }
 
-export async function populateGridSaveMenu(saveMenu, fontId) {
+export function populateGridSaveMenu(saveMenu, fontId) {
   if (!saveMenu) return;
 
   let userCollections = [];
   try {
-    const { getUserCollections } = await import("../collections.js");
     userCollections = getUserCollections() || [];
   } catch (e) {
     console.error("Failed to get user collections:", e);

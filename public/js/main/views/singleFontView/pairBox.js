@@ -118,6 +118,54 @@ function setupPairBoxEvents(controlsContainer, displayContainer, font, signal) {
   setupPairStylesMenu(controlsContainer, displayContainer, font, signal);
 }
 
+
+function applyPairWeight(styleEl, fontFamily, weight, h1El) {
+  styleEl.textContent = `
+    @font-face {
+      font-family: '${fontFamily}';
+      src: url('../assets/fonts/${weight.file}');
+    }
+  `;
+  if (h1El) h1El.style.fontFamily = `'${fontFamily}'`;
+}
+
+// ================
+// HELPER: Build Styles Menu
+// ================
+function buildPairStylesMenuOptions(menuScroll, font, fontFamily, styleEl, h1El, signal) {
+  if (!menuScroll) return;
+  menuScroll.innerHTML = "";
+
+  const defaultWeight = font.weights.find((w) => w.default) || font.weights[0];
+
+  font.weights.forEach((w) => {
+    const optionLink = document.createElement("a");
+    optionLink.href = "#";
+    optionLink.className = "option style-option";
+
+    const optionSelected = document.createElement("div");
+    optionSelected.className = "option_selected";
+    if (w === defaultWeight) optionSelected.classList.add("selected");
+
+    const optionText = document.createElement("h5");
+    optionText.textContent = w.style;
+
+    optionLink.appendChild(optionSelected);
+    optionLink.appendChild(optionText);
+    menuScroll.appendChild(optionLink);
+
+    optionLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      menuScroll?.querySelectorAll(".option_selected").forEach((sel) => sel.classList.remove("selected"));
+      optionSelected.classList.add("selected");
+      applyPairWeight(styleEl, fontFamily, w, h1El);
+    }, { signal });
+  });
+
+  applyPairWeight(styleEl, fontFamily, defaultWeight, h1El);
+}
+
 // ================
 // PAIR STYLES MENU
 // ================
@@ -138,53 +186,10 @@ function setupPairStylesMenu(controlsContainer, displayContainer, font, signal) 
     pairFace.textContent = "";
   }
 
-  function applyWeight(weight) {
-    pairFace.textContent = `
-      @font-face {
-        font-family: '${pairFamily}';
-        src: url('../assets/fonts/${weight.file}');
-      }
-    `;
-    if (h1) h1.style.fontFamily = `'${pairFamily}'`;
-  }
+  buildPairStylesMenuOptions(menuScroll, font, pairFamily, pairFace, h1, signal);
 
-  function buildStylesMenu() {
-    if (!menuScroll) return;
-    menuScroll.innerHTML = "";
-
-    const defaultWeight = font.weights.find((w) => w.default) || font.weights[0];
-
-    font.weights.forEach((w) => {
-      const optionLink = document.createElement("a");
-      optionLink.href = "#";
-      optionLink.className = "option style-option";
-
-      const optionSelected = document.createElement("div");
-      optionSelected.className = "option_selected";
-      if (w === defaultWeight) optionSelected.classList.add("selected");
-
-      const optionText = document.createElement("h5");
-      optionText.textContent = w.style;
-
-      optionLink.appendChild(optionSelected);
-      optionLink.appendChild(optionText);
-      menuScroll.appendChild(optionLink);
-
-      optionLink.addEventListener("click", (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        menuScroll?.querySelectorAll(".option_selected").forEach((sel) => sel.classList.remove("selected"));
-        optionSelected.classList.add("selected");
-        applyWeight(w);
-      }, { signal });
-    });
-
-    applyWeight(defaultWeight);
-  }
-
-  buildStylesMenu();
-
-  chooseBtn?.addEventListener("click", (e) => {
+  // Handler para toggle do menu
+  const toggleMenu = (e) => {
     e.preventDefault();
     e.stopPropagation();
     if (!menu) return;
@@ -193,13 +198,17 @@ function setupPairStylesMenu(controlsContainer, displayContainer, font, signal) 
     menu.style.display = isOpening ? "block" : "none";
     chooseBtn.classList.toggle("selected", isOpening);
     displayContainer.classList.toggle("shifted", isOpening);
-  }, { signal });
+  };
 
-  document.addEventListener("click", (e) => {
+  // Handler para fechar ao clicar fora
+  const closeOnOutsideClick = (e) => {
     if (menu && chooseBtn && !menu.contains(e.target) && !chooseBtn.contains(e.target)) {
       menu.style.display = "none";
       chooseBtn.classList.remove("selected");
       displayContainer.classList.remove("shifted");
     }
-  }, { signal });
+  };
+
+  chooseBtn?.addEventListener("click", toggleMenu, { signal });
+  document.addEventListener("click", closeOnOutsideClick, { signal });
 }

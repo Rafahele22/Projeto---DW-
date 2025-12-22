@@ -140,6 +140,8 @@ export function createSingleFontView({
     const globalText = getGlobalSampleText() || "The quick brown fox jumps over the lazy dog.";
     const displayText = hasAllCaps ? globalText.toUpperCase() : globalText;
 
+    const allFonts = getAllFonts();
+
     const controlsDiv = document.createElement("div");
     controlsDiv.className = "bar_individual_font force-visible-controls";
     controlsDiv.innerHTML = renderControlsBar({ isPair: false });
@@ -155,11 +157,11 @@ export function createSingleFontView({
     pairDiv.className = "pair-wrapper";
     pairDiv.innerHTML = renderPairWrapper();
 
-    await populatePairCollections(pairDiv, font, getAllFonts());
+    await populatePairCollections(pairDiv, font, allFonts);
 
     const similarSection = await buildSimilarSection({
       currentFont: font,
-      fontsAll: getAllFonts(),
+      fontsAll: allFonts,
       onOpenFont: showSingleFont,
       onOpenPairSuggestion: (headingFont, bodyFont) => {
         showSingleFontWithPair(headingFont, bodyFont);
@@ -174,7 +176,7 @@ export function createSingleFontView({
     singleFontView.appendChild(listDiv);
 
     const singleSaveMenu = listDiv.querySelector(".save_list");
-    await populateSaveCollections(singleSaveMenu, font._id);
+    populateSaveCollections(singleSaveMenu, font._id);
 
     singleFontView.appendChild(pairDiv);
     singleFontView.appendChild(similarSection);
@@ -211,6 +213,8 @@ export function createSingleFontView({
     const globalText = getGlobalSampleText() || "The quick brown fox jumps over the lazy dog.";
     const displayText = hasAllCaps ? globalText.toUpperCase() : globalText;
 
+    const allFonts = getAllFonts();
+
     const controlsDiv = document.createElement("div");
     controlsDiv.className = "bar_individual_font force-visible-controls";
     controlsDiv.innerHTML = renderControlsBar({ isPair: false });
@@ -232,11 +236,11 @@ export function createSingleFontView({
     pairDiv.className = "pair-wrapper";
     pairDiv.innerHTML = renderPairWrapper();
 
-    await populatePairCollections(pairDiv, headingFont, getAllFonts());
+    await populatePairCollections(pairDiv, headingFont, allFonts);
 
     const similarSection = await buildSimilarSection({
       currentFont: headingFont,
-      fontsAll: getAllFonts(),
+      fontsAll: allFonts,
       onOpenFont: showSingleFont,
       onOpenPairSuggestion: (newHeadingFont, newBodyFont) => {
         showSingleFontWithPair(newHeadingFont, newBodyFont);
@@ -248,7 +252,7 @@ export function createSingleFontView({
     singleFontView.appendChild(listDiv);
 
     const pairSaveMenu = listDiv.querySelector(".save_list");
-    await populateSaveCollections(pairSaveMenu, headingFont._id);
+    populateSaveCollections(pairSaveMenu, headingFont._id);
 
     singleFontView.appendChild(pairBox);
     singleFontView.appendChild(pairDiv);
