@@ -52,6 +52,21 @@ export function checkFontAgainstFilters(
   return true;
 }
 
+export function getFilteredFonts(fonts, filterParams) {
+  if (!Array.isArray(fonts)) return [];
+  
+  return fonts.filter(font => 
+    checkFontAgainstFilters(
+      font,
+      filterParams.selectedTags || [],
+      filterParams.selectedFoundries || [],
+      filterParams.selectedFamilySizes || [],
+      filterParams.selectedVariables || [],
+      filterParams.searchQuery || ""
+    )
+  );
+}
+
 function filterElements(selector, fonts, filterParams) {
   const elements = document.querySelectorAll(selector);
   let visibleCount = 0;

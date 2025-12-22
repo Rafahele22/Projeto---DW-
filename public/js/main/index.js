@@ -1,5 +1,5 @@
 import { fetchFonts } from "./fontsApi.js";
-import { filterFonts } from "./filtering.js";
+import { filterFonts, getFilteredFonts } from "./filtering.js";
 import {
   setAllFonts,
   getAllFonts,
@@ -253,18 +253,18 @@ async function main() {
       allTags.sort();
 
       if (gridUniverse && listUniverse) {
-        generateListItems({
+        const gridLoader = generateGridArticles({
+          gridEl: gridUniverse,
+          fonts,
+          onOpenFont: openFontFromDiscover,
+        });
+
+        const listLoader = generateListItems({
           gridEl: listUniverse,
           fonts,
           onOpenFont: openFontFromDiscover,
           getGlobalSampleText,
           setGlobalSampleText,
-        });
-
-        generateGridArticles({
-          gridEl: gridUniverse,
-          fonts,
-          onOpenFont: openFontFromDiscover,
         });
 
         const gridViewBtn = document.querySelector("#view_mode_selected");
@@ -273,19 +273,29 @@ async function main() {
         );
 
         let currentFilterParams = {};
+        let currentFilteredFonts = fonts;
 
         const doEqualizeHeights = () =>
           equalizeGridCardHeights(gridUniverse, viewMode.getIsGridView());
 
         const doFilterFonts = (params = {}) => {
           currentFilterParams = { ...currentFilterParams, ...params };
+          currentFilteredFonts = getFilteredFonts(fonts, currentFilterParams);
+          
           const isGrid = viewMode.getIsGridView();
-          filterFonts({
-            gridEl: isGrid ? gridUniverse : listUniverse,
-            fonts,
-            isGridView: isGrid,
-            filterParams: currentFilterParams,
-          });
+          const activeContainer = isGrid ? gridUniverse : listUniverse;
+          const activeLoader = isGrid ? gridLoader : listLoader;
+          
+          if (activeLoader.rerender) {
+            activeLoader.rerender(currentFilteredFonts);
+          }
+          
+          const noResults = document.getElementById("no_results");
+          if (noResults) {
+            noResults.style.display = currentFilteredFonts.length === 0 ? "block" : "none";
+          }
+          
+          requestAnimationFrame(doEqualizeHeights);
         };
 
         const viewMode = setupViewModeToggle({
@@ -295,7 +305,11 @@ async function main() {
           listUniverse,
           filtersPanel,
           onToggle: () => {
-            doFilterFonts();
+            const isGrid = viewMode.getIsGridView();
+            const activeLoader = isGrid ? gridLoader : listLoader;
+            if (activeLoader.rerender) {
+              activeLoader.rerender(currentFilteredFonts);
+            }
             doEqualizeHeights();
           },
         });
@@ -352,14 +366,28 @@ async function main() {
         removeAllFiltersBtn?.addEventListener("click", (e) => {
           e.preventDefault();
           reactApi.clearAll();
-          doEqualizeHeights();
 
-          lastFilterParams = {
+          currentFilterParams = {
             selectedTags: [],
             selectedFoundries: [],
             selectedFamilySizes: [],
             selectedVariables: [],
+            searchQuery: "",
           };
+          
+          currentFilteredFonts = fonts;
+          const isGrid = viewMode.getIsGridView();
+          const activeLoader = isGrid ? gridLoader : listLoader;
+          if (activeLoader.rerender) {
+            activeLoader.rerender(currentFilteredFonts);
+          }
+          
+          const noResults = document.getElementById("no_results");
+          if (noResults) {
+            noResults.style.display = "none";
+          }
+          
+          doEqualizeHeights();
           updateFiltersCounter();
         });
 

@@ -73,7 +73,10 @@ function createGridArticle(font, onOpenFont) {
 }
 
 export function generateGridArticles({ gridEl, fonts, onOpenFont }) {
-  if (!gridEl) return { cleanup: () => {} };
+  if (!gridEl) return { 
+    cleanup: () => {},
+    rerender: () => {}
+  };
 
   gridEl.innerHTML = "";
 
@@ -101,6 +104,19 @@ export function generateGridArticles({ gridEl, fonts, onOpenFont }) {
       loader.cleanup();
       document.removeEventListener("click", handleGlobalClick);
     },
-    loadAll: loader.loadAll
+    loadAll: loader.loadAll,
+    rerender: (newFonts) => {
+      loader.cleanup();
+      gridEl.innerHTML = "";
+      
+      const newLoader = createLazyGridLoader({
+        gridEl,
+        fonts: newFonts,
+        onOpenFont,
+        renderArticle: createGridArticle
+      });
+      
+      return newLoader;
+    }
   };
 }
