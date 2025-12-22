@@ -2,10 +2,9 @@ import { ensureFontFace } from "../../shared/fontUtils.js";
 import { getGlobalSampleText } from "../../state.js";
 import { renderFontTags, renderControlsBar, renderPairBox } from "./templates.js";
 
-// =========================
-// CREATE PAIR CONTROLS BOX
-// =========================
-export function createPairControlsBox(pairFont, signal) {
+const API_BASE = "http://web-dev-grupo05.dei.uc.pt/api";
+
+export function createPairControlsBox(pairFont, signal, headingFont = null) {
   const hasAllCaps = pairFont.tags?.includes("All Caps");
   const globalText = getGlobalSampleText() || "The quick brown fox jumps over the lazy dog.";
   const displayText = hasAllCaps ? globalText.toUpperCase() : globalText;
@@ -15,6 +14,8 @@ export function createPairControlsBox(pairFont, signal) {
   const pairBoxWrapper = document.createElement("div");
   pairBoxWrapper.id = "pair-box-wrapper";
   pairBoxWrapper.className = "pair-box-wrapper";
+  if (headingFont) pairBoxWrapper.dataset.headingFontId = headingFont._id;
+  pairBoxWrapper.dataset.bodyFontId = pairFont._id;
 
   const controlsDiv = document.createElement("div");
   controlsDiv.className = "bar_individual_font pair-controls force-visible-controls";
@@ -27,7 +28,7 @@ export function createPairControlsBox(pairFont, signal) {
   const tagsHTML = renderFontTags(pairFont);
   listDiv.innerHTML = renderPairBox(pairFont, displayText, tagsHTML);
 
-  setupPairButtonEvents(listDiv, signal);
+  setupPairButtonEvents(listDiv, signal, headingFont, pairFont);
 
   pairBoxWrapper.appendChild(controlsDiv);
   pairBoxWrapper.appendChild(listDiv);
@@ -37,10 +38,54 @@ export function createPairControlsBox(pairFont, signal) {
   return pairBoxWrapper;
 }
 
-// ===================
-// PAIR BUTTON EVENTS 
-// ===================
-function setupPairButtonEvents(listDiv, signal) {
+async function savePairToCollection(headingFontId, bodyFontId) {
+  const user = JSON.parse(localStorage.getItem("user") || "null");
+  if (!user || !user._id) return { success: false, message: "Not logged in" };
+
+  try {
+    const res = await fetch(`${API_BASE}/pairs/save`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        userId: user._id,
+        headingFontId: String(headingFontId),
+        bodyFontId: String(bodyFontId),
+      }),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      return { success: true, added: data.added };
+    }
+    return { success: false };
+  } catch (e) {
+    return { success: false };
+  }
+}
+
+async function removePairFromCollection(headingFontId, bodyFontId) {
+  const user = JSON.parse(localStorage.getItem("user") || "null");
+  if (!user || !user._id) return { success: false };
+
+  try {
+    const res = await fetch(`${API_BASE}/pairs/remove`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        userId: user._id,
+        headingFontId: String(headingFontId),
+        bodyFontId: String(bodyFontId),
+      }),
+    });
+    if (res.ok) {
+      return { success: true };
+    }
+    return { success: false };
+  } catch (e) {
+    return { success: false };
+  }
+}
+
+function setupPairButtonEvents(listDiv, signal, headingFont, bodyFont) {
   const savePairBtn = listDiv.querySelector(".save-pair-btn");
   const removePairBtn = listDiv.querySelector(".remove-pair-btn");
 
@@ -74,11 +119,35 @@ function setupPairButtonEvents(listDiv, signal) {
     syncSavePairIcon();
   }, { signal });
 
-  savePairBtn?.addEventListener("click", (e) => {
+  savePairBtn?.addEventListener("click", async (e) => {
     e.preventDefault();
     e.stopPropagation();
-    savePairBtn.classList.toggle("selected-option");
-    syncSavePairIcon();
+    
+    if (!headingFont) {
+      const singleFontView = document.getElementById("singleFontView");
+      const mainListDiv = singleFontView?.querySelector(".list_individual:not(.pair-list)");
+      const mainFontFamily = mainListDiv?.querySelector("h1.sampleText")?.style.fontFamily;
+      const headingId = mainFontFamily?.replace(/['-]/g, "").replace("font", "") || null;
+      if (headingId && bodyFont) {
+        const isSelected = savePairBtn.classList.contains("selected-option");
+        if (isSelected) {
+          await removePairFromCollection(headingId, bodyFont._id);
+        } else {
+          await savePairToCollection(headingId, bodyFont._id);
+        }
+        savePairBtn.classList.toggle("selected-option");
+        syncSavePairIcon();
+      }
+    } else {
+      const isSelected = savePairBtn.classList.contains("selected-option");
+      if (isSelected) {
+        await removePairFromCollection(headingFont._id, bodyFont._id);
+      } else {
+        await savePairToCollection(headingFont._id, bodyFont._id);
+      }
+      savePairBtn.classList.toggle("selected-option");
+      syncSavePairIcon();
+    }
   }, { signal });
 
   syncSavePairIcon();
@@ -163,9 +232,6 @@ function buildPairStylesMenuOptions(menuScroll, font, fontFamily, styleEl, h1El,
   applyPairWeight(styleEl, fontFamily, defaultWeight, h1El);
 }
 
-// ================
-// PAIR STYLES MENU
-// ================
 function setupPairStylesMenu(controlsContainer, displayContainer, font, signal) {
   const chooseBtn = controlsContainer.querySelector(".choose_style_btn");
   const menu = controlsContainer.querySelector("#pair_styles_menu");

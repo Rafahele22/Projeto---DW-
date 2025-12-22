@@ -71,7 +71,7 @@ async function fetchTopPairs(fontsById, currentFont, allFonts) {
   let pairsToShow = [];
 
   try {
-    const res = await fetch("http://web-dev-grupo05.dei.uc.pt/api/top-pairs?limit=4");
+    const res = await fetch(`http://web-dev-grupo05.dei.uc.pt/api/top-pairs?limit=4&withFont=${encodeURIComponent(currentFont._id)}`);
     if (res.ok) {
       const topPairs = await res.json();
       pairsToShow = topPairs
@@ -85,15 +85,19 @@ async function fetchTopPairs(fontsById, currentFont, allFonts) {
     console.warn("Failed to fetch top pairs:", e);
   }
 
-  if (pairsToShow.length === 0) {
+  if (pairsToShow.length < 4) {
     const bodyCandidates = allFonts.filter(
       (f) => f && f._id !== currentFont._id && Array.isArray(f.tags) && f.tags.includes("Body Text")
     );
-    const bodyChosen = pickRandom(bodyCandidates, 4);
-    pairsToShow = bodyChosen.map((bodyFont) => ({
+    const existingBodyIds = new Set(pairsToShow.map(p => p.body._id));
+    const filteredCandidates = bodyCandidates.filter(f => !existingBodyIds.has(f._id));
+    const needed = 4 - pairsToShow.length;
+    const bodyChosen = pickRandom(filteredCandidates, needed);
+    const fallbackPairs = bodyChosen.map((bodyFont) => ({
       heading: currentFont,
       body: bodyFont,
     }));
+    pairsToShow = [...pairsToShow, ...fallbackPairs];
   }
 
   return pairsToShow;
