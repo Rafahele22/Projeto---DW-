@@ -125,7 +125,6 @@ function createPairControlsBox(pairFont, signal) {
     ${tagsHTML}
   `;
 
-  // --- ICON SWAP (hover/selected) ---
   const savePairBtn = listDiv.querySelector(".save-pair-btn");
   const removePairBtn = listDiv.querySelector(".remove-pair-btn");
 
@@ -144,7 +143,6 @@ function createPairControlsBox(pairFont, signal) {
     savePairImg.src = isSelected ? SAVE_HOVER_SELECTED : SAVE_DEFAULT;
   };
 
-  // Remove Pair: hover troca icon
   removePairBtn?.addEventListener(
     "mouseenter",
     (e) => {
@@ -181,7 +179,6 @@ function createPairControlsBox(pairFont, signal) {
     { signal }
   );
 
-  // Se queres mesmo "selected" (fica guardado visualmente)
   savePairBtn?.addEventListener(
     "click",
     (e) => {
@@ -194,7 +191,6 @@ function createPairControlsBox(pairFont, signal) {
   );
 
   syncSavePairIcon();
-  // --- /ICON SWAP ---
 
   pairBoxWrapper.appendChild(controlsDiv);
   pairBoxWrapper.appendChild(listDiv);
@@ -631,7 +627,7 @@ async function buildSimilarSection({ currentFont, fontsAll, onOpenFont, onOpenPa
       option.addEventListener("click", async (e) => {
         e.preventDefault();
         e.stopPropagation();
-        const collectionType = option.dataset.type; // "web" or "print"
+        const collectionType = option.dataset.type;
         if (collectionType && font._id) {
           const collectionName = collectionType === "web" ? "Web" : "Print";
           const result = await toggleFontInCollection(font._id, collectionName);
@@ -760,18 +756,35 @@ export function createSingleFontView({
     if (pairMenu) pairMenu.style.display = "none";
 
     addPairBtn?.addEventListener(
-      "click",
-      (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        if (!pairMenu) return;
+  "click",
+  (e) => {
+    e.preventDefault();
+    e.stopPropagation();
 
-        const isOpening = pairMenu.style.display === "none";
-        pairMenu.style.display = isOpening ? "block" : "none";
-        addPairBtn.classList.toggle("selected", isOpening);
-      },
-      { signal }
-    );
+    const isLoggedIn = document.body.classList.contains("is-logged-in");
+
+    if (!isLoggedIn) {
+      const loginBox = document.querySelector(".loginContentor");
+      const loginForm = document.getElementById("login");
+      const registerForm = document.getElementById("register");
+
+      if (loginBox) loginBox.style.display = "block";
+      if (loginForm) loginForm.style.display = "block";
+      if (registerForm) registerForm.style.display = "none";
+
+      if (pairMenu) pairMenu.style.display = "none";
+      addPairBtn.classList.remove("selected");
+      return;
+    }
+
+    if (!pairMenu) return;
+    const isOpening = pairMenu.style.display === "none";
+    pairMenu.style.display = isOpening ? "block" : "none";
+    addPairBtn.classList.toggle("selected", isOpening);
+  },
+  { signal }
+);
+
 
     const handlePairCategoryClick = (e) => {
   const cat = e.target.closest(".pair-category");
@@ -890,7 +903,7 @@ pairContainer?.addEventListener("click", handlePairOptionClick, { signal });
       { signal }
     );
 
-    // SAVE OPTIONS (Web/Print)
+    // SAVE OPTIONS
     displayContainer.querySelectorAll(".save-option").forEach((option) => {
       option.addEventListener(
         "click",
