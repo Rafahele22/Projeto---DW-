@@ -34,6 +34,21 @@ if (navigator.userAgent.toLowerCase().includes("electron")) {
 async function main() {
   initializeApp();
   
+  await Promise.all([
+    new Promise((resolve) => {
+      const script1 = document.createElement('script');
+      script1.src = 'js/auth.js';
+      script1.onload = resolve;
+      document.head.appendChild(script1);
+    }),
+    new Promise((resolve) => {
+      const script2 = document.createElement('script');
+      script2.src = 'js/interactions.js';
+      script2.onload = resolve;
+      document.head.appendChild(script2);
+    })
+  ]);
+  
   if (window.AuthManager) {
     window.AuthManager.init();
   }

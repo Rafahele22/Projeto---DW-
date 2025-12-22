@@ -83,17 +83,18 @@ function useFavorite(fontId) {
   const [favSelected, setFavSelected] = React.useState(false);
 
   React.useEffect(() => {
-    import("../state.js").then(({ isFavorite }) => {
-      setFavSelected(isFavorite(fontId));
-    });
+    if (window.__appState?.isFavorite) {
+      setFavSelected(window.__appState.isFavorite(fontId));
+    }
   }, [fontId]);
 
   const toggle = async (e) => {
     e?.preventDefault();
     e?.stopPropagation();
-    const { toggleFavorite } = await import("../state.js");
-    const newState = await toggleFavorite(fontId);
-    setFavSelected(newState);
+    if (window.__appState?.toggleFavorite) {
+      const newState = await window.__appState.toggleFavorite(fontId);
+      setFavSelected(newState);
+    }
   };
 
   return { favSelected, toggle };
@@ -726,8 +727,10 @@ function ListItem({
 
   const handleFavToggle = async (e) => {
     const wasSelected = favSelected || forceFavSelected;
+    console.log('[ListItem handleFavToggle]', { collectionName, wasSelected, fontId: font._id });
     if (collectionName === "Favourites" && wasSelected) {
       await toggleFav(e);
+      console.log('[ListItem] Calling onFontRemovedFromCollection');
       onFontRemovedFromCollection?.(font._id);
     } else {
       await toggleFav(e);
@@ -856,8 +859,10 @@ function GridItem({
 
   const handleFavToggle = async (e) => {
     const wasSelected = favSelected || forceFavSelected;
+    console.log('[GridItem handleFavToggle]', { collectionName, wasSelected, fontId: font._id });
     if (collectionName === "Favourites" && wasSelected) {
       await toggleFav(e);
+      console.log('[GridItem] Calling onFontRemovedFromCollection');
       onFontRemovedFromCollection?.(font._id);
     } else {
       await toggleFav(e);

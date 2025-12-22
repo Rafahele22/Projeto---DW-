@@ -90,3 +90,10 @@ export function setActualMode(mode) {
     actualMode = mode;
   }
 }
+
+window.__appState = {
+  isFavorite,
+  toggleFavorite,
+  getGlobalSampleText,
+  setGlobalSampleText,
+};

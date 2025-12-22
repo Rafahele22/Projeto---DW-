@@ -41,6 +41,13 @@ function safeJoinPublic(requestPathname) {
     return resolved.startsWith(path.resolve(PUBLIC_DIR)) ? resolved : null;
 }
 
+function safeJoinAssets(requestPathname) {
+    const decoded = decodeURIComponent(requestPathname).replace(/\\/g, '/');
+    const assetsDir = path.join(__dirname, '../assets');
+    const resolved = path.resolve(path.join(assetsDir, decoded));
+    return resolved.startsWith(path.resolve(assetsDir)) ? resolved : null;
+}
+
 function inlineJsxScriptsInHtml(html) {
     let out = html;
     for (const src of JSX_SCRIPTS) {
@@ -95,6 +102,25 @@ const server = http.createServer(async (req, res) => {
             console.error('Error serving main.html:', e);
             sendError(res, 500, 'Server Error');
         }
+        return;
+    }
+
+    if (pathname.startsWith('/assets/')) {
+        const assetPath = pathname.slice('/assets/'.length);
+        const filePath = safeJoinAssets('/' + assetPath);
+        if (!filePath) {
+            sendError(res, 400, 'Bad Request');
+            return;
+        }
+        fs.readFile(filePath, (err, content) => {
+            if (err) {
+                err.code === 'ENOENT' ? sendError(res, 404, 'Not Found') : sendError(res, 500, 'Server Error');
+                if (err.code !== 'ENOENT') console.error('File read error:', err);
+            } else {
+                res.writeHead(200, { 'Content-Type': getContentType(filePath) });
+                res.end(content);
+            }
+        });
         return;
     }
 
