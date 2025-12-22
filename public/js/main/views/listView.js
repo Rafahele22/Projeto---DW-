@@ -7,58 +7,72 @@ import {
   populateGridSaveMenu,
 } from "../shared/fontUtils.js";
 import { hide } from "../shared/displayUtils.js";
+import { createLazyListLoader } from "../shared/lazyLoader.js";
+
+function createListItem(font, onOpenFont, getGlobalSampleText, setGlobalSampleText) {
+  ensureFontFace(font);
+
+  const numStyles = font.weights.length;
+  const hasAllCaps = font.tags && font.tags.includes("All Caps");
+  const sampleText = getGlobalSampleText() || "The quick brown fox jumps over the lazy dog.";
+  const displayText = hasAllCaps ? sampleText.toUpperCase() : sampleText;
+
+  const listDiv = document.createElement("div");
+  listDiv.className = "list";
+  listDiv.dataset.allCaps = hasAllCaps ? "1" : "0";
+
+  listDiv.innerHTML = `
+    <div class="list_information_bar">
+      <section class="list_information">
+        <h3>${font.name}</h3>
+        ${font.foundry !== "Unknown" ? `<h3>${font.foundry}</h3>` : ""}
+        <h3>${numStyles} ${numStyles === 1 ? "style" : "styles"}</h3>
+        ${font.variable ? "<h3>Variable</h3>" : ""}
+      </section>
+      <section class="list_information">
+        <a href="#" class="fav-btn"><img src="../assets/imgs/fav.svg" alt="favourite"/></a>
+        <a href="#" class="button save-btn"><h4>Save</h4></a>
+      </section>
+      <section class="save_list">
+      </section>
+    </div>
+    <h1 class="sampleText" contenteditable="true" style="font-family:'${font._id}-font'; line-height: 4.5vw; word-wrap: break-word; overflow-wrap: break-word; white-space: normal; outline: none;">${displayText}</h1>
+  `;
+
+  listDiv.addEventListener("click", (e) => {
+    if (
+      e.target.closest("a") ||
+      e.target.closest("input") ||
+      e.target.closest(".save_list") ||
+      e.target.closest(".range-container") ||
+      e.target.closest('h1[contenteditable="true"]')
+    ) {
+      return;
+    }
+    onOpenFont(font);
+  });
+
+  setupListItemEvents({ listItem: listDiv, font, getGlobalSampleText, setGlobalSampleText });
+  return listDiv;
+}
 
 export function generateListItems({ gridEl, fonts, onOpenFont, getGlobalSampleText, setGlobalSampleText }) {
-  if (!gridEl) return;
+  if (!gridEl) return { cleanup: () => {} };
 
   ensureCapsLockTracking();
+  
+  gridEl.innerHTML = "";
 
-  fonts.forEach((font) => {
-    ensureFontFace(font);
-
-    const numStyles = font.weights.length;
-    const hasAllCaps = font.tags && font.tags.includes("All Caps");
-    const sampleText = "The quick brown fox jumps over the lazy dog.";
-    const displayText = hasAllCaps ? sampleText.toUpperCase() : sampleText;
-
-    const listDiv = document.createElement("div");
-    listDiv.className = "list";
-    listDiv.dataset.allCaps = hasAllCaps ? "1" : "0";
-
-    listDiv.innerHTML = `
-      <div class="list_information_bar">
-        <section class="list_information">
-          <h3>${font.name}</h3>
-          ${font.foundry !== "Unknown" ? `<h3>${font.foundry}</h3>` : ""}
-          <h3>${numStyles} ${numStyles === 1 ? "style" : "styles"}</h3>
-          ${font.variable ? "<h3>Variable</h3>" : ""}
-        </section>
-        <section class="list_information">
-          <a href="#" class="fav-btn"><img src="../assets/imgs/fav.svg" alt="favourite"/></a>
-          <a href="#" class="button save-btn"><h4>Save</h4></a>
-        </section>
-        <section class="save_list">
-        </section>
-      </div>
-      <h1 class="sampleText" contenteditable="true" style="font-family:'${font._id}-font'; line-height: 4.5vw; word-wrap: break-word; overflow-wrap: break-word; white-space: normal; outline: none;">${displayText}</h1>
-    `;
-
-    listDiv.addEventListener("click", (e) => {
-      if (
-        e.target.closest("a") ||
-        e.target.closest("input") ||
-        e.target.closest(".save_list") ||
-        e.target.closest(".range-container") ||
-        e.target.closest('h1[contenteditable="true"]')
-      ) {
-        return;
-      }
-      onOpenFont(font);
-    });
-
-    gridEl.appendChild(listDiv);
-    setupListItemEvents({ listItem: listDiv, font, getGlobalSampleText, setGlobalSampleText });
+  const loader = createLazyListLoader({
+    listEl: gridEl,
+    fonts,
+    onOpenFont,
+    renderListItem: (font) => createListItem(font, onOpenFont, getGlobalSampleText, setGlobalSampleText)
   });
+
+  return {
+    cleanup: () => loader.cleanup()
+  };
 }
 
 function setupListItemEvents({ listItem, font, getGlobalSampleText, setGlobalSampleText }) {
@@ -68,11 +82,17 @@ function setupListItemEvents({ listItem, font, getGlobalSampleText, setGlobalSam
   const saveBtn = listItem.querySelector(".save-btn");
   hide(saveMenu);
   
-  populateGridSaveMenu(saveMenu, font._id);
+  let menuPopulated = false;
 
   saveBtn?.addEventListener("click", (e) => {
     e.preventDefault();
     e.stopPropagation();
+    
+    if (!menuPopulated) {
+      populateGridSaveMenu(saveMenu, font._id);
+      menuPopulated = true;
+    }
+    
     closeSaveMenusExcept(saveMenu);
     const isOpening = saveMenu?.style.display === "none";
     if (saveMenu) saveMenu.style.display = isOpening ? "block" : "none";
@@ -81,15 +101,6 @@ function setupListItemEvents({ listItem, font, getGlobalSampleText, setGlobalSam
 
   const editable = listItem.querySelector("h1.sampleText");
   if (!editable) return;
-
-  const renderGlobalTextEverywhere = () => {
-    document.querySelectorAll("h1.sampleText").forEach((h1) => {
-      if (h1 === document.activeElement) return;
-      h1.innerText = getGlobalSampleText();
-    });
-  };
-
-  renderGlobalTextEverywhere();
 
   editable.addEventListener("input", () => {
     const parent = editable.closest(".list");
@@ -105,6 +116,14 @@ function setupListItemEvents({ listItem, font, getGlobalSampleText, setGlobalSam
       setGlobalSampleText(visualText);
     }
 
-    renderGlobalTextEverywhere();
+    requestAnimationFrame(() => {
+      document.querySelectorAll("h1.sampleText").forEach((h1) => {
+        if (h1 === document.activeElement) return;
+        const parentDiv = h1.closest(".list");
+        const isAllCaps = parentDiv?.dataset.allCaps === "1";
+        const text = getGlobalSampleText();
+        h1.innerText = isAllCaps ? text.toUpperCase() : text;
+      });
+    });
   });
 }

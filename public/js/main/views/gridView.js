@@ -6,72 +6,85 @@ import {
   closeSaveMenusExcept,
 } from "../shared/fontUtils.js";
 import { hide } from "../shared/displayUtils.js";
+import { createLazyGridLoader } from "../shared/lazyLoader.js";
 
-export function generateGridArticles({ gridEl, fonts, onOpenFont }) {
-  if (!gridEl) return [];
+function createGridArticle(font, onOpenFont) {
+  ensureFontFace(font);
 
-  const articles = [];
+  const numStyles = font.weights.length;
+  const sampleLetter = font.tags?.includes("All Caps") ? "AA" : "Aa";
 
-  fonts.forEach((font) => {
-    ensureFontFace(font);
+  const article = document.createElement("article");
+  article.dataset.fontId = font._id;
 
-    const numStyles = font.weights.length;
-    const sampleLetter = font.tags?.includes("All Caps") ? "AA" : "Aa";
+  article.innerHTML = `
+    <section class="grid_information">
+      <a href="#" class="button save-btn"><h4>Save</h4></a>
+      <a href="#" class="fav-btn"><img src="../assets/imgs/fav.svg" alt="favourite"/></a>
+    </section>
 
-    const article = document.createElement("article");
-    article.dataset.fontId = font._id;
+    <section class="save">
+    </section>
 
-    article.innerHTML = `
-      <section class="grid_information">
-        <a href="#" class="button save-btn"><h4>Save</h4></a>
-        <a href="#" class="fav-btn"><img src="../assets/imgs/fav.svg" alt="favourite"/></a>
-      </section>
+    <h1 class="title_gridview" style="font-family:'${font._id}-font'">${sampleLetter}</h1>
 
-      <section class="save">
-      </section>
+    <section class="grid_information">
+      <h2>${font.name}</h2>
+      <h3>${numStyles} styles</h3>
+    </section>
+  `;
 
-      <h1 class="title_gridview" style="font-family:'${font._id}-font'">${sampleLetter}</h1>
-
-      <section class="grid_information">
-        <h2>${font.name}</h2>
-        <h3>${numStyles} styles</h3>
-      </section>
-    `;
-
-    article.addEventListener("click", (e) => {
-      if (e.target.closest("a") || e.target.closest("button") || e.target.closest(".save")) {
-        return;
-      }
-      onOpenFont(font);
-    });
-
-    gridEl.appendChild(article);
-    articles.push(article);
-
-    const saveMenu = article.querySelector(".save");
-    const saveBtn = article.querySelector(".save-btn");
-
-    setupFavButton(article.querySelector(".fav-btn img"), font._id);
-    populateGridSaveMenu(saveMenu, font._id);
-
-    hide(saveMenu);
-
-    saveBtn?.addEventListener("click", (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      closeSaveMenusExcept(saveMenu);
-      const isOpening = saveMenu?.style.display === "none";
-      if (saveMenu) saveMenu.style.display = isOpening ? "block" : "none";
-      saveBtn.classList.toggle("selected", isOpening);
-    });
-
-    article.addEventListener("mouseleave", () => {
-      hide(saveMenu);
-      saveBtn?.classList.remove("selected");
-    });
+  article.addEventListener("click", (e) => {
+    if (e.target.closest("a") || e.target.closest("button") || e.target.closest(".save")) {
+      return;
+    }
+    onOpenFont(font);
   });
 
-  document.addEventListener("click", (e) => {
+  const saveMenu = article.querySelector(".save");
+  const saveBtn = article.querySelector(".save-btn");
+
+  setupFavButton(article.querySelector(".fav-btn img"), font._id);
+  
+  let menuPopulated = false;
+  hide(saveMenu);
+
+  saveBtn?.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (!menuPopulated) {
+      populateGridSaveMenu(saveMenu, font._id);
+      menuPopulated = true;
+    }
+    
+    closeSaveMenusExcept(saveMenu);
+    const isOpening = saveMenu?.style.display === "none";
+    if (saveMenu) saveMenu.style.display = isOpening ? "block" : "none";
+    saveBtn.classList.toggle("selected", isOpening);
+  });
+
+  article.addEventListener("mouseleave", () => {
+    hide(saveMenu);
+    saveBtn?.classList.remove("selected");
+  });
+
+  return article;
+}
+
+export function generateGridArticles({ gridEl, fonts, onOpenFont }) {
+  if (!gridEl) return { cleanup: () => {} };
+
+  gridEl.innerHTML = "";
+
+  const loader = createLazyGridLoader({
+    gridEl,
+    fonts,
+    onOpenFont,
+    renderArticle: createGridArticle
+  });
+
+  const handleGlobalClick = (e) => {
     document.querySelectorAll(".save").forEach((menu) => {
       const btn = menu.parentElement?.querySelector(".save-btn");
       if (!menu.contains(e.target) && (!btn || !btn.contains(e.target))) {
@@ -79,7 +92,15 @@ export function generateGridArticles({ gridEl, fonts, onOpenFont }) {
         btn?.classList.remove("selected");
       }
     });
-  });
+  };
 
-  return articles;
+  document.addEventListener("click", handleGlobalClick);
+
+  return {
+    cleanup: () => {
+      loader.cleanup();
+      document.removeEventListener("click", handleGlobalClick);
+    },
+    loadAll: loader.loadAll
+  };
 }
