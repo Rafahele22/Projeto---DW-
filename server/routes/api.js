@@ -460,6 +460,7 @@ async function handleApiRequest(req, res) {
         try {
             const body = await parseBody(req);
             const { userId, headingFontId, bodyFontId } = body;
+            console.log('[pairs/save] Received:', { userId, headingFontId, bodyFontId });
 
             if (!userId || !headingFontId || !bodyFontId) {
                 res.writeHead(400, { 'Content-Type': 'application/json' });
@@ -472,6 +473,7 @@ async function handleApiRequest(req, res) {
                 userId: userIdStr,
                 type: 'pairs'
             });
+            console.log('[pairs/save] Found collection:', pairsCollection ? pairsCollection._id : 'null');
 
             if (!pairsCollection) {
                 const newCollection = {
@@ -483,6 +485,7 @@ async function handleApiRequest(req, res) {
                 };
                 const result = await db.collection('collections').insertOne(newCollection);
                 pairsCollection = { ...newCollection, _id: result.insertedId };
+                console.log('[pairs/save] Created new collection:', pairsCollection._id);
             }
 
             const items = Array.isArray(pairsCollection.items) ? pairsCollection.items : [];
@@ -498,6 +501,7 @@ async function handleApiRequest(req, res) {
             }
 
             if (pairExists) {
+                console.log('[pairs/save] Pair already exists');
                 res.writeHead(200, { 'Content-Type': 'application/json' });
                 res.end(JSON.stringify({ added: false, message: 'Pair already exists' }));
             } else {
@@ -514,6 +518,7 @@ async function handleApiRequest(req, res) {
                         } 
                     }
                 );
+                console.log('[pairs/save] Pair added successfully');
                 res.writeHead(200, { 'Content-Type': 'application/json' });
                 res.end(JSON.stringify({ added: true, headingFontId: headingStr, bodyFontId: bodyStr }));
             }

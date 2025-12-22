@@ -250,7 +250,7 @@ export function setupCollectionsNav(options = {}) {
     return activeCollectionsTab === "pairs" ? pairsTab : albumsTab;
   }
 
-  function enterCollections() {
+  async function enterCollections() {
     const singleFontViewEl = document.getElementById("singleFontView");
     if (singleFontViewEl) {
       singleFontViewEl.innerHTML = "";
@@ -264,6 +264,14 @@ export function setupCollectionsNav(options = {}) {
     setSelected(collectionsBtn);
     hide(filtersPanel);
     filtersBtn?.classList.remove("selected");
+    
+    const user = JSON.parse(localStorage.getItem("user") || "null");
+    if (user && user._id) {
+      const newCollections = await refreshUserCollections(user._id);
+      if (newCollections) {
+        collectionsReact?.update?.({ collections: newCollections });
+      }
+    }
     
     attachCollectionsViewModeInterceptors();
     setCollectionsTabSelected(getActiveTab() || albumsTab);
