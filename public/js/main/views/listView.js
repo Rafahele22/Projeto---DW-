@@ -57,7 +57,10 @@ function createListItem(font, onOpenFont, getGlobalSampleText, setGlobalSampleTe
 }
 
 export function generateListItems({ gridEl, fonts, onOpenFont, getGlobalSampleText, setGlobalSampleText }) {
-  if (!gridEl) return { cleanup: () => {} };
+  if (!gridEl) return { 
+    cleanup: () => {},
+    rerender: () => {}
+  };
 
   ensureCapsLockTracking();
   
@@ -71,7 +74,20 @@ export function generateListItems({ gridEl, fonts, onOpenFont, getGlobalSampleTe
   });
 
   return {
-    cleanup: () => loader.cleanup()
+    cleanup: () => loader.cleanup(),
+    rerender: (newFonts) => {
+      loader.cleanup();
+      gridEl.innerHTML = "";
+      
+      const newLoader = createLazyListLoader({
+        listEl: gridEl,
+        fonts: newFonts,
+        onOpenFont,
+        renderListItem: (font) => createListItem(font, onOpenFont, getGlobalSampleText, setGlobalSampleText)
+      });
+      
+      return newLoader;
+    }
   };
 }
 
