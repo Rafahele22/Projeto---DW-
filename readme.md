@@ -41,3 +41,4 @@ Fontscope is intended for both designers and non-designers, offering clear and u
 -> Add albums
 -> Add pairs
 -> Manage favorites
+— Connection to the server

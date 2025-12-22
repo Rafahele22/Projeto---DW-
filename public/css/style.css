@@ -449,7 +449,8 @@ body.is-logged-in #register {
 .save a .add-text,
 .save_list a .add-text, 
 #logout, 
-#register { 
+#register,
+.pending-album > section > h3 { 
     display: none; 
 }
 
@@ -483,7 +484,8 @@ button[type="submit"]:hover,
 .selected:hover, 
 .remove-pair-btn:hover, 
 .save-pair-btn:hover, 
-.save-pair-btn.selected-option { 
+.save-pair-btn.selected-option, 
+.pending-album-confirm:hover { 
     background-color: var(--purple); 
 }
 
@@ -1193,8 +1195,7 @@ form button:hover img { content: url("../../assets/imgs/login_selected.svg"); }
 }
 
 .pending-album .exemples_album {
-    background-color: var(--grey);
-    border-radius: 5vh 5vh 0 0;
+    border: none;
 }
 
 .pending-album > section {
@@ -1217,12 +1218,12 @@ form button:hover img { content: url("../../assets/imgs/login_selected.svg"); }
     outline: none;
     width: 100%;
     padding: 0.5vh 0;
-    border-bottom: 2px solid var(--purple);
+    border-bottom: 2px solid var(--black);
 }
 
 .pending-album-confirm {
     border: none;
-    background-color: var(--purple);
+    background-color: var(--grey);
     border-radius: 50%;
     width: 2vw;
     height: 2vw;
@@ -1233,13 +1234,16 @@ form button:hover img { content: url("../../assets/imgs/login_selected.svg"); }
     flex-shrink: 0;
 }
 
-.pending-album-confirm:hover {
-    background-color: var(--darker-grey);
+.pending-album .exemples_album h1 {
+    color: var(--dark-grey);
 }
 
 .pending-album-confirm img {
     width: 1vw;
     height: auto;
+}
+
+.pending-album-confirm:hover img {
     filter: brightness(0) invert(1);
 }
 
