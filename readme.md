@@ -65,83 +65,15 @@ Projeto---DW-
 ├── data/
 ├── C-react/
 ├── electron/
+├── docs/
+│   └── JS_STRUCTURE.md
 ├── readme.md
 └── instructions.md
 ```
 
-### Technologies used
-- HTML5
-- CSS3 (Grid, Flexbox, media queries)
-- JavaScript
-- React (Babel standalone)
-- Node.js
-- Electron
-- MongoDB
+## Task Distribution
 
-### Documentation
-- See code comments and folder structure for module details
-
-### License
-This project is open source and available for educational purposes.
-
-## List of tasks performed
-
-### Olga
-— Logo and icon design and animation
-
-— Collection and construction of the font database (free fonts only)
-
-— HTML/CSS structure
-
--> Styling of all interface elements
-
--> Responsive design (media queries)
-
-— Linking content to the fonts dataset
-
-— Filtering system (native JavaScript)
-
-— Dropdown buttons
-
-— Page navigation and routing
-
-— “Similar” feature
-
-— Login state handling (UI changes based on authentication)
-
-— Electron navigation bar
-
-— Loading screen
-
-### Rafael
-— File and codebase organization
-
-— Node.js / Electron / MongoDB project structure
-
-— Connection of all content to MongoDB
-
-— Authentication and login functionality
-
-— Conversion of filters and collections to React
-
-— Search bar and slider functionality
-
-— User dataset creation
-
-— Collection dataset creation
-
-— User features:
-
--> Add albums
-
--> Add pairs
-
--> Manage favorites
-
-— Connection to the server
-
--> Refactoring and modularization of React components
--> Implementation and debugging of filtering, search, and lazy loading logic
--> Asset loading and server path troubleshooting
--> Improvements to project documentation and onboarding
--> Technical planning and architectural decisions
+| Contributor | Main Responsibilities |
+|-------------|----------------------|
+| **Olga**    | - Logo and icon design and animation<br>- Collection and construction of the font database (free fonts only)<br>- HTML/CSS structure<br>&nbsp;&nbsp;&nbsp;&rarr; Styling of all interface elements<br>&nbsp;&nbsp;&nbsp;&rarr; Responsive design (media queries)<br>- Linking content to the fonts dataset<br>- Filtering system (native JavaScript)<br>- Dropdown buttons<br>- Page navigation and routing<br>- “Similar” feature<br>- Login state handling (UI changes based on authentication)<br>- Electron navigation bar<br>- Loading screen |
+| **Rafael**  | - File and codebase organization<br>- Node.js / Electron / MongoDB project structure<br>- Connection of all content to MongoDB<br>- Authentication and login functionality<br>- Conversion of filters and collections to React<br>- Search bar and slider functionality<br>- User dataset creation<br>- Collection dataset creation<br>- User features:<br>&nbsp;&nbsp;&nbsp;&rarr; Add albums<br>&nbsp;&nbsp;&nbsp;&rarr; Add pairs<br>&nbsp;&nbsp;&nbsp;&rarr; Manage favorites<br>- Connection to the server<br>- Refactoring and modularization of React components<br>- Implementation and debugging of filtering, search, and lazy loading logic<br>- Asset loading and server path troubleshooting<br>- Improvements to project documentation and onboarding<br>- Technical planning and architectural decisions |
