@@ -19,6 +19,7 @@ import {
 } from "./collections.js";
 import { equalizeGridCardHeights } from "./shared/gridUtils.js";
 import { hide, show, showFlex } from "./shared/displayUtils.js";
+import { initializeApp } from "./htmlGenerator.js";
 
 if (navigator.userAgent.toLowerCase().includes("electron")) {
   document.body.classList.add("is-electron");
@@ -31,6 +32,15 @@ if (navigator.userAgent.toLowerCase().includes("electron")) {
 }
 
 async function main() {
+  initializeApp();
+  
+  if (window.AuthManager) {
+    window.AuthManager.init();
+  }
+  if (window.initInteractions) {
+    window.initInteractions();
+  }
+  
   const loadingScreen = document.getElementById("loading-screen");
 
   function hideLoadingScreen() {

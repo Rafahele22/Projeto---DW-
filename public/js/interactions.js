@@ -1,3 +1,4 @@
+function initInteractions() {
   const profileBtn = document.getElementById("profile");
   const loginContainer = document.querySelector(".loginContentor");
   
@@ -37,6 +38,7 @@
       e.stopPropagation();
     });
   }
+}
 
 function openLoginContainer() {
   const loginContainer = document.querySelector(".loginContentor");
@@ -83,3 +85,5 @@ document.addEventListener(
   },
   true
 );
+
+window.initInteractions = initInteractions;

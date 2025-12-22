@@ -49,7 +49,7 @@ const AuthManager = {
 
   async register(username, mail, password) {
     try {
-      const response = await fetch("http://localhost:4000/api/register", {
+      const response = await fetch("http://web-dev-grupo05.dei.uc.pt/api/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, mail, password }),
@@ -70,7 +70,6 @@ const AuthManager = {
 
   updateUIElements() {
     const user = this.getUser();
-    console.log("AuthManager: Utilizador atual ->", user);
 
     const profileLabel = document.querySelector("#profile h4");
     const logoutUsernameSpan = document.getElementById("logoutUsername");
@@ -87,62 +86,64 @@ const AuthManager = {
       if (profileLabel) profileLabel.textContent = "Profile";
     }
   },
+
+  init() {
+    this.updateUIElements();
+
+    const loginForm = document.getElementById("login");
+    loginForm?.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const mail = loginForm.querySelector('input[type="email"]').value;
+      const password = loginForm.querySelector('input[type="password"]').value;
+      
+      const result = await this.login(mail, password);
+      if (result.success) {
+        this.updateUIElements();
+        window.location.reload(); 
+      } else {
+        alert(result.message);
+      }
+    });
+
+    const registerForm = document.getElementById("register");
+    registerForm?.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const username = registerForm.querySelector('input[type="username"]').value;
+      const mail = registerForm.querySelector('input[type="email"]').value;
+      const password = registerForm.querySelector('input[type="password"]').value;
+
+      const result = await this.register(username, mail, password);
+      if (result.success) {
+        this.updateUIElements();
+        window.location.reload();
+      } else {
+        alert(result.message);
+      }
+    });
+
+    const logoutForm = document.getElementById("logout");
+    logoutForm?.addEventListener("submit", (e) => {
+      e.preventDefault();
+      this.logout();
+    });
+
+    const goRegister = document.getElementById("goRegister");
+    const goLogin = document.getElementById("goLogin");
+
+    goRegister?.addEventListener("click", (e) => {
+      e.preventDefault();
+      if(document.body.classList.contains('is-logged-in')) return;
+      document.getElementById("login").style.display = "none";
+      document.getElementById("register").style.display = "block";
+    });
+
+    goLogin?.addEventListener("click", (e) => {
+      e.preventDefault();
+      if(document.body.classList.contains('is-logged-in')) return;
+      document.getElementById("register").style.display = "none";
+      document.getElementById("login").style.display = "block";
+    });
+  }
 };
 
-document.addEventListener("DOMContentLoaded", () => {
-  AuthManager.updateUIElements();
-
-  const loginForm = document.getElementById("login");
-  loginForm?.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const mail = loginForm.querySelector('input[type="email"]').value;
-    const password = loginForm.querySelector('input[type="password"]').value;
-    
-    const result = await AuthManager.login(mail, password);
-    if (result.success) {
-      AuthManager.updateUIElements();
-      window.location.reload(); 
-    } else {
-      alert(result.message);
-    }
-  });
-
-  const registerForm = document.getElementById("register");
-  registerForm?.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const username = registerForm.querySelector('input[type="username"]').value;
-    const mail = registerForm.querySelector('input[type="email"]').value;
-    const password = registerForm.querySelector('input[type="password"]').value;
-
-    const result = await AuthManager.register(username, mail, password);
-    if (result.success) {
-      AuthManager.updateUIElements();
-      window.location.reload();
-    } else {
-      alert(result.message);
-    }
-  });
-
-  const logoutForm = document.getElementById("logout");
-  logoutForm?.addEventListener("submit", (e) => {
-    e.preventDefault();
-    AuthManager.logout();
-  });
-
-  const goRegister = document.getElementById("goRegister");
-  const goLogin = document.getElementById("goLogin");
-
-  goRegister?.addEventListener("click", (e) => {
-    e.preventDefault();
-    if(document.body.classList.contains('is-logged-in')) return;
-    document.getElementById("login").style.display = "none";
-    document.getElementById("register").style.display = "block";
-  });
-
-  goLogin?.addEventListener("click", (e) => {
-    e.preventDefault();
-    if(document.body.classList.contains('is-logged-in')) return;
-    document.getElementById("register").style.display = "none";
-    document.getElementById("login").style.display = "block";
-  });
-});
+window.AuthManager = AuthManager;
