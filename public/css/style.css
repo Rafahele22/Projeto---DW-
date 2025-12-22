@@ -715,12 +715,16 @@ button[type="submit"]:hover h4,
   margin-top: 4vh;
 }
 
-#pair-box-wrapper .remove-pair-btn {
+.remove-pair-btn, .save-pair-btn {
   background-color: var(--light_grey);
 }
 
-#pair-box-wrapper .remove-pair-btn:hover {
-  background-color: var(--darker-grey);
+.remove-pair-btn:hover, .save-pair-btn:hover {
+  background-color: var(--purple);
+}
+
+.remove-pair-btn:hover h4, .save-pair-btn:hover h4 {
+  color: var(--light_grey);
 }
 
 .list_individual h1 {

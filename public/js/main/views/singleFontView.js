@@ -97,7 +97,8 @@ function createPairControlsBox(pairFont, signal) {
       </section>
 
       <section class="list_information">
-        <a href="#" class="button remove-pair-btn"><h4>Remove Pair</h4></a>
+        <a href="#" class="button save-pair-btn"><img src="../assets/imgs/fav.svg" alt="favourite"/><h4>Save to Pairs</h4></a>
+        <a href="#" class="button remove-pair-btn"><img src="../assets/imgs/trash.svg" alt="trash"/><h4>Remove Pair</h4></a>
       </section>
     </div>
 
