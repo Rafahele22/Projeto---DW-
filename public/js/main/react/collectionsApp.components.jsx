@@ -715,13 +715,18 @@ function ListItem({
     if (!collectionId || !font?._id) return;
 
     try {
+      console.log('[ListItem handleTrashClick] Deleting font:', font._id, 'from collection:', collectionId);
       const res = await fetch(`${API_BASE}/collections/${collectionId}/fonts/${font._id}`, {
         method: "DELETE",
       });
+      console.log('[ListItem handleTrashClick] Response status:', res.status);
       if (res.ok) {
+        console.log('[ListItem handleTrashClick] Calling onDeleteFont');
         onDeleteFont?.(font._id);
       }
-    } catch (err) {}
+    } catch (err) {
+      console.error('[ListItem handleTrashClick] Error:', err);
+    }
   };
 
   const handleFavToggle = async (e) => {
@@ -843,13 +848,18 @@ function GridItem({
     if (!collectionId || !font?._id) return;
 
     try {
+      console.log('[GridItem handleTrashClick] Deleting font:', font._id, 'from collection:', collectionId);
       const res = await fetch(`${API_BASE}/collections/${collectionId}/fonts/${font._id}`, {
         method: "DELETE",
       });
+      console.log('[GridItem handleTrashClick] Response status:', res.status);
       if (res.ok) {
+        console.log('[GridItem handleTrashClick] Calling onDeleteFont');
         onDeleteFont?.(font._id);
       }
-    } catch (err) {}
+    } catch (err) {
+      console.error('[GridItem handleTrashClick] Error:', err);
+    }
   };
 
   const handleFavToggle = async (e) => {

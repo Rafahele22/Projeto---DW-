@@ -117,6 +117,11 @@ export function setupCollectionsNav(options = {}) {
       mountEl: collectionsUniverse,
       getGlobalSampleText,
       setGlobalSampleText,
+      onRefreshCollections: async (newCollections) => {
+        if (newCollections) {
+          setUserCollections(newCollections);
+        }
+      },
       onSelectCollection: (id) => {
         openedCollectionId = String(id);
         isInCollectionsDetail = true;
@@ -267,10 +272,7 @@ export function setupCollectionsNav(options = {}) {
     
     const user = JSON.parse(localStorage.getItem("user") || "null");
     if (user && user._id) {
-      const newCollections = await refreshUserCollections(user._id);
-      if (newCollections) {
-        collectionsReact?.update?.({ collections: newCollections });
-      }
+      await refreshUserCollections(user._id);
     }
     
     attachCollectionsViewModeInterceptors();

@@ -368,27 +368,23 @@ async function handleApiRequest(req, res) {
         try {
             const collectionId = fontInCollectionMatch[1];
             const fontId = fontInCollectionMatch[2];
-            const { ObjectId } = require('mongodb');
+            console.log('[DELETE font from collection]', { collectionId, fontId });
 
-            let query;
-            try {
-                query = { _id: new ObjectId(collectionId) };
-            } catch (e) {
-                query = { _id: collectionId };
-            }
-
-            const collection = await db.collection('collections').findOne(query);
+            const collection = await db.collection('collections').findOne({ _id: collectionId });
             
             if (!collection) {
+                console.log('[DELETE font] Collection not found:', collectionId);
                 res.writeHead(404, { 'Content-Type': 'application/json' });
                 res.end(JSON.stringify({ error: 'Collection not found' }));
                 return;
             }
 
-            await db.collection('collections').updateOne(
-                query,
+            console.log('[DELETE font] Collection found, removing fontId:', fontId);
+            const result = await db.collection('collections').updateOne(
+                { _id: collectionId },
                 { $pull: { items: { fontId: String(fontId) } } }
             );
+            console.log('[DELETE font] Update result:', result.modifiedCount);
             
             res.writeHead(200, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({ success: true, collectionId, fontId }));

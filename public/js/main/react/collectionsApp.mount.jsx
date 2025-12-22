@@ -2,6 +2,7 @@ function mountCollectionsImpl({
   mountEl,
   getGlobalSampleText,
   setGlobalSampleText,
+  onRefreshCollections,
   onSelectCollection,
   onOpenFont,
   onOpenPair,
@@ -105,6 +106,9 @@ function mountCollectionsImpl({
         if (res.ok) {
           const data = await res.json();
           setState((prev) => ({ ...prev, collections: data }));
+          if (typeof onRefreshCollections === "function") {
+            onRefreshCollections(data);
+          }
         }
       } catch (e) {
         console.error("Failed to refresh collections:", e);
