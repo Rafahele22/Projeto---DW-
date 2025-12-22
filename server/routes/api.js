@@ -474,28 +474,9 @@ async function handleApiRequest(req, res) {
             });
 
             if (!pairsCollection) {
-                try {
-                    const { ObjectId } = require('mongodb');
-                    if (ObjectId.isValid(userId)) {
-                        pairsCollection = await db.collection('collections').findOne({
-                            userId: new ObjectId(userId),
-                            type: 'pairs'
-                        });
-                        if (pairsCollection) {
-                            await db.collection('collections').updateOne(
-                                { _id: pairsCollection._id },
-                                { $set: { userId: userIdStr } }
-                            );
-                            pairsCollection.userId = userIdStr;
-                        }
-                    }
-                } catch (e) {}
-            }
-
-            if (!pairsCollection) {
                 const newCollection = {
                     userId: userIdStr,
-                    name: 'pairs',
+                    name: 'Pairs',
                     type: 'pairs',
                     items: [],
                     createdAt: new Date()
@@ -508,11 +489,13 @@ async function handleApiRequest(req, res) {
             const headingStr = String(headingFontId);
             const bodyStr = String(bodyFontId);
             
-            const pairExists = items.some((item, idx) => {
-                if (String(item.fontId) !== headingStr) return false;
-                const nextItem = items[idx + 1];
-                return nextItem && String(nextItem.fontId) === bodyStr;
-            });
+            let pairExists = false;
+            for (let i = 0; i < items.length - 1; i += 2) {
+                if (String(items[i].fontId) === headingStr && String(items[i + 1].fontId) === bodyStr) {
+                    pairExists = true;
+                    break;
+                }
+            }
 
             if (pairExists) {
                 res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -524,8 +507,8 @@ async function handleApiRequest(req, res) {
                         $push: { 
                             items: { 
                                 $each: [
-                                    { fontId: headingStr, role: 'heading', addedAt: new Date() },
-                                    { fontId: bodyStr, role: 'body', addedAt: new Date() }
+                                    { fontId: headingStr, weight: 0 },
+                                    { fontId: bodyStr, weight: 0 }
                                 ]
                             } 
                         } 
@@ -554,29 +537,10 @@ async function handleApiRequest(req, res) {
             }
 
             const userIdStr = String(userId);
-            let pairsCollection = await db.collection('collections').findOne({
+            const pairsCollection = await db.collection('collections').findOne({
                 userId: userIdStr,
                 type: 'pairs'
             });
-
-            if (!pairsCollection) {
-                try {
-                    const { ObjectId } = require('mongodb');
-                    if (ObjectId.isValid(userId)) {
-                        pairsCollection = await db.collection('collections').findOne({
-                            userId: new ObjectId(userId),
-                            type: 'pairs'
-                        });
-                        if (pairsCollection) {
-                            await db.collection('collections').updateOne(
-                                { _id: pairsCollection._id },
-                                { $set: { userId: userIdStr } }
-                            );
-                            pairsCollection.userId = userIdStr;
-                        }
-                    }
-                } catch (e) {}
-            }
 
             if (!pairsCollection) {
                 res.writeHead(404, { 'Content-Type': 'application/json' });
@@ -589,17 +553,15 @@ async function handleApiRequest(req, res) {
             const bodyStr = String(bodyFontId);
             
             const newItems = [];
-            let i = 0;
-            while (i < items.length) {
-                const current = items[i];
-                const next = items[i + 1];
+            for (let i = 0; i < items.length; i += 2) {
+                const heading = items[i];
+                const body = items[i + 1];
+                if (!heading || !body) continue;
                 
-                if (String(current.fontId) === headingStr && next && String(next.fontId) === bodyStr) {
-                    i += 2;
-                } else {
-                    newItems.push(current);
-                    i += 1;
+                if (String(heading.fontId) === headingStr && String(body.fontId) === bodyStr) {
+                    continue;
                 }
+                newItems.push(heading, body);
             }
 
             await db.collection('collections').updateOne(
