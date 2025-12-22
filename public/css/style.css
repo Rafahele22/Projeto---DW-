@@ -480,14 +480,19 @@ button[type="submit"]:hover,
 .styles_menu .option_selected.selected, 
 .font-tags a:hover, 
 .selected, 
-.selected:hover { 
+.selected:hover, 
+.remove-pair-btn:hover, 
+.save-pair-btn:hover, 
+.save-pair-btn.selected-option { 
     background-color: var(--purple); 
 }
 
 .font-tags a,
 .grid_view article:hover .save-btn:not(.selected),
 .list:hover .save-btn:not(.selected),
-.list_individual .save-btn:not(.selected) { 
+.list_individual .save-btn:not(.selected),
+.remove-pair-btn, 
+.save-pair-btn { 
     background-color: var(--light_grey); 
 }
 
@@ -504,7 +509,10 @@ button[type="submit"]:hover h4,
 .selected h4, 
 #tags a:hover h4, 
 #tags .button.tag-btn.selected h4, 
-.font-tags a:hover h4 { 
+.font-tags a:hover h4, 
+.remove-pair-btn:hover h4, 
+.save-pair-btn:hover h4, 
+.save-pair-btn.selected-option h4  { 
     color: var(--light_grey); 
 }
 
@@ -713,18 +721,6 @@ button[type="submit"]:hover h4,
   display: flex;
   flex-direction: column;
   margin-top: 4vh;
-}
-
-.remove-pair-btn, .save-pair-btn {
-  background-color: var(--light_grey);
-}
-
-.remove-pair-btn:hover, .save-pair-btn:hover, .save-pair-btn.selected-option {
-  background-color: var(--purple);
-}
-
-.remove-pair-btn:hover h4, .save-pair-btn:hover h4, .save-pair-btn.selected-option h4 {
-  color: var(--light_grey);
 }
 
 .list_individual h1 {
