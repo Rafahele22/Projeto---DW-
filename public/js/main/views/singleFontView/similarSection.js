@@ -187,9 +187,6 @@ function setupFavButton(article, fontId) {
   }
 }
 
-// =========================
-// HELPER: Setup Save Menu Toggle
-// =========================
 function setupSaveMenuToggle(article) {
   const gridSaveMenuBtn = article.querySelector(".save");
   const gridSaveBtn = article.querySelector(".save-btn");
