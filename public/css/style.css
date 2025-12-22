@@ -952,7 +952,34 @@ body.single-font-open #second_bar section {
   margin-left: 2vw; 
   max-height: 19vh;
   overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-gutter: stable;  
 }
+
+.pair-options {
+  scrollbar-width: auto;  
+  scrollbar-color: var(--darker-grey);
+}
+
+.pair-options::-webkit-scrollbar {
+  width: 0.4vw;   
+}
+
+.pair-options::-webkit-scrollbar-track {
+  background: var(--grey);
+  border-radius: 10px;
+}
+
+.pair-options::-webkit-scrollbar-thumb {
+  background: var(--darker-grey);
+  border-radius: 10px;
+}
+
+.pair-options::-webkit-scrollbar-thumb:hover {
+  background: var(--black);
+}
+
+
 
 .pair-option-btn {
     background-color: var(--grey) !important;
