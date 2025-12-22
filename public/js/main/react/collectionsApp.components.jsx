@@ -737,6 +737,8 @@ function ListItem({
     }
   };
 
+  const isFavourites = collectionName === "Favourites";
+
   return (
     <div
       className="list"
@@ -754,7 +756,7 @@ function ListItem({
         onOpenFont?.(font);
       }}
     >
-            <div className="list_information_bar">
+      <div className="list_information_bar">
         <section className="list_information">
           <h3>{font?.name}</h3>
           {font?.foundry && font.foundry !== "Unknown" ? <h3>{font.foundry}</h3> : null}
@@ -765,16 +767,14 @@ function ListItem({
         </section>
 
         <section className="list_information">
-          <a
-            href="#"
-            className="trash-btn"
-            onClick={handleTrashClick}
-          >
-            <img src="../assets/imgs/trash.svg" alt="trash icon" />
-          </a>
-          <FavButton selected={forceFavSelected ? true : favSelected} onToggle={handleFavToggle} />
+          {/* TRASH NÃO APARECE NOS FAVOURITES */}
+          {!isFavourites && (
+            <a href="#" className="trash-btn" onClick={handleTrashClick}>
+              <img src="../assets/imgs/trash.svg" alt="trash icon" />
+            </a>
+          )}
 
-        
+          <FavButton selected={forceFavSelected ? true : favSelected} onToggle={handleFavToggle} />
 
           <a
             href="#"
@@ -787,7 +787,6 @@ function ListItem({
 
         <SaveMenu isOpen={isSaveOpen} fontId={font?._id} />
       </div>
-
 
       <h1
         className="sampleText"
@@ -865,6 +864,8 @@ function GridItem({
     }
   };
 
+  const isFavourites = collectionName === "Favourites";
+
   return (
     <article
       data-font-id={String(font?._id)}
@@ -876,7 +877,7 @@ function GridItem({
       }}
       onMouseLeave={() => setSaveOpen(false)}
     >
-            <section className="grid_information">
+      <section className="grid_information">
         <a
           href="#"
           className={"button save-btn" + (saveOpen ? " selected" : "")}
@@ -890,17 +891,16 @@ function GridItem({
         </a>
 
         <div className="album_icons_grid">
-        <a
-          href="#"
-          className="trash-btn"
-          onClick={handleTrashClick}
-        >
-          <img src="../assets/imgs/trash.svg" alt="trash icon" />
-        </a>
-        <FavButton selected={forceFavSelected ? true : favSelected} onToggle={handleFavToggle} />
-</div>
-      </section>
+          {/* TRASH NÃO APARECE NOS FAVOURITES */}
+          {!isFavourites && (
+            <a href="#" className="trash-btn" onClick={handleTrashClick}>
+              <img src="../assets/imgs/trash.svg" alt="trash icon" />
+            </a>
+          )}
 
+          <FavButton selected={forceFavSelected ? true : favSelected} onToggle={handleFavToggle} />
+        </div>
+      </section>
 
       <GridSaveMenu isOpen={saveOpen} fontId={font?._id} />
 
