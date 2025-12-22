@@ -796,7 +796,7 @@ function CollectionList({
 
     try {
       const res = await fetch(`http://localhost:4000/api/collections/${id}`, {
-        method: "PUT", // troca para PATCH se o backend assim exigir
+        method: "PUT", 
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name: newName }),
       });
@@ -917,7 +917,7 @@ function CollectionGrid({
 
     try {
       const res = await fetch(`http://localhost:4000/api/collections/${id}`, {
-        method: "PUT", // troca para PATCH se necessário
+        method: "PUT", 
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name: newName }),
       });
