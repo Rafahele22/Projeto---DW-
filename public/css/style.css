@@ -1304,7 +1304,7 @@ form button:hover img { content: url("../../assets/imgs/login_selected.svg"); }
 
   main { margin-top: 20vh; }
 
-  h2, h3 { font-size: 1.35vw; }
+  h2, h3 { font-size: 1.45vw; }
 
   h4, h5, .rangeLabel span, #search_bar input[type="text"] {
     font-size: 1.5vw;
