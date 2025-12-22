@@ -127,8 +127,11 @@ function setupPairButtonEvents(listDiv, signal, headingFont, bodyFont) {
       const singleFontView = document.getElementById("singleFontView");
       const mainListDiv = singleFontView?.querySelector(".list_individual:not(.pair-list)");
       const mainFontFamily = mainListDiv?.querySelector("h1.sampleText")?.style.fontFamily;
-      const headingId = mainFontFamily?.replace(/['-]/g, "").replace("font", "") || null;
-      if (headingId && bodyFont) {
+      
+      if (mainFontFamily && bodyFont) {
+        const cleanFamily = mainFontFamily.replace(/['"]/g, "");
+        const headingId = cleanFamily.replace(/-font$/, "");
+        
         const isSelected = savePairBtn.classList.contains("selected-option");
         if (isSelected) {
           await removePairFromCollection(headingId, bodyFont._id);

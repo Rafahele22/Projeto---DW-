@@ -209,14 +209,14 @@ async function handleApiRequest(req, res) {
                 const now = new Date();
                 await db.collection('collections').insertMany([
                     {
-                        userId: newUser._id,
+                        userId: String(newUser._id),
                         name: 'Favourites',
                         type: 'fonts',
                         items: [],
                         createdAt: now,
                     },
                     {
-                        userId: newUser._id,
+                        userId: String(newUser._id),
                         name: 'pairs',
                         type: 'pairs',
                         items: [],
@@ -224,7 +224,7 @@ async function handleApiRequest(req, res) {
                     },
                 ]);
             } catch (e) {
-                await db.collection('collections').deleteMany({ userId: newUser._id });
+                await db.collection('collections').deleteMany({ userId: String(newUser._id) });
                 await db.collection('user').deleteOne({ _id: newUser._id });
                 throw e;
             }
@@ -467,14 +467,34 @@ async function handleApiRequest(req, res) {
                 return;
             }
 
+            const userIdStr = String(userId);
             let pairsCollection = await db.collection('collections').findOne({
-                userId: String(userId),
+                userId: userIdStr,
                 type: 'pairs'
             });
 
             if (!pairsCollection) {
+                try {
+                    const { ObjectId } = require('mongodb');
+                    if (ObjectId.isValid(userId)) {
+                        pairsCollection = await db.collection('collections').findOne({
+                            userId: new ObjectId(userId),
+                            type: 'pairs'
+                        });
+                        if (pairsCollection) {
+                            await db.collection('collections').updateOne(
+                                { _id: pairsCollection._id },
+                                { $set: { userId: userIdStr } }
+                            );
+                            pairsCollection.userId = userIdStr;
+                        }
+                    }
+                } catch (e) {}
+            }
+
+            if (!pairsCollection) {
                 const newCollection = {
-                    userId: String(userId),
+                    userId: userIdStr,
                     name: 'pairs',
                     type: 'pairs',
                     items: [],
@@ -533,10 +553,30 @@ async function handleApiRequest(req, res) {
                 return;
             }
 
-            const pairsCollection = await db.collection('collections').findOne({
-                userId: String(userId),
+            const userIdStr = String(userId);
+            let pairsCollection = await db.collection('collections').findOne({
+                userId: userIdStr,
                 type: 'pairs'
             });
+
+            if (!pairsCollection) {
+                try {
+                    const { ObjectId } = require('mongodb');
+                    if (ObjectId.isValid(userId)) {
+                        pairsCollection = await db.collection('collections').findOne({
+                            userId: new ObjectId(userId),
+                            type: 'pairs'
+                        });
+                        if (pairsCollection) {
+                            await db.collection('collections').updateOne(
+                                { _id: pairsCollection._id },
+                                { $set: { userId: userIdStr } }
+                            );
+                            pairsCollection.userId = userIdStr;
+                        }
+                    }
+                } catch (e) {}
+            }
 
             if (!pairsCollection) {
                 res.writeHead(404, { 'Content-Type': 'application/json' });
