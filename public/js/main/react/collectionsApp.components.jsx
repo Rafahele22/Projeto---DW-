@@ -1327,6 +1327,11 @@ function PairsGrid({ collection, fontsById, onOpenFont, onOpenPair, onRefreshCol
   const items = Array.isArray(collection?.items) ? collection.items : [];
   const [removedPairs, setRemovedPairs] = React.useState(new Set());
   
+  React.useEffect(() => {
+    console.log('[PairsGrid] Collection items:', items);
+    console.log('[PairsGrid] fontsById size:', fontsById.size);
+  }, [items, fontsById]);
+  
   const pairs = React.useMemo(() => {
     const result = [];
     for (let i = 0; i < items.length - 1; i += 2) {
@@ -1336,6 +1341,14 @@ function PairsGrid({ collection, fontsById, onOpenFont, onOpenPair, onRefreshCol
       
       const headingFont = fontsById.get(String(headingItem.fontId));
       const bodyFont = fontsById.get(String(bodyItem.fontId));
+      
+      console.log('[PairsGrid] Pair', i/2, ':', {
+        headingId: headingItem.fontId,
+        bodyId: bodyItem.fontId,
+        foundHeading: !!headingFont,
+        foundBody: !!bodyFont
+      });
+      
       if (!headingFont || !bodyFont) continue;
       
       const pairKey = `${headingFont._id}|${bodyFont._id}`;
@@ -1343,6 +1356,7 @@ function PairsGrid({ collection, fontsById, onOpenFont, onOpenPair, onRefreshCol
         result.push({ heading: headingFont, body: bodyFont, key: pairKey });
       }
     }
+    console.log('[PairsGrid] Total pairs:', result.length);
     return result;
   }, [items, fontsById, removedPairs]);
 

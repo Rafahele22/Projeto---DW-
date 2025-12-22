@@ -130,7 +130,7 @@ function setupPairButtonEvents(listDiv, signal, headingFont, bodyFont) {
       
       if (mainFontFamily && bodyFont) {
         const cleanFamily = mainFontFamily.replace(/['"]/g, "");
-        const headingId = cleanFamily.replace(/-font$/, "");
+        const headingId = cleanFamily.replace(/-font.*$/, "");
         
         const isSelected = savePairBtn.classList.contains("selected-option");
         if (isSelected) {
