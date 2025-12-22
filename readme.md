@@ -58,7 +58,7 @@ Projeto---DW-
 │   │       ├── filtering.js
 │   │       ├── react/
 │   │       └── ...
-│   └── assets/
+├── assets/
 ├── server/
 │   ├── server.js
 │   └── config/
