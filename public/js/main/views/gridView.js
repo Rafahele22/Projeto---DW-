@@ -2,7 +2,7 @@ import {
   ensureFontFace,
   setupFavButton,
   setupSaveMenuToggle,
-  setupSaveOptions,
+  populateGridSaveMenu,
   closeSaveMenusExcept,
 } from "../shared/fontUtils.js";
 import { hide } from "../shared/displayUtils.js";
@@ -28,17 +28,6 @@ export function generateGridArticles({ gridEl, fonts, onOpenFont }) {
       </section>
 
       <section class="save">
-        <h4>Save font on...</h4>
-        <a href="#" class="save-option" data-type="web">
-          <div><h4>Aa</h4><h4>Web</h4></div>
-          <h5 class="add-text">add</h5>
-          <img src="../assets/imgs/check.svg" class="check-icon" alt="check icon">
-        </a>
-        <a href="#" class="save-option" data-type="print">
-          <div><h4>Aa</h4><h4>Print</h4></div>
-          <h5 class="add-text">add</h5>
-          <img src="../assets/imgs/check.svg" class="check-icon" alt="check icon">
-        </a>
       </section>
 
       <h1 class="title_gridview" style="font-family:'${font._id}-font'">${sampleLetter}</h1>
@@ -63,7 +52,7 @@ export function generateGridArticles({ gridEl, fonts, onOpenFont }) {
     const saveBtn = article.querySelector(".save-btn");
 
     setupFavButton(article.querySelector(".fav-btn img"), font._id);
-    setupSaveOptions(article, font._id);
+    populateGridSaveMenu(saveMenu, font._id);
 
     hide(saveMenu);
 

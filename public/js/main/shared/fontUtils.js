@@ -139,6 +139,56 @@ export async function toggleFontInCollection(fontId, collectionName) {
   }
 }
 
+export async function populateGridSaveMenu(saveMenu, fontId) {
+  if (!saveMenu) return;
+
+  let userCollections = [];
+  try {
+    const { getUserCollections } = await import("../collections.js");
+    userCollections = getUserCollections() || [];
+  } catch (e) {
+    console.error("Failed to get user collections:", e);
+    saveMenu.innerHTML = '<h4>Save font on...</h4><p style="color: var(--darker-grey); padding: 0.5rem; font-size: 0.8rem;">Please login.</p>';
+    return;
+  }
+
+  const fontsCollections = userCollections.filter(c => c.type === "fonts" && c.name !== "Favourites");
+
+  if (fontsCollections.length === 0) {
+    saveMenu.innerHTML = '<h4>Save font on...</h4><p style="color: var(--darker-grey); padding: 0.5rem; font-size: 0.8rem;">No collections.</p>';
+    return;
+  }
+
+  saveMenu.innerHTML = '<h4>Save font on...</h4>';
+
+  fontsCollections.forEach(collection => {
+    const items = Array.isArray(collection.items) ? collection.items : [];
+    const fontIds = items.map(item => String(item.fontId)).filter(Boolean);
+    const isInCollection = fontIds.includes(String(fontId));
+
+    const option = document.createElement("a");
+    option.href = "#";
+    option.className = "save-option";
+    if (isInCollection) option.classList.add("selected-option");
+    option.dataset.collectionName = collection.name;
+
+    option.innerHTML = `
+      <div><h4>Aa</h4><h4>${escapeHtml(collection.name)}</h4></div>
+      <h5 class="add-text">add</h5>
+      <img src="../assets/imgs/check.svg" class="check-icon" alt="check icon">
+    `;
+
+    option.addEventListener("click", async (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const result = await toggleFontInCollection(fontId, collection.name);
+      option.classList.toggle("selected-option", result?.added);
+    });
+
+    saveMenu.appendChild(option);
+  });
+}
+
 export function setupSaveOptions(container, fontId) {
   container.querySelectorAll(".save-option").forEach((option) => {
     option.addEventListener("click", async (e) => {

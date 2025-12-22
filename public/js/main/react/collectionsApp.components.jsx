@@ -29,7 +29,7 @@ function useFontsFromCollection(collection, fontsById) {
       if (font) fonts.push(font);
     }
     return fonts;
-  }, [collection, fontsById]);
+  }, [collection?.items?.length, fontsById]);
 }
 
 
@@ -321,7 +321,6 @@ function AlbumsGrid({ collections, fontsById, onSelectCollection, onCreateCollec
                 <img src="../assets/imgs/check.svg" alt="confirm" />
               </button>
             </div>
-            <h3>0 fonts</h3>
           </section>
         </div>
       )}
