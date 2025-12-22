@@ -687,83 +687,88 @@ export function createSingleFontView({
     );
 
     const handlePairCategoryClick = (e) => {
-      const cat = e.target.closest(".pair-category");
-      if (!cat) return;
-      
-      e.preventDefault();
-      e.stopPropagation();
+  const cat = e.target.closest(".pair-category");
+  if (!cat) return;
 
-      const collectionId = cat.dataset.collectionId;
-      const options = pairContainer.querySelector(`.pair-options[data-collection-id="${collectionId}"]`);
-      if (!options) return;
+  e.preventDefault();
+  e.stopPropagation();
 
-      const isOpening = options.style.display === "none";
+  const collectionId = cat.dataset.collectionId;
+  const options = pairContainer.querySelector(`.pair-options[data-collection-id="${collectionId}"]`);
+  if (!options) return;
 
-      pairContainer.querySelectorAll(".pair-options").forEach((sec) => (sec.style.display = "none"));
-      pairContainer.querySelectorAll(".pair-category").forEach((c) => c.classList.remove("selected-option"));
+  const isOpening = options.style.display === "none";
 
-      options.style.display = isOpening ? "block" : "none";
-      cat.classList.toggle("selected-option", isOpening);
-    };
+  pairContainer.querySelectorAll(".pair-options").forEach((sec) => (sec.style.display = "none"));
+  pairContainer.querySelectorAll(".pair-category").forEach((c) => c.classList.remove("selected-option"));
 
-    const handlePairOptionClick = (e) => {
-      const btn = e.target.closest(".pair-option-btn");
-      if (!btn) return;
-      
-      e.preventDefault();
-      e.stopPropagation();
+  options.style.display = isOpening ? "block" : "none";
+  cat.classList.toggle("selected-option", isOpening);
+};
 
-      const fontId = btn.dataset.fontId;
-      if (!fontId) return;
+const removePairBox = () => {
+  const existingPairBox = singleFontView.querySelector("#pair-box-wrapper");
+  if (existingPairBox) existingPairBox.remove();
 
-      const allFonts = getAllFonts();
-      const pairFont = allFonts.find(f => String(f._id) === fontId);
-      if (!pairFont) return;
+  const pairFace = document.getElementById("pair-font-face");
+  if (pairFace) pairFace.textContent = "";
 
+  pairContainer?.querySelectorAll(".pair-option-btn").forEach((b) => b.classList.remove("selected-option"));
+
+  const addPairLabel = addPairBtn?.querySelector("h4");
+  if (addPairLabel) addPairLabel.textContent = "Add Pair";
+};
+
+const handlePairOptionClick = (e) => {
+  const btn = e.target.closest(".pair-option-btn");
+  if (!btn) return;
+
+  e.preventDefault();
+  e.stopPropagation();
+
+  const fontId = btn.dataset.fontId;
+  if (!fontId) return;
+
+  const allFonts = getAllFonts();
+  const pairFont = allFonts.find((f) => String(f._id) === String(fontId));
+  if (!pairFont) return;
+
+  removePairBox();
+
+  const pairBox = createPairControlsBox(pairFont, signal);
+
+  const firstListIndividual = singleFontView.querySelector(".list_individual:not(.pair-list)");
+  if (firstListIndividual && firstListIndividual.nextSibling) {
+    singleFontView.insertBefore(pairBox, firstListIndividual.nextSibling);
+  } else {
+    singleFontView.appendChild(pairBox);
+  }
+
+  const addPairLabel = addPairBtn?.querySelector("h4");
+  if (addPairLabel) addPairLabel.textContent = "Change Pair";
+
+  const removePairBtn = pairBox.querySelector(".remove-pair-btn");
+  removePairBtn?.addEventListener(
+    "click",
+    (evt) => {
+      evt.preventDefault();
+      evt.stopPropagation();
       removePairBox();
+    },
+    { signal }
+  );
 
-      const pairBox = createPairControlsBox(pairFont, signal);
-      
-      const firstListIndividual = singleFontView.querySelector(".list_individual:not(.pair-list)");
-      if (firstListIndividual && firstListIndividual.nextSibling) {
-        singleFontView.insertBefore(pairBox, firstListIndividual.nextSibling);
-      } else {
-        singleFontView.appendChild(pairBox);
-      }
+  pairMenu.style.display = "none";
+  addPairBtn?.classList.remove("selected");
+  pairContainer?.querySelectorAll(".pair-options").forEach((sec) => (sec.style.display = "none"));
+  pairContainer?.querySelectorAll(".pair-category").forEach((c) => c.classList.remove("selected-option"));
 
-      const removePairBtn = pairBox.querySelector(".remove-pair-btn");
-      removePairBtn?.addEventListener(
-        "click",
-        (evt) => {
-          evt.preventDefault();
-          evt.stopPropagation();
-          removePairBox();
-        },
-        { signal }
-      );
+  btn.classList.add("selected-option");
+};
 
-      pairMenu.style.display = "none";
-      addPairBtn.classList.remove("selected");
-      pairContainer?.querySelectorAll(".pair-options").forEach((sec) => (sec.style.display = "none"));
-      pairContainer?.querySelectorAll(".pair-category").forEach((c) => c.classList.remove("selected-option"));
+pairContainer?.addEventListener("click", handlePairCategoryClick, { signal });
+pairContainer?.addEventListener("click", handlePairOptionClick, { signal });
 
-      btn.classList.add("selected-option");
-    };
-
-    const removePairBox = () => {
-      const existingPairBox = singleFontView.querySelector("#pair-box-wrapper");
-      if (existingPairBox) {
-        existingPairBox.remove();
-      }
-      const pairFace = document.getElementById("pair-font-face");
-      if (pairFace) {
-        pairFace.textContent = "";
-      }
-      pairContainer?.querySelectorAll(".pair-option-btn").forEach((b) => b.classList.remove("selected-option"));
-    };
-
-    pairContainer?.addEventListener("click", handlePairCategoryClick, { signal });
-    pairContainer?.addEventListener("click", handlePairOptionClick, { signal });
 
     // FAVOURITE
     const favBtn = displayContainer.querySelector(".fav-btn img");
