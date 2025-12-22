@@ -129,9 +129,6 @@ function applyPairWeight(styleEl, fontFamily, weight, h1El) {
   if (h1El) h1El.style.fontFamily = `'${fontFamily}'`;
 }
 
-// ================
-// HELPER: Build Styles Menu
-// ================
 function buildPairStylesMenuOptions(menuScroll, font, fontFamily, styleEl, h1El, signal) {
   if (!menuScroll) return;
   menuScroll.innerHTML = "";
@@ -188,7 +185,6 @@ function setupPairStylesMenu(controlsContainer, displayContainer, font, signal) 
 
   buildPairStylesMenuOptions(menuScroll, font, pairFamily, pairFace, h1, signal);
 
-  // Handler para toggle do menu
   const toggleMenu = (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -200,7 +196,6 @@ function setupPairStylesMenu(controlsContainer, displayContainer, font, signal) 
     displayContainer.classList.toggle("shifted", isOpening);
   };
 
-  // Handler para fechar ao clicar fora
   const closeOnOutsideClick = (e) => {
     if (menu && chooseBtn && !menu.contains(e.target) && !chooseBtn.contains(e.target)) {
       menu.style.display = "none";

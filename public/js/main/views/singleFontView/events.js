@@ -54,7 +54,6 @@ function setupAddPairEvents(pairContainer, font, signal, singleFontView, getAllF
     addPairBtn.classList.toggle("selected", isOpening);
   }, { signal });
 
-  // Pair Category Click
   pairContainer?.addEventListener("click", (e) => {
     const cat = e.target.closest(".pair-category");
     if (!cat) return;
@@ -75,7 +74,6 @@ function setupAddPairEvents(pairContainer, font, signal, singleFontView, getAllF
     cat.classList.toggle("selected-option", isOpening);
   }, { signal });
 
-  // Pair Option Click
   pairContainer?.addEventListener("click", (e) => {
     const btn = e.target.closest(".pair-option-btn");
     if (!btn) return;
@@ -121,7 +119,7 @@ function setupAddPairEvents(pairContainer, font, signal, singleFontView, getAllF
 }
 
 // =========================
-// HELPER: Remove Pair Box
+// HELPER
 // =========================
 function removePairBox(singleFontView, pairContainer, addPairBtn) {
   const existingPairBox = singleFontView.querySelector("#pair-box-wrapper");
@@ -136,9 +134,6 @@ function removePairBox(singleFontView, pairContainer, addPairBtn) {
   if (addPairLabel) addPairLabel.textContent = "Add Pair";
 }
 
-// =========================
-// HELPER: Show Login Prompt
-// =========================
 function showLoginPrompt() {
   const loginBox = document.querySelector(".loginContentor");
   const loginForm = document.getElementById("login");
@@ -150,7 +145,7 @@ function showLoginPrompt() {
 }
 
 // =========================
-// FAVOURITE EVENT
+// FAVOURITE 
 // =========================
 function setupFavouriteEvent(displayContainer, signal) {
   const favBtn = displayContainer.querySelector(".fav-btn img");
@@ -168,7 +163,7 @@ function toggleFavIcon(img) {
 }
 
 // =========================
-// SAVE MENU EVENT
+// SAVE MENU
 // =========================
 function setupSaveMenuEvent(displayContainer, signal) {
   const saveMenu = displayContainer.querySelector(".save_list");
@@ -187,7 +182,7 @@ function setupSaveMenuEvent(displayContainer, signal) {
 }
 
 // =========================
-// SLIDERS EVENTS
+// SLIDERS
 // =========================
 function setupSlidersEvents(controlsContainer, displayContainer, signal) {
   const h1 = displayContainer.querySelector("h1");
@@ -219,7 +214,7 @@ function setupSlidersEvents(controlsContainer, displayContainer, signal) {
 }
 
 // =========================
-// TAGS EVENTS
+// TAGS
 // =========================
 function setupTagsEvents(displayContainer, signal, closeSingleFontView, filtersPanelEl, filtersBtnEl, gridEl, listEl) {
   const tagLinks = displayContainer.querySelectorAll(".font-tags a.tag-btn");
@@ -262,7 +257,7 @@ function applyWeight(styleEl, fontFamily, weight, h1El) {
 }
 
 // =========================
-// HELPER: Build Styles Menu
+// HELPER
 // =========================
 function buildStylesMenuOptions(menuScroll, font, fontFamily, styleEl, h1El, signal) {
   if (!menuScroll) return;

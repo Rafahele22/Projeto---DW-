@@ -80,7 +80,7 @@ export function renderControlsBar(options = {}) {
 }
 
 // =========================
-// LIST INDIVIDUAL (Main font display)
+// LIST INDIVIDUAL
 // =========================
 export function renderListIndividual(font, displayText, tagsHTML) {
   const numStyles = font.weights?.length || 0;
@@ -117,7 +117,7 @@ export function renderListIndividual(font, displayText, tagsHTML) {
 }
 
 // =========================
-// PAIR BOX (Second font display)
+// PAIR BOX
 // =========================
 export function renderPairBox(font, displayText, tagsHTML) {
   const numStyles = font.weights?.length || 0;

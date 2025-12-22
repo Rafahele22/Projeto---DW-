@@ -172,7 +172,7 @@ function getSimilarFonts(currentFont, allFonts) {
 }
 
 // =========================
-// HELPER: Setup Fav Button
+// HELPER
 // =========================
 function setupFavButton(article, fontId) {
   const favImg = article.querySelector(".fav-btn img");
