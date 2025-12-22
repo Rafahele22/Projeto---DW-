@@ -1206,17 +1206,19 @@ form button:hover img { content: url("../../assets/imgs/login_selected.svg"); }
 }
 
 .pending-album {
-    border: 2px dashed var(--purple);
+    
     border-radius: 5vh;
     cursor: default;
 }
 
 .pending-album .exemples_album {
-    border: none;
+    border: 2px dashed var(--purple);
 }
 
 .pending-album > section {
-    padding: 2vh 2vw 5vh 2vw;
+  display: flex;
+  justify-content: space-between;
+  padding: 1vh 2vw 3vh 2vw !important;
 }
 
 .pending-album-input-row {
@@ -1230,7 +1232,7 @@ form button:hover img { content: url("../../assets/imgs/login_selected.svg"); }
     border: none;
     background: transparent;
     font-family: "roboto medium";
-    font-size: 1.25vw;
+    font-size: 1.15vw;
     color: var(--black);
     outline: none;
     width: 100%;
