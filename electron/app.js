@@ -21,7 +21,6 @@ function createWindow() {
       nodeIntegration: false,
       contextIsolation: true
     },
-    show: false
   });
 
   mainWindow.loadFile(path.join(__dirname, "../public/main.html"));
